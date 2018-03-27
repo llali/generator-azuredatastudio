@@ -2,6 +2,11 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
+
+// The module 'sqlops' contains the SQL Operations Studio extensibility API
+// This is a complementary set of APIs that add SQL / Data-specific functionality to the app
+// Import the module and reference it with the alias sqlops in your code below
+
 import * as sqlops from 'sqlops';
 
 // this method is called when your extension is activated
