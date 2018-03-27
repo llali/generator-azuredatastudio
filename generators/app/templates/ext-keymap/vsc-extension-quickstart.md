@@ -1,4 +1,4 @@
-# Welcome to your VS Code Extension
+# Welcome to your SQL Operations Studio Extension
 
 ## What's in the folder
 * This folder contains all of the files necessary for your extension pack.
@@ -11,8 +11,8 @@
 
 ## Make changes
 * You can relaunch the extension from the debug toolbar after making changes to the files listed above.
-* You can also reload (`Ctrl+R` or `Cmd+R` on Mac) the VS Code window with your extension to load your changes.
+* You can also reload (`Ctrl+R` or `Cmd+R` on Mac) the SQL Operations Studio window with your extension to load your changes.
 
 ## Install your extension
-* To start using your extension with Visual Studio Code copy it into the `<user home>/.vscode/extensions` folder and restart Code.
-* To share your extension with the world, read on https://code.visualstudio.com/docs about publishing an extension.
+* To start using your extension with SQL Operations Studio copy it into the `<user home>/.sqlops/extensions` folder and restart SqlOps.
+* To share your extension with the world, read on https://github.com/microsoft/sqlopsstudio/wiki/Getting-started-with-Extensibility about publishing an extension.
