@@ -1,26 +1,27 @@
 {
   "name": "generator-sqlops",
-  "version": "1.1.29",
-  "description": "Yeoman generator for Visual Studio Code Extensions",
+  "version": "0.10.0",
+  "description": "Yeoman generator for SQL Operation Studio Extensions",
   "keywords": [
     "yeoman-generator",
     "vscode",
     "sqlops",
     "visual studio code",
+    "sql operations studio",
     "vs code",
     "extensions"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/Microsoft/vscode-generator-code.git"
+    "url": "https://github.com/llali/generator-sqlops"
   },
   "bugs": {
-    "url": "https://github.com/Microsoft/vscode-generator-code/issues"
+    "url": "https://github.com/llali/generator-sqlops/issues"
   },
-  "homepage": "http://code.visualstudio.com",
+  "homepage": "https://docs.microsoft.com/en-us/sql/sql-operations-studio",
   "license": "MIT",
   "author": {
-    "name": "VS Code Team",
+    "name": "SQL Operation Studio Team",
     "url": "https://github.com/Microsoft"
   },
   "engines": {
