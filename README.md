@@ -7,7 +7,7 @@ We have written a Yeoman generator to help get you started. We plan to add templ
 Install Yeoman and the SQL Operations Studio Extension generator:
 
 ```bash
-npm install -g yo generator-sqlops
+npm install -g github:llali/generator-sqlops
 ```
 
 ## Run Yo SQL OPS
