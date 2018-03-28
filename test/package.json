@@ -6,7 +6,7 @@
     "publisher": "leila",
     "engines": {
         "vscode": "1.19.0",
-        "sqlOps": "0.27.2"
+        "sqlops": "0.27.2"
     },
     "categories": [
         "Other"

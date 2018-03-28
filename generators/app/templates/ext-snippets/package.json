@@ -5,8 +5,8 @@
     "version": "0.0.1",
     "publisher": <%- JSON.stringify(publisher) %>,
     "engines": {
-        "vscode": <%- JSON.stringify(sqlOpsEngine) %>,
-        "sqlOps": <%- JSON.stringify(sqlOpsEngine) %>
+        "vscode": <%- JSON.stringify(vsCodeEngine) %>,
+        "sqlops": <%- JSON.stringify(sqlopsEngine) %>
     },
     "categories": [
         "Snippets"

@@ -6,7 +6,7 @@
     "publisher": <%- JSON.stringify(publisher) %>,
     "engines": {
         "vscode": <%- JSON.stringify(vsCodeEngine) %>,
-        "sqlops": "*"
+        "sqlops": <%- JSON.stringify(sqlopsEngine) %>
     },
     "categories": [
         "Other"
@@ -22,7 +22,6 @@
         }]
     },
     "scripts": {
-        "prepare": "",
         "vscode:prepublish": "npm run compile",
         "compile": "tsc -p ./",
         "watch": "tsc -watch -p ./",
