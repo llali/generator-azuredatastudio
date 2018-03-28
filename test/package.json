@@ -33,7 +33,7 @@
     "devDependencies": {
         "typescript": "^2.6.1",
         "vscode": "^1.1.6",
-        "sqlops": "github:anthonydresser/vscode-extension-vscode",
+        "sqlops": "github:anthonydresser/sqlops-extension-sqlops",
         "@types/node": "^7.0.43",
         "@types/mocha": "^2.2.42"
     }
