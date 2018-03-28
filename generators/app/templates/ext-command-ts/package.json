@@ -31,7 +31,7 @@
     "devDependencies": {
         "typescript": "^2.6.1",
         "vscode": "^1.1.6",
-        "sqlops": "github:anthonydresser/vscode-extension-vscode",
+        "sqlops": "github:anthonydresser/sqlops-extension-sqlops",
 <%if (tslint) {-%>
         "tslint": "^5.8.0",
 <% } -%>
