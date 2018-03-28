@@ -4,8 +4,8 @@
 'use strict';
 var request = require('request');
 
-var fallbackVersion = '^1.20.0';
-var promise = new Promise(function(resolve, reject) {
+var vscodeFallbackVersion = '^1.20.0';
+var vscodePromise = new Promise(function(resolve, reject) {
     request.get('https://vscode-update.azurewebsites.net/api/releases/stable', { headers: { "X-API-Version": "2" } }, function(error, response, body) {
         if (!error && response.statusCode === 200) {
             try {
@@ -23,8 +23,11 @@ var promise = new Promise(function(resolve, reject) {
         } else {
             console.log('Unable to fetch latest vscode version: ' + (error || ('Status code: ' + response.statusCode + ', ' + body)));
         }
-        resolve(fallbackVersion);
+        resolve(vscodeFallbackVersion);
     });
 });
 
-module.exports.getLatestVSCodeVersion = function() { return promise; };
+module.exports.getLatestVSCodeVersion = function() { return vscodePromise; };
+
+var sqlopsFallbackVersion = '*';
+module.exports.sqlopsVersion = sqlopsFallbackVersion;

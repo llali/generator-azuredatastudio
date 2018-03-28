@@ -43,9 +43,12 @@ module.exports = yeoman.Base.extend({
 
         evaluateEngineVersion: function () {
             var extensionConfig = this.extensionConfig;
-            extensionConfig.sqlOpsEngine = '0.27.2';
+            extensionConfig.sqlopsEngine = env.sqlopsVersion;
             extensionConfig.vsCodeEngine = '^1.19.0';
-            return Promise.resolve();//env.getLatestVSCodeVersion().then(function (version) { extensionConfig.sqlOpsEngine = version; });
+            return env.getLatestVSCodeVersion()
+            .then(function (version) { extensionConfig.vsCodeEngine = version; });
+            // TODO add tool to get latest SQL Ops Studio verison on machine and set this too
+
         }
 
     },
