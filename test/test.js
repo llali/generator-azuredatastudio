@@ -658,7 +658,7 @@ describe('test code generator', function () {
                     ],
                     "devDependencies": {
                         "typescript": "^2.6.1",
-                        "sqlops": "github:anthonydresser/vscode-extension-vscode",
+                        "sqlops": "github:anthonydresser/sqlops-extension-sqlops",
                         "vscode": "^1.1.6",
                         "@types/node": "^7.0.43",
                         "@types/mocha": "^2.2.42"
@@ -728,7 +728,7 @@ describe('test code generator', function () {
                     ],
                     "devDependencies": {
                         "typescript": "^2.6.1",
-                        "sqlops": "github:anthonydresser/vscode-extension-vscode",
+                        "sqlops": "github:anthonydresser/sqlops-extension-sqlops",
                         "vscode": "^1.1.6",
                         "tslint": "^5.8.0",
                         "@types/node": "^7.0.43",
@@ -843,7 +843,7 @@ describe('test code generator', function () {
                     ],
                     "devDependencies": {
                         "typescript": "^2.6.1",
-                        "sqlops": "github:anthonydresser/vscode-extension-vscode",
+                        "sqlops": "github:anthonydresser/sqlops-extension-sqlops",
                         "vscode": "^1.1.6",
                         "eslint": "^4.11.0",
                         "@types/node": "^7.0.43",
