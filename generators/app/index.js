@@ -59,7 +59,7 @@ module.exports = yeoman.Base.extend({
         askForType: function () {
             var generator = this;
             if (generator.extensionType) {
-                var extensionTypes = ['colortheme', 'language', 'snippets', 'command-ts', 'command-js', 'extensionpack'];
+                var extensionTypes = ['insight', 'colortheme', 'language', 'snippets', 'command-ts', 'command-js', 'extensionpack'];
                 if (extensionTypes.indexOf(generator.extensionType) !== -1) {
                     generator.extensionConfig.type = 'ext-' + generator.extensionType;
                 } else {
@@ -79,6 +79,10 @@ module.exports = yeoman.Base.extend({
                 {
                     name: 'New Extension (JavaScript)',
                     value: 'ext-command-js'
+                },
+                {
+                    name: 'New Dashboard Insight',
+                    value: 'ext-insight'
                 },
                 {
                     name: 'New Color Theme',
@@ -251,6 +255,26 @@ module.exports = yeoman.Base.extend({
                         });
                     });
                 }
+            });
+        },
+
+        askForInsightInfo: function () {
+            var generator = this;
+            if (generator.extensionConfig.type !== 'ext-insight') {
+                return Promise.resolve();
+            }
+
+            generator.extensionConfig.isCustomization = true;
+
+            return generator.prompt({
+                type: 'confirm',
+                name: 'addDashboardExtension',
+                message: 'Add a full dashboard tab?',
+                default: true
+            }).then(function (answer) {
+                generator.extensionConfig.addDashboardTab = answer.addDashboardExtension;
+                generator.extensionConfig.insightName = generator.extensionConfig.name + '.insight';
+                generator.extensionConfig.tabName = generator.extensionConfig.name + '.tab';
             });
         },
 
@@ -550,6 +574,9 @@ module.exports = yeoman.Base.extend({
             case 'ext-localization':
                 localization.writingLocalizationExtension(this);
                 break;
+            case 'ext-insight':
+                this._writingInsight();
+                break;
             default:
                 //unknown project type
                 break;
@@ -635,11 +662,25 @@ module.exports = yeoman.Base.extend({
         this.copy(this.sourceRoot() + '/gitignore', context.name + '/.gitignore');
     },
 
-    // Write Snippets Extension
+    // Write Keymaps Extension
     _writingKeymaps: function () {
         var context = this.extensionConfig;
 
         this.directory(this.sourceRoot() + '/vscode', context.name + '/.vscode');
+        this.template(this.sourceRoot() + '/package.json', context.name + '/package.json', context);
+        this.template(this.sourceRoot() + '/vsc-extension-quickstart.md', context.name + '/vsc-extension-quickstart.md', context);
+        this.template(this.sourceRoot() + '/README.md', context.name + '/README.md', context);
+        this.template(this.sourceRoot() + '/CHANGELOG.md', context.name + '/CHANGELOG.md', context);
+        this.copy(this.sourceRoot() + '/vscodeignore', context.name + '/.vscodeignore');
+        this.copy(this.sourceRoot() + '/gitignore', context.name + '/.gitignore');
+    },
+
+    // Write Insight Extension
+    _writingInsight: function () {
+        var context = this.extensionConfig;
+
+        this.directory(this.sourceRoot() + '/vscode', context.name + '/.vscode');
+        this.directory(this.sourceRoot() + '/sql', context.name + '/sql');
         this.template(this.sourceRoot() + '/package.json', context.name + '/package.json', context);
         this.template(this.sourceRoot() + '/vsc-extension-quickstart.md', context.name + '/vsc-extension-quickstart.md', context);
         this.template(this.sourceRoot() + '/README.md', context.name + '/README.md', context);

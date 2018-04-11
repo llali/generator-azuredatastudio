@@ -12,9 +12,9 @@
             //
             "type": "node",
             "request": "launch",
-            "name": "yeoman code",
+            "name": "yeoman sqlops",
             "program": "${workspaceFolder}/node_modules/yo/lib/cli.js",
-            "args": [ "code" ],
+            "args": [ "sqlops" ],
             "cwd": "${workspaceFolder}",
             "console": "integratedTerminal",
             "internalConsoleOptions": "neverOpen"
