@@ -7,7 +7,7 @@ We have written a Yeoman generator to help get you started. We plan to add templ
 Install Yeoman and the SQL Operations Studio Extension generator:
 
 ```bash
-npm install -g github:llali/generator-sqlops
+npm install generator-sqlops
 ```
 
 ## Run Yo SQL OPS
@@ -19,7 +19,7 @@ To launch the generator simply type:
 yo sqlops
 ```
 
-![The command generator](yocode.png)
+![The command generator](https://raw.githubusercontent.com/llali/generator-sqlops/master/yosqlops.PNG)
 
 ## Generator Output
 
@@ -31,7 +31,7 @@ These templates will
 
 ## History
 
-* 0.10.x: Generates a VS Code extension for TypeScript 1.8.10
+* 0.10.x: Generates a SQL Operations Studio extension for TypeScript 1.8.10
 
 ## License
 
