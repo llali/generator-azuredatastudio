@@ -12,13 +12,18 @@
         "Other"
     ],
     "activationEvents": [
-        "onCommand:extension.sayHello"
+        "onCommand:extension.sayHello",
+        "onCommand:extension.showCurrentConnection"
     ],
     "main": "./out/extension",
     "contributes": {
         "commands": [{
             "command": "extension.sayHello",
             "title": "Hello World"
+        },
+        {
+            "command": "extension.showCurrentConnection",
+            "title": "Show Current Connection"
         }]
     },
     "scripts": {
