@@ -654,7 +654,8 @@ describe('test code generator', function () {
                         "sqlops": env.sqlopsVersion
                     },
                     "activationEvents": [
-                        "onCommand:extension.sayHello"
+                        "onCommand:extension.sayHello",
+                        "onCommand:extension.showCurrentConnection"
                     ],
                     "devDependencies": {
                         "typescript": "^2.6.1",
@@ -678,6 +679,10 @@ describe('test code generator', function () {
                         "commands": [{
                             "command": "extension.sayHello",
                             "title": "Hello World"
+                        },
+                        {
+                            "command": "extension.showCurrentConnection",
+                            "title": "Show Current Connection"
                         }]
                     }
                 };
@@ -724,7 +729,8 @@ describe('test code generator', function () {
                         "sqlops": env.sqlopsVersion
                     },
                     "activationEvents": [
-                        "onCommand:extension.sayHello"
+                        "onCommand:extension.sayHello",
+                        "onCommand:extension.showCurrentConnection"
                     ],
                     "devDependencies": {
                         "typescript": "^2.6.1",
@@ -749,6 +755,10 @@ describe('test code generator', function () {
                         "commands": [{
                             "command": "extension.sayHello",
                             "title": "Hello World"
+                        },
+                        {
+                            "command": "extension.showCurrentConnection",
+                            "title": "Show Current Connection"
                         }]
                     }
                 };
