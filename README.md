@@ -19,7 +19,7 @@ To launch the generator simply type:
 yo sqlops
 ```
 
-![The command generator](https://raw.githubusercontent.com/llali/generator-sqlops/master/yosqlops.PNG)
+![The command generator](https://raw.githubusercontent.com/llali/generator-azuredatastudio/master/yoazuredatastudio.PNG)
 
 ## Generator Output
 
