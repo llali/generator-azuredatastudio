@@ -1,4 +1,4 @@
-# Yo SQL OPS - Extension and Customization Generator
+# Yo Azure Data Studio - Extension and Customization Generator
 
 We have written a Yeoman generator to help get you started. We plan to add templates for most extension/customization types into this.
 
@@ -7,19 +7,19 @@ We have written a Yeoman generator to help get you started. We plan to add templ
 Install Yeoman and the Azure Data Studio Extension generator:
 
 ```bash
-npm install generator-sqlops
+npm install generator-azuredatastudio
 ```
 
-## Run Yo SQL OPS
+## Run Yo Azure Data Studio
 The Yeoman generator will walk you through the steps required to create your customization or extension prompting for the required information.
 
 To launch the generator simply type:
 
 ```bash
-yo sqlops
+yo azuredatastudio
 ```
 
-![The command generator](https://raw.githubusercontent.com/llali/generator-sqlops/master/yosqlops.PNG)
+![The command generator](https://raw.githubusercontent.com/llali/generator-azuredatastudio/master/yoazuredatastudio.PNG)
 
 ## Generator Output
 
