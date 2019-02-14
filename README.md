@@ -19,7 +19,7 @@ To launch the generator simply type:
 yo azuredatastudio
 ```
 
-![The command generator](https://raw.githubusercontent.com/llali/generator-azuredatastudio/master/yoazuredatastudio.PNG)
+![The command generator](https://raw.githubusercontent.com/llali/generator-azuredatastudio/master/yoazuredatastudio.png)
 
 ## Generator Output
 
