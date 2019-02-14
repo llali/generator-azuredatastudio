@@ -37,7 +37,7 @@ module.exports = yeoman.Base.extend({
 
         // Welcome
         welcome: function () {
-            this.log(yosay('Welcome to the SQL Operations Studio Extension generator!'));
+            this.log(yosay('Welcome to the Azure Data Studio Extension generator!'));
         },
 
 
@@ -47,7 +47,7 @@ module.exports = yeoman.Base.extend({
             extensionConfig.vsCodeEngine = '^1.19.0';
             return env.getLatestVSCodeVersion()
             .then(function (version) { extensionConfig.vsCodeEngine = version; });
-            // TODO add tool to get latest SQL Ops Studio verison on machine and set this too
+            // TODO add tool to get latest Azure Data Studio verison on machine and set this too
 
         }
 

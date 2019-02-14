@@ -1,4 +1,4 @@
-# Welcome to your SQL Operations Studio Extension
+# Welcome to your Azure Data Studio Extension
 
 ## What's in the folder
 * This folder contains all of the files necessary for your color theme extension.
@@ -13,13 +13,13 @@ and specifies the base theme of the theme.
 
 ## Make changes
 * You can relaunch the extension from the debug toolbar after making changes to the files listed above.
-* You can also reload (`Ctrl+R` or `Cmd+R` on Mac) the SQL Operations Studio window with your extension to load your changes.
+* You can also reload (`Ctrl+R` or `Cmd+R` on Mac) the Azure Data Studio window with your extension to load your changes.
 * When editing workbench colors, it's easiest to test the colors in the settings under `workbench.colorCustomizations` and `workbench.tokenColorCustomizations`. When done, run the `Generate Color Theme From Current Settings` command to generate an updated content for the color theme definition file.
 
-## Adopt your theme to SQL Operations Studio
+## Adopt your theme to Azure Data Studio
 * The token colorization is done based on standard TextMate themes. Colors are matched against one or more scopes.
 To learn more about scopes and how they're used, check out the [theme](https://code.visualstudio.com/docs/extensions/themes-snippets-colorizers#_adding-a-new-color-theme) documentation.
 
 ## Install your extension
-* To start using your extension with SQL Operations Studio copy it into the `<user home>/.sqlops/extensions` folder and restart SqlOps.
-* To share your extension with the world, read on https://github.com/microsoft/sqlopsstudio/wiki/Getting-started-with-Extensibility about publishing an extension.
+* To start using your extension with Azure Data Studio copy it into the `<user home>/.azuredatastudio/extensions` folder and restart Azure Data Studio.
+* To share your extension with the world, read on https://github.com/microsoft/azuredatastudio/wiki/Getting-started-with-Extensibility about publishing an extension.

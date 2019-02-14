@@ -1,28 +1,28 @@
 {
-  "name": "generator-sqlops",
-  "version": "0.10.3",
-  "description": "Yeoman generator for SQL Operation Studio Extensions",
+  "name": "generator-azuredatastudio",
+  "version": "0.11.0",
+  "description": "Yeoman generator for Azure Data Studio Extensions",
   "keywords": [
     "yeoman-generator",
     "vscode",
     "sqlops",
     "visual studio code",
-    "sql operations studio",
+    "azure data studio",
     "vs code",
     "extensions"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/llali/generator-sqlops"
+    "url": "https://github.com/kevcunnane/generator-azuredatastudio"
   },
   "bugs": {
-    "url": "https://github.com/llali/generator-sqlops/issues"
+    "url": "https://github.com/kevcunnane/generator-azuredatastudio/issues"
   },
-  "homepage": "https://docs.microsoft.com/en-us/sql/sql-operations-studio",
+  "homepage": "https://docs.microsoft.com/en-us/sql/azure-data-studio",
   "license": "MIT",
   "author": {
-    "name": "SQL Operation Studio Team",
-    "url": "https://github.com/Microsoft"
+    "name": "Azure Data Studio Team",
+    "url": "https://github.com/Microsoft/azuredatastudio"
   },
   "engines": {
     "node": ">=0.10.0"
