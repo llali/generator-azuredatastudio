@@ -4,7 +4,7 @@ We have written a Yeoman generator to help get you started. We plan to add templ
 
 ## Install the Generator
 
-Install Yeoman and the SQL Operations Studio Extension generator:
+Install Yeoman and the Azure Data Studio Extension generator:
 
 ```bash
 npm install generator-sqlops
@@ -31,7 +31,7 @@ These templates will
 
 ## History
 
-* 0.10.x: Generates a SQL Operations Studio extension for TypeScript 1.8.10
+* 0.10.x: Generates a Azure Data Studio extension for TypeScript 1.8.10
 
 ## License
 

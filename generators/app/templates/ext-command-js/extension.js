@@ -2,7 +2,7 @@
 // Import the module and reference it with the alias vscode in your code below
 const vscode = require('vscode');
 
-// The module 'sqlops' contains the SQL Operations Studio extensibility API
+// The module 'sqlops' contains the Azure Data Studio extensibility API
 // This is a complementary set of APIs that add SQL / Data-specific functionality to the app
 // Import the module and reference it with the alias sqlops in your code below
 const vscode = require('sqlops');

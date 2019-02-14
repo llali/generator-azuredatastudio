@@ -4,9 +4,9 @@
 // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
 
 // To debug the extension:
-// 1. please install the "SQL Operations Studio Debug" extension into VSCode
+// 1. please install the "Azure Data Studio Debug" extension into VSCode
 // 2. Ensure sqlops is added to your path:
-//    - open SQL Operations Studio
+//    - open Azure Data Studio
 //    - run the command "Install 'sqlops' command in PATH"
 {
 	"version": "0.2.0",
