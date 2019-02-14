@@ -13,10 +13,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/kevcunnane/generator-azuredatastudio"
+    "url": "https://github.com/llali/generator-azuredatastudio"
   },
   "bugs": {
-    "url": "https://github.com/kevcunnane/generator-azuredatastudio/issues"
+    "url": "https://github.com/llali/generator-azuredatastudio/issues"
   },
   "homepage": "https://docs.microsoft.com/en-us/sql/azure-data-studio",
   "license": "MIT",
