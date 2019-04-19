@@ -19,6 +19,6 @@
         }]
     },
     "scripts": {
-        "update": "cd ../vscode && npm run update-localization-extension <%- lpLanguageId %>"
+        "update": "cd ../vscode && <%= pkgManager %> run update-localization-extension <%- lpLanguageId %>"
     }
 }

@@ -640,10 +640,11 @@ describe('test code generator', function () {
                 publisher: 'Microsoft',
                 strictTypeScript: false,
                 tslint: false,
-                gitInit: false
+                gitInit: false,
+                pkgManager: 'npm'
             }) // Mock the prompt answers
             .toPromise().then(function () {
-                var expected = {
+                var expectedPackageJSON = {
                     "name": "testCom",
                     "displayName": 'Test Com',
                     "description": "My TestCom",
@@ -659,7 +660,7 @@ describe('test code generator', function () {
                     ],
                     "devDependencies": {
                         "typescript": "^2.6.1",
-                        "azdata": "azdata",
+                        "azdata": "1.0.0",
                         "vscode": "^1.1.6",
                         "@types/node": "^7.0.43",
                         "@types/mocha": "^2.2.42"
@@ -670,6 +671,7 @@ describe('test code generator', function () {
                         "compile": "tsc -p ./",
                         "watch": "tsc -watch -p ./",
                         "postinstall": "node ./node_modules/vscode/bin/install && node ./node_modules/azdata/bin/install",
+                        "proposedapi": "node installTypings.js",
                         "test": "npm run compile && node ./node_modules/vscode/bin/test"
                     },
                     "categories": [
@@ -694,7 +696,7 @@ describe('test code generator', function () {
                     var body = fs.readFileSync('package.json', 'utf8');
 
                     var actual = JSON.parse(body);
-                    assert.deepEqual(expected, actual);
+                    assert.deepEqual(expectedPackageJSON, actual);
 
                     done();
                 } catch (e) {
@@ -715,7 +717,8 @@ describe('test code generator', function () {
                 publisher: 'Microsoft',
                 strictTypeScript: false,
                 tslint: true,
-                gitInit: false
+                gitInit: false,
+                pkgManager: 'npm'
             }) // Mock the prompt answers
             .toPromise().then(function () {
                 var expected = {
@@ -734,7 +737,7 @@ describe('test code generator', function () {
                     ],
                     "devDependencies": {
                         "typescript": "^2.6.1",
-                        "azdata": "azdata",
+                        "azdata": "1.0.0",
                         "vscode": "^1.1.6",
                         "tslint": "^5.8.0",
                         "@types/node": "^7.0.43",
@@ -746,6 +749,7 @@ describe('test code generator', function () {
                         "compile": "tsc -p ./",
                         "watch": "tsc -watch -p ./",
                         "postinstall": "node ./node_modules/vscode/bin/install && node ./node_modules/azdata/bin/install",
+                        "proposedapi": "node installTypings.js",
                         "test": "npm run compile && node ./node_modules/vscode/bin/test"
                     },
                     "categories": [
@@ -790,7 +794,8 @@ describe('test code generator', function () {
                 publisher: 'Microsoft',
                 strictTypeScript: true,
                 tslint: false,
-                gitInit: false
+                gitInit: false,
+                pkgManager: 'npm'
             }) // Mock the prompt answers
             .toPromise().then(function () {
                 var expected = {
@@ -835,7 +840,8 @@ describe('test code generator', function () {
                 description: 'My TestCom',
                 publisher: 'Microsoft',
                 checkJavaScript: false,
-                gitInit: false
+                gitInit: false,
+                pkgManager: 'npm'
             }) // Mock the prompt answers
             .toPromise().then(function () {
                 var expected = {
@@ -853,7 +859,7 @@ describe('test code generator', function () {
                     ],
                     "devDependencies": {
                         "typescript": "^2.6.1",
-                        "azdata": "azdata",
+                        "azdata": "1.0.0",
                         "vscode": "^1.1.6",
                         "eslint": "^4.11.0",
                         "@types/node": "^7.0.43",
@@ -902,7 +908,8 @@ describe('test code generator', function () {
                 description: 'My TestCom',
                 publisher: 'Microsoft',
                 checkJavaScript: true,
-                gitInit: false
+                gitInit: false,
+                pkgManager: 'npm'
             }) // Mock the prompt answers
             .toPromise().then(function () {
                 var expected = {
@@ -982,7 +989,8 @@ describe('test code generator', function () {
                 lpLanguageId: 'ru',
                 lpLanguageName: 'Russian',
                 lpLocalizedLanguageName: 'русский',
-                publisher: 'Microsoft'
+                publisher: 'Microsoft',
+                pkgManager: 'npm'
             }).toPromise().then(function () {
                 var expected = {
                     "name": "vscode-language-pack-ru",
