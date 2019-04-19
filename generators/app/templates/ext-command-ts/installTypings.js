@@ -1,9 +1,9 @@
-var http = require('http');
+var https = require('https');
 var fs = require('fs');
 
 function download(filename, url) {
   var file = fs.createWriteStream(filename);
-  var request = http.get(url, function(response) {
+  var request = https.get(url, function(response) {
     response.pipe(file);
   });
 }
