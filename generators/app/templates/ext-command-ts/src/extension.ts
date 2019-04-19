@@ -3,11 +3,11 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 
-// The module 'sqlops' contains the Azure Data Studio extensibility API
+// The module 'azdata' contains the Azure Data Studio extensibility API
 // This is a complementary set of APIs that add SQL / Data-specific functionality to the app
-// Import the module and reference it with the alias sqlops in your code below
+// Import the module and reference it with the alias azdata in your code below
 
-import * as sqlops from 'sqlops';
+import * as azdata from 'azdata';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -31,7 +31,7 @@ export function activate(context: vscode.ExtensionContext) {
         // The code you place here will be executed every time your command is executed
 
         // Display a message box to the user
-        sqlops.connection.getCurrentConnection().then(connection => {
+        azdata.connection.getCurrentConnection().then(connection => {
             let connectionId = connection ? connection.connectionId : 'No connection found!';
             vscode.window.showInformationMessage(connectionId);
         }, error => {

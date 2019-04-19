@@ -43,7 +43,7 @@ module.exports = yeoman.Base.extend({
 
         evaluateEngineVersion: function () {
             var extensionConfig = this.extensionConfig;
-            extensionConfig.sqlopsEngine = env.sqlopsVersion;
+            extensionConfig.azdataEngine = env.azdataVersion;
             extensionConfig.vsCodeEngine = '^1.19.0';
             return env.getLatestVSCodeVersion()
             .then(function (version) { extensionConfig.vsCodeEngine = version; });

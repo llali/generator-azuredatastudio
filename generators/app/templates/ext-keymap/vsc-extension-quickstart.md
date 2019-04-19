@@ -15,4 +15,4 @@
 
 ## Install your extension
 * To start using your extension with Azure Data Studio copy it into the `<user home>/.azuredatastudio/extensions` folder and restart Azure Data Studio.
-* To share your extension with the world, read on https://github.com/microsoft/sqlopsstudio/wiki/Getting-started-with-Extensibility about publishing an extension.
+* To share your extension with the world, read on https://github.com/microsoft/azuredatastudio/wiki/Getting-started-with-Extensibility about publishing an extension.

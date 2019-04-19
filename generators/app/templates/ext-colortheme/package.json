@@ -6,7 +6,7 @@
     "publisher": <%- JSON.stringify(publisher) %>,
     "engines": {
         "vscode": <%- JSON.stringify(vsCodeEngine) %>,
-        "sqlops": <%- JSON.stringify(sqlopsEngine) %>
+        "azdata": <%- JSON.stringify(azdataEngine) %>
     },
     "categories": [
         "Themes"

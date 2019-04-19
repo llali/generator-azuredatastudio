@@ -70,7 +70,7 @@ describe('test code generator', function () {
                     "publisher": 'Microsoft',
                     "engines": {
                         "vscode": engineVersion,
-                        "sqlops": env.sqlopsVersion
+                        "azdata": env.azdataVersion
                     },
                     "categories": [
                         "Themes"
@@ -138,7 +138,7 @@ describe('test code generator', function () {
                     "publisher": 'Microsoft',
                     "engines": {
                         "vscode": engineVersion,
-                        "sqlops": env.sqlopsVersion
+                        "azdata": env.azdataVersion
                     },
                     "categories": [
                         "Themes"
@@ -206,7 +206,7 @@ describe('test code generator', function () {
                     "publisher": 'Microsoft',
                     "engines": {
                         "vscode": engineVersion,
-                        "sqlops": env.sqlopsVersion
+                        "azdata": env.azdataVersion
                     },
                     "categories": [
                         "Themes"
@@ -292,7 +292,7 @@ describe('test code generator', function () {
                     "publisher": 'Microsoft',
                     "engines": {
                         "vscode": engineVersion,
-                        "sqlops": env.sqlopsVersion
+                        "azdata": env.azdataVersion
                     },
                     "categories": [
                         "Themes"
@@ -352,7 +352,7 @@ describe('test code generator', function () {
                     "publisher": 'Microsoft',
                     "engines": {
                         "vscode": engineVersion,
-                        "sqlops": env.sqlopsVersion
+                        "azdata": env.azdataVersion
                     },
                     "categories": [
                         "Languages"
@@ -410,7 +410,7 @@ describe('test code generator', function () {
                     "publisher": 'Microsoft',
                     "engines": {
                         "vscode": engineVersion,
-                        "sqlops": env.sqlopsVersion
+                        "azdata": env.azdataVersion
                     },
                     "categories": [
                         "Languages"
@@ -472,7 +472,7 @@ describe('test code generator', function () {
                     "publisher": 'Microsoft',
                     "engines": {
                         "vscode": engineVersion,
-                        "sqlops": env.sqlopsVersion
+                        "azdata": env.azdataVersion
                     },
                     "categories": [
                         "Snippets"
@@ -522,7 +522,7 @@ describe('test code generator', function () {
                     "publisher": 'Microsoft',
                     "engines": {
                         "vscode": engineVersion,
-                        "sqlops": env.sqlopsVersion
+                        "azdata": env.azdataVersion
                     },
                     "categories": [
                         "Snippets"
@@ -600,7 +600,7 @@ describe('test code generator', function () {
                     "publisher": 'Microsoft',
                     "engines": {
                         "vscode": engineVersion,
-                        "sqlops": env.sqlopsVersion
+                        "azdata": env.azdataVersion
                     },
                     "categories": [
                         "Keymaps"
@@ -651,7 +651,7 @@ describe('test code generator', function () {
                     "publisher": 'Microsoft',
                     "engines": {
                         "vscode": engineVersion,
-                        "sqlops": env.sqlopsVersion
+                        "azdata": env.azdataVersion
                     },
                     "activationEvents": [
                         "onCommand:extension.sayHello",
@@ -659,7 +659,7 @@ describe('test code generator', function () {
                     ],
                     "devDependencies": {
                         "typescript": "^2.6.1",
-                        "sqlops": "github:anthonydresser/sqlops-extension-sqlops",
+                        "azdata": "azdata",
                         "vscode": "^1.1.6",
                         "@types/node": "^7.0.43",
                         "@types/mocha": "^2.2.42"
@@ -669,7 +669,7 @@ describe('test code generator', function () {
                         "vscode:prepublish": "npm run compile",
                         "compile": "tsc -p ./",
                         "watch": "tsc -watch -p ./",
-                        "postinstall": "node ./node_modules/vscode/bin/install && node ./node_modules/sqlops/bin/install",
+                        "postinstall": "node ./node_modules/vscode/bin/install && node ./node_modules/azdata/bin/install",
                         "test": "npm run compile && node ./node_modules/vscode/bin/test"
                     },
                     "categories": [
@@ -726,7 +726,7 @@ describe('test code generator', function () {
                     "publisher": 'Microsoft',
                     "engines": {
                         "vscode": engineVersion,
-                        "sqlops": env.sqlopsVersion
+                        "azdata": env.azdataVersion
                     },
                     "activationEvents": [
                         "onCommand:extension.sayHello",
@@ -734,7 +734,7 @@ describe('test code generator', function () {
                     ],
                     "devDependencies": {
                         "typescript": "^2.6.1",
-                        "sqlops": "github:anthonydresser/sqlops-extension-sqlops",
+                        "azdata": "azdata",
                         "vscode": "^1.1.6",
                         "tslint": "^5.8.0",
                         "@types/node": "^7.0.43",
@@ -745,7 +745,7 @@ describe('test code generator', function () {
                         "vscode:prepublish": "npm run compile",
                         "compile": "tsc -p ./",
                         "watch": "tsc -watch -p ./",
-                        "postinstall": "node ./node_modules/vscode/bin/install && node ./node_modules/sqlops/bin/install",
+                        "postinstall": "node ./node_modules/vscode/bin/install && node ./node_modules/azdata/bin/install",
                         "test": "npm run compile && node ./node_modules/vscode/bin/test"
                     },
                     "categories": [
@@ -846,14 +846,14 @@ describe('test code generator', function () {
                     "publisher": 'Microsoft',
                     "engines": {
                         "vscode": engineVersion,
-                        "sqlops": env.sqlopsVersion
+                        "azdata": env.azdataVersion
                     },
                     "activationEvents": [
                         "onCommand:extension.sayHello"
                     ],
                     "devDependencies": {
                         "typescript": "^2.6.1",
-                        "sqlops": "github:anthonydresser/sqlops-extension-sqlops",
+                        "azdata": "azdata",
                         "vscode": "^1.1.6",
                         "eslint": "^4.11.0",
                         "@types/node": "^7.0.43",
@@ -861,7 +861,7 @@ describe('test code generator', function () {
                     },
                     "main": "./extension",
                     "scripts": {
-                        "postinstall": "node ./node_modules/vscode/bin/install && node ./node_modules/sqlops/bin/install",
+                        "postinstall": "node ./node_modules/vscode/bin/install && node ./node_modules/azdata/bin/install",
                         "test": "node ./node_modules/vscode/bin/test"
                     },
                     "categories": [
@@ -951,7 +951,7 @@ describe('test code generator', function () {
                     "publisher": 'Microsoft',
                     "engines": {
                         "vscode": engineVersion,
-                        "sqlops": env.sqlopsVersion
+                        "azdata": env.azdataVersion
                     },
                     "categories": [
                         "Extension Packs"
@@ -992,7 +992,7 @@ describe('test code generator', function () {
                     "publisher": 'Microsoft',
                     "engines": {
                         "vscode": engineVersion,
-                        "sqlops": env.sqlopsVersion
+                        "azdata": env.azdataVersion
                     },
                     "categories": [
                         "Language Packs"
