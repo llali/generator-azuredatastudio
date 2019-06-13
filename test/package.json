@@ -6,7 +6,7 @@
     "publisher": "leila",
     "engines": {
         "vscode": "1.19.0",
-        "sqlops": "0.27.2"
+        "azdata": "0.27.2"
     },
     "categories": [
         "Other"
@@ -33,7 +33,7 @@
     "devDependencies": {
         "typescript": "^2.6.1",
         "vscode": "^1.1.6",
-        "sqlops": "github:anthonydresser/sqlops-extension-sqlops",
+        "azdata": "1.0.0",
         "@types/node": "^7.0.43",
         "@types/mocha": "^2.2.42"
     }

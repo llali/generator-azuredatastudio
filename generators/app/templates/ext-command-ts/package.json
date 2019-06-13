@@ -6,7 +6,7 @@
     "publisher": <%- JSON.stringify(publisher) %>,
     "engines": {
         "vscode": <%- JSON.stringify(vsCodeEngine) %>,
-        "sqlops": <%- JSON.stringify(sqlopsEngine) %>
+        "azdata": <%- JSON.stringify(azdataEngine) %>
     },
     "categories": [
         "Other"
@@ -27,16 +27,17 @@
         }]
     },
     "scripts": {
-        "vscode:prepublish": "npm run compile",
+		"vscode:prepublish": "<%= pkgManager %> run compile",
         "compile": "tsc -p ./",
         "watch": "tsc -watch -p ./",
-        "postinstall": "node ./node_modules/vscode/bin/install && node ./node_modules/sqlops/bin/install",
-        "test": "npm run compile && node ./node_modules/vscode/bin/test"
+        "postinstall": "node ./node_modules/vscode/bin/install && node ./node_modules/azdata/bin/install",
+		"test": "<%= pkgManager %> run compile && node ./node_modules/vscode/bin/test",
+        "proposedapi": "node installTypings.js"
     },
     "devDependencies": {
         "typescript": "^2.6.1",
         "vscode": "^1.1.6",
-        "sqlops": "github:anthonydresser/sqlops-extension-sqlops",
+        "azdata": "1.0.0",
 <%if (tslint) {-%>
         "tslint": "^5.8.0",
 <% } -%>

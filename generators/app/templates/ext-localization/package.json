@@ -6,7 +6,7 @@
     "publisher": <%- JSON.stringify(publisher) %>,
     "engines": {
         "vscode": <%- JSON.stringify(vsCodeEngine) %>,
-        "sqlops": <%- JSON.stringify(sqlopsEngine) %>
+        "azdata": <%- JSON.stringify(azdataEngine) %>
     },
     "categories": [
         "Language Packs"
@@ -19,6 +19,6 @@
         }]
     },
     "scripts": {
-        "update": "cd ../vscode && npm run update-localization-extension <%- lpLanguageId %>"
+        "update": "cd ../vscode && <%= pkgManager %> run update-localization-extension <%- lpLanguageId %>"
     }
 }

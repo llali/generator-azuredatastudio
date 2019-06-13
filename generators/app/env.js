@@ -35,5 +35,5 @@ var vscodePromise = new Promise(function(resolve, reject) {
 
 module.exports.getLatestVSCodeVersion = function() { return vscodePromise; };
 
-var sqlopsFallbackVersion = '*';
-module.exports.sqlopsVersion = sqlopsFallbackVersion;
+var azdataFallbackVersion = '*';
+module.exports.azdataVersion = azdataFallbackVersion;
