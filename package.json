@@ -1,6 +1,6 @@
 {
   "name": "generator-azuredatastudio",
-  "version": "0.12.0",
+  "version": "0.13.0",
   "description": "Yeoman generator for Azure Data Studio Extensions",
   "keywords": [
     "yeoman-generator",
