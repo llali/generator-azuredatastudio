@@ -822,6 +822,13 @@ module.exports = class extends Generator {
             this.log('');
         }
 
+        if (this.extensionConfig.type === 'ext-command-ts') {
+            this.log('To include proposed Azure Data Studio APIs in your extension, run the following after opening the directory:');
+            this.log('');
+            this.log(chalk.default.blue('npm run proposedapi'));
+            this.log('');
+        }
+
         this.log('For more information, also visit http://code.visualstudio.com and follow us @code.');
         this.log('\r\n');
     }
