@@ -3,15 +3,13 @@
     "displayName": <%- JSON.stringify(displayName) %>,
     "description": <%- JSON.stringify(description) %>,
     "version": "0.0.1",
-    "publisher": <%- JSON.stringify(publisher) %>,
     "engines": {
-        "vscode": <%- JSON.stringify(vsCodeEngine) %>,
-        "azdata": <%- JSON.stringify(azdataEngine) %>
+        "vscode": <%- JSON.stringify(vsCodeEngine) %>
     },
     "categories": [
         "Extension Packs"
     ],
-    "extensionDependencies": [ <% for (i=0; i<extensionList.length-1; i++) { %>
+    "extensionPack": [ <% for (i=0; i<extensionList.length-1; i++) { %>
         "<%- extensionList[i] %>", <%}%>
         "<%- extensionList[extensionList.length-1]%>"
     ]

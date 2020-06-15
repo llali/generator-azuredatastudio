@@ -1,17 +1,15 @@
 {
-    "name": <%- JSON.stringify(name) %>,
-    "displayName": <%- JSON.stringify(displayName) %>,
-    "description": <%- JSON.stringify(description) %>,
-    "version": "0.0.1",
-    "publisher": <%- JSON.stringify(publisher) %>,
-    "engines": {
-        "vscode": <%- JSON.stringify(vsCodeEngine) %>,
-        "azdata": <%- JSON.stringify(azdataEngine) %>
-    },
-    "categories": [
-        "Other"
-    ],
-    "activationEvents": [
+	"name": <%- JSON.stringify(name) %>,
+	"displayName": <%- JSON.stringify(displayName) %>,
+	"description": <%- JSON.stringify(description) %>,
+	"version": "0.0.1",
+	"engines": {
+		"vscode": <%- JSON.stringify(vsCodeEngine) %>
+	},
+	"categories": [
+		"Other"
+	],
+	"activationEvents": [
         "onCommand:extension.sayHello"
     ],
     "main": "./extension",
@@ -21,16 +19,21 @@
             "title": "Hello World"
         }]
     },
-    "scripts": {
-        "postinstall": "node ./node_modules/vscode/bin/install && node ./node_modules/azdata/bin/install",
-        "test": "node ./node_modules/vscode/bin/test"
-    },
-    "devDependencies": {
-        "typescript": "^2.6.1",
-        "vscode": "^1.1.6",
-        "eslint": "^4.11.0",
-        "@types/node": "^7.0.43",
-        "@types/mocha": "^2.2.42",
-        "azdata": "1.0.0"
+	"scripts": {
+		"lint": "eslint .",
+		"pretest": "<%= pkgManager %> run lint",
+		"test": "node ./test/runTest.js"
+	},
+	"devDependencies": {
+        "@types/vscode": <%- JSON.stringify(vsCodeEngine) %>,
+        "@types/glob": "^7.1.1",
+        "@types/mocha": "^7.0.2",
+        "@types/node": "^13.11.0",
+        "eslint": "^6.8.0",
+        "glob": "^7.1.6",
+		"mocha": "^7.1.2",
+        "typescript": "^3.8.3",
+        "vscode-test": "^1.3.0"
     }
+
 }

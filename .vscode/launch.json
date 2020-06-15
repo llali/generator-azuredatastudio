@@ -12,9 +12,9 @@
             //
             "type": "node",
             "request": "launch",
-            "name": "yeoman azuredatastudio",
+            "name": "yeoman code",
             "program": "${workspaceFolder}/node_modules/yo/lib/cli.js",
-            "args": [ "azuredatastudio" ],
+            "args": [ "code" ],
             "cwd": "${workspaceFolder}",
             "console": "integratedTerminal",
             "internalConsoleOptions": "neverOpen"
@@ -24,14 +24,7 @@
             "request": "launch",
             "name": "Mocha Tests",
             "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
-            "args": [
-                "-u",
-                "tdd",
-                "--timeout",
-                "999999",
-                "--colors",
-                "${workspaceFolder}/test"
-            ],
+
             "internalConsoleOptions": "openOnSessionStart"
         }
     ]

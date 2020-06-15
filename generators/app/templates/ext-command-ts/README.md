@@ -1,16 +1,3 @@
-**Note:**
-If you want to build your extension, run:
-
-```
-npm run compile
-```
-
-If you want to include proposed Azure Data Studio APIs, run:
-
-```
-npm run proposedapi
-```
-
 # <%= name %> README
 
 This is the README for your extension "<%= name %>". After writing up a brief description, we recommend including the following sections.
@@ -31,7 +18,7 @@ If you have any requirements or dependencies, add a section describing those and
 
 ## Extension Settings
 
-Include if your extension adds any Azure Data Studio settings through the `contributes.configuration` extension point.
+Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
 
 For example:
 

@@ -31,20 +31,18 @@ module.exports = class extends Generator {
 
         this.extensionConfig = Object.create(null);
         this.extensionConfig.installDependencies = false;
+
+        this.abort = false;
     }
 
     initializing() {
 
         // Welcome
-        this.log(yosay('Welcome to the Azure Data Studio Extension generator!'));
+        this.log(yosay('Welcome to the Azure Data Studio extension generator for test!'));
 
         // evaluateEngineVersion
         let extensionConfig = this.extensionConfig;
-        extensionConfig.azdataEngine = env.azdataVersion;
-        extensionConfig.vsCodeEngine = '^1.19.0';
-        return env.getLatestVSCodeVersion()
-        .then(function (version) { extensionConfig.vsCodeEngine = version; });
-        // TODO add tool to get latest Azure Data Studio verison on machine and set this too
+        return env.getLatestVSCodeVersion().then(version => { extensionConfig.vsCodeEngine = version; });
     }
 
     prompting() {
@@ -53,9 +51,8 @@ module.exports = class extends Generator {
             // Ask for extension type
             askForType: () => {
                 let extensionType = generator.options['extensionType'];
-
                 if (extensionType) {
-                    let extensionTypes = ['insight', 'colortheme', 'language', 'snippets', 'command-ts', 'command-js', 'extensionpack'];
+                    let extensionTypes = ['colortheme', 'language', 'snippets', 'command-ts', 'command-js', 'extensionpack'];
                     if (extensionTypes.indexOf(extensionType) !== -1) {
                         generator.extensionConfig.type = 'ext-' + extensionType;
                     } else {
@@ -77,12 +74,12 @@ module.exports = class extends Generator {
                         value: 'ext-command-js'
                     },
                     {
-                        name: 'New Dashboard Insight',
-                        value: 'ext-insight'
-                    },
-                    {
                         name: 'New Color Theme',
                         value: 'ext-colortheme'
+                    },
+                    {
+                        name: 'New Language Support',
+                        value: 'ext-language'
                     },
                     {
                         name: 'New Code Snippets',
@@ -116,21 +113,20 @@ module.exports = class extends Generator {
                     name: 'themeImportType',
                     message: 'Do you want to import or convert an existing TextMate color theme?',
                     choices: [
-                    {
-                        name: 'No, start fresh',
-                        value: 'new'
-                    },
-                    {
-                        name: 'Yes, import an existing theme but keep it as tmTheme file.',
-                        value: 'import-keep'
-                    },
-                    {
-                        name: 'Yes, import an existing theme and inline it in the Visual Studio Code color theme file.',
-                        value: 'import-inline'
-                    }
+                        {
+                            name: 'No, start fresh',
+                            value: 'new'
+                        },
+                        {
+                            name: 'Yes, import an existing theme but keep it as tmTheme file.',
+                            value: 'import-keep'
+                        },
+                        {
+                            name: 'Yes, import an existing theme and inline it in the Visual Studio Code color theme file.',
+                            value: 'import-inline'
+                        }
                     ]
                 }).then(answer => {
-                    let inline = true;
                     let type = answer.themeImportType;
                     if (type === 'import-keep' || type === 'import-inline') {
                         generator.log("Enter the location (URL (http, https) or file name) of the tmTheme file, e.g., http://www.monokai.nl/blog/wp-content/asdev/Monokai.tmTheme.");
@@ -190,7 +186,10 @@ module.exports = class extends Generator {
                         let snippetPath = snippetAnswer.snippetPath;
 
                         if (typeof snippetPath === 'string' && snippetPath.length > 0) {
-                            snippetConverter.processSnippetFolder(snippetPath, generator);
+                            const count = snippetConverter.processSnippetFolder(snippetPath, generator);
+                            if (count <= 0) {
+                                return snippetPrompt();
+                            }
                         } else {
                             generator.extensionConfig.snippets = {};
                             generator.extensionConfig.languageId = null;
@@ -203,6 +202,7 @@ module.exports = class extends Generator {
                 };
                 return snippetPrompt();
             },
+
 
             askForLocalizationLanguageId: () => {
                 return localization.askForLanguageId(generator);
@@ -222,21 +222,15 @@ module.exports = class extends Generator {
                 }
 
                 generator.extensionConfig.isCustomization = true;
+                const defaultExtensionList = ['publisher.extensionName'];
 
-                return generator.prompt({
-                    type: 'confirm',
-                    name: 'addExtensions',
-                    message: 'Add the currently installed extensions to the extension pack?',
-                    default: true
-                }).then(function (addExtensionsAnswer) {
-
-                    generator.extensionConfig.extensionList = ["publisher.extensionName"];
-
-                    if (addExtensionsAnswer.addExtensions) {
-                        return new Promise(function (resolve, reject) {
-                            childProcess.exec('code --list-extensions', function (error, stdout, stderr) {
+                const getExtensionList = () =>
+                    new Promise((resolve, reject) => {
+                        childProcess.exec(
+                            'code --list-extensions',
+                            (error, stdout, stderr) => {
                                 if (error) {
-                                    generator.log("Problems starting Code: " + error);
+                                    generator.env.error(error);
                                 } else {
                                     let out = stdout.trim();
                                     if (out.length > 0) {
@@ -244,28 +238,31 @@ module.exports = class extends Generator {
                                     }
                                 }
                                 resolve();
-                            });
-                        });
+                            }
+                        );
+                    });
+
+                const extensionParam = generator.options['extensionParam'];
+                if (extensionParam) {
+                    switch (extensionParam.toString().trim().toLowerCase()) {
+                        case 'n':
+                            generator.extensionConfig.extensionList = defaultExtensionList;
+                            return Promise.resolve();
+                        case 'y':
+                            return getExtensionList();
                     }
-                });
-            },
-
-            askForInsightInfo: () => {
-                if (generator.extensionConfig.type !== 'ext-insight') {
-                    return Promise.resolve();
                 }
-
-                generator.extensionConfig.isCustomization = true;
 
                 return generator.prompt({
                     type: 'confirm',
-                    name: 'addDashboardExtension',
-                    message: 'Add a full dashboard tab?',
+                    name: 'addExtensions',
+                    message: 'Add the currently installed extensions to the extension pack?',
                     default: true
-                }).then(function (answer) {
-                    generator.extensionConfig.addDashboardTab = answer.addDashboardExtension;
-                    generator.extensionConfig.insightName = generator.extensionConfig.name + '.insight';
-                    generator.extensionConfig.tabName = generator.extensionConfig.name + '.tab';
+                }).then(addExtensionsAnswer => {
+                    generator.extensionConfig.extensionList = defaultExtensionList;
+                    if (addExtensionsAnswer.addExtensions) {
+                        return getExtensionList();
+                    }
                 });
             },
 
@@ -282,7 +279,7 @@ module.exports = class extends Generator {
                     name: 'displayName',
                     message: 'What\'s the name of your extension?',
                     default: generator.extensionConfig.displayName
-                }).then(function (displayNameAnswer) {
+                }).then(displayNameAnswer => {
                     generator.extensionConfig.displayName = displayNameAnswer.displayName;
                 });
             },
@@ -330,49 +327,6 @@ module.exports = class extends Generator {
                 });
             },
 
-            // Ask for publisher name
-            askForPublisherName: () => {
-                return generator.prompt({
-                    type: 'input',
-                    name: 'publisher',
-                    message: 'What\'s your publisher name (more info: https://code.visualstudio.com/docs/tools/vscecli#_publishing-extensions)?',
-                    store: true,
-                    validate: validator.validatePublisher
-                }).then(function (publisherAnswer) {
-                    generator.extensionConfig.publisher = publisherAnswer.publisher;
-                });
-            },
-
-            askForTypeScriptInfo: () => {
-                if (generator.extensionConfig.type !== 'ext-command-ts') {
-                    return Promise.resolve();
-                }
-                generator.extensionConfig.strictTypeScript = false;
-                return generator.prompt({
-                    type: 'confirm',
-                    name: 'strictTypeScript',
-                    message: 'Enable stricter TypeScript checking in \'tsconfig.json\'?',
-                    default: true
-                }).then(function (strictTypeScriptAnswer) {
-                    generator.extensionConfig.strictTypeScript = strictTypeScriptAnswer.strictTypeScript;
-                });
-            },
-
-            askForTsLint: () => {
-                if (generator.extensionConfig.type !== 'ext-command-ts') {
-                    return Promise.resolve();
-                }
-                generator.extensionConfig.tslint = false;
-                return generator.prompt({
-                    type: 'confirm',
-                    name: 'tslint',
-                    message: 'Setup linting using \'tslint\'?',
-                    default: true
-                }).then(function (tslintAnswer) {
-                    generator.extensionConfig.tslint = tslintAnswer.tslint;
-                });
-            },
-
             askForJavaScriptInfo: () => {
                 if (generator.extensionConfig.type !== 'ext-command-js') {
                     return Promise.resolve();
@@ -383,7 +337,7 @@ module.exports = class extends Generator {
                     name: 'checkJavaScript',
                     message: 'Enable JavaScript type checking in \'jsconfig.json\'?',
                     default: false
-                }).then(function (strictJavaScriptAnswer) {
+                }).then(strictJavaScriptAnswer => {
                     generator.extensionConfig.checkJavaScript = strictJavaScriptAnswer.checkJavaScript;
                 });
             },
@@ -398,12 +352,12 @@ module.exports = class extends Generator {
                     name: 'gitInit',
                     message: 'Initialize a git repository?',
                     default: true
-                }).then(function (gitAnswer) {
+                }).then(gitAnswer => {
                     generator.extensionConfig.gitInit = gitAnswer.gitInit;
                 });
             },
 
-            askForThemeName: function () {
+            askForThemeName: () => {
                 if (generator.extensionConfig.type !== 'ext-colortheme') {
                     return Promise.resolve();
                 }
@@ -414,7 +368,7 @@ module.exports = class extends Generator {
                     message: 'What\'s the name of your theme shown to the user?',
                     default: generator.extensionConfig.themeName,
                     validate: validator.validateNonEmpty
-                }).then(function (nameAnswer) {
+                }).then(nameAnswer => {
                     generator.extensionConfig.themeName = nameAnswer.themeName;
                 });
             },
@@ -441,7 +395,7 @@ module.exports = class extends Generator {
                         value: "hc-black"
                     }
                     ]
-                }).then(function (themeBase) {
+                }).then(themeBase => {
                     generator.extensionConfig.themeBase = themeBase.themeBase;
                 });
             },
@@ -457,7 +411,7 @@ module.exports = class extends Generator {
                     name: 'languageId',
                     message: 'Language id:',
                     default: generator.extensionConfig.languageId,
-                }).then(function (idAnswer) {
+                }).then(idAnswer => {
                     generator.extensionConfig.languageId = idAnswer.languageId;
                 });
             },
@@ -473,7 +427,7 @@ module.exports = class extends Generator {
                     name: 'languageName',
                     message: 'Language name:',
                     default: generator.extensionConfig.languageName,
-                }).then(function (nameAnswer) {
+                }).then(nameAnswer => {
                     generator.extensionConfig.languageName = nameAnswer.languageName;
                 });
             },
@@ -489,8 +443,8 @@ module.exports = class extends Generator {
                     name: 'languageExtensions',
                     message: 'File extensions:',
                     default: generator.extensionConfig.languageExtensions.join(', '),
-                }).then(function (extAnswer) {
-                    generator.extensionConfig.languageExtensions = extAnswer.languageExtensions.split(',').map(function (e) { return e.trim(); });
+                }).then(extAnswer => {
+                    generator.extensionConfig.languageExtensions = extAnswer.languageExtensions.split(',').map(e => { return e.trim(); });
                 });
             },
 
@@ -504,7 +458,7 @@ module.exports = class extends Generator {
                     name: 'languageScopeName',
                     message: 'Scope names:',
                     default: generator.extensionConfig.languageScopeName,
-                }).then(function (extAnswer) {
+                }).then(extAnswer => {
                     generator.extensionConfig.languageScopeName = extAnswer.languageScopeName;
                 });
             },
@@ -513,7 +467,6 @@ module.exports = class extends Generator {
                 if (generator.extensionConfig.type !== 'ext-snippets') {
                     return Promise.resolve();
                 }
-
                 let extensionParam2 = generator.options['extensionParam2'];
 
                 if (extensionParam2) {
@@ -527,7 +480,7 @@ module.exports = class extends Generator {
                     name: 'languageId',
                     message: 'Language id:',
                     default: generator.extensionConfig.languageId
-                }).then(function (idAnswer) {
+                }).then(idAnswer => {
                     generator.extensionConfig.languageId = idAnswer.languageId;
                 });
             },
@@ -557,24 +510,28 @@ module.exports = class extends Generator {
             },
         };
 
-
         // run all prompts in sequence. Results can be ignored.
         let result = Promise.resolve();
         for (let taskName in prompts) {
             let prompt = prompts[taskName];
             result = result.then(_ => {
-                return new Promise((s, r) => {
-                    setTimeout(_ => prompt().then(s, r), 0); // set timeout is required, otherwise node hangs
-                });
+                if (!this.abort) {
+                    return new Promise((s, r) => {
+                        setTimeout(_ => prompt().then(s, r), 0); // set timeout is required, otherwise node hangs
+                    });
+                }
+            }, error => {
+                generator.log(error.toString());
+                this.abort = true;
             })
         }
         return result;
     }
-
-
-
     // Write files
     writing() {
+        if (this.abort) {
+            return;
+        }
         this.sourceRoot(path.join(__dirname, './templates/' + this.extensionConfig.type));
 
         switch (this.extensionConfig.type) {
@@ -602,9 +559,6 @@ module.exports = class extends Generator {
             case 'ext-localization':
                 localization.writingLocalizationExtension(this);
                 break;
-            case 'ext-insight':
-                this._writingInsight();
-                break;
             default:
                 //unknown project type
                 break;
@@ -613,7 +567,6 @@ module.exports = class extends Generator {
 
     // Write Color Theme Extension
     _writingExtensionPack() {
-
         let context = this.extensionConfig;
 
         this.fs.copy(this.sourceRoot() + '/vscode', context.name + '/.vscode');
@@ -622,8 +575,8 @@ module.exports = class extends Generator {
         this.fs.copyTpl(this.sourceRoot() + '/README.md', context.name + '/README.md', context);
         this.fs.copyTpl(this.sourceRoot() + '/CHANGELOG.md', context.name + '/CHANGELOG.md', context);
         this.fs.copy(this.sourceRoot() + '/vscodeignore', context.name + '/.vscodeignore');
-        this.fs.copy(this.sourceRoot() + '/gitignore', context.name + '/.gitignore');
         if (this.extensionConfig.gitInit) {
+            this.fs.copy(this.sourceRoot() + '/gitignore', context.name + '/.gitignore');
             this.fs.copy(this.sourceRoot() + '/gitattributes', context.name + '/.gitattributes');
         }
     }
@@ -655,8 +608,8 @@ module.exports = class extends Generator {
         this.fs.copyTpl(this.sourceRoot() + '/README.md', context.name + '/README.md', context);
         this.fs.copyTpl(this.sourceRoot() + '/CHANGELOG.md', context.name + '/CHANGELOG.md', context);
         this.fs.copy(this.sourceRoot() + '/vscodeignore', context.name + '/.vscodeignore');
-        this.fs.copy(this.sourceRoot() + '/gitignore', context.name + '/.gitignore');
         if (this.extensionConfig.gitInit) {
+            this.fs.copy(this.sourceRoot() + '/gitignore', context.name + '/.gitignore');
             this.fs.copy(this.sourceRoot() + '/gitattributes', context.name + '/.gitattributes');
         }
     }
@@ -679,8 +632,8 @@ module.exports = class extends Generator {
         this.fs.copyTpl(this.sourceRoot() + '/vsc-extension-quickstart.md', context.name + '/vsc-extension-quickstart.md', context);
         this.fs.copyTpl(this.sourceRoot() + '/language-configuration.json', context.name + '/language-configuration.json', context);
         this.fs.copy(this.sourceRoot() + '/vscodeignore', context.name + '/.vscodeignore');
-        this.fs.copy(this.sourceRoot() + '/gitignore', context.name + '/.gitignore');
         if (this.extensionConfig.gitInit) {
+            this.fs.copy(this.sourceRoot() + '/gitignore', context.name + '/.gitignore');
             this.fs.copy(this.sourceRoot() + '/gitattributes', context.name + '/.gitattributes');
         }
     }
@@ -694,15 +647,15 @@ module.exports = class extends Generator {
         this.fs.copyTpl(this.sourceRoot() + '/vsc-extension-quickstart.md', context.name + '/vsc-extension-quickstart.md', context);
         this.fs.copyTpl(this.sourceRoot() + '/README.md', context.name + '/README.md', context);
         this.fs.copyTpl(this.sourceRoot() + '/CHANGELOG.md', context.name + '/CHANGELOG.md', context);
-        this.fs.copyTpl(this.sourceRoot() + '/snippets/snippets.json', context.name + '/snippets/snippets.json', context);
+        this.fs.copyTpl(this.sourceRoot() + '/snippets/snippets.code-snippets', context.name + '/snippets/snippets.code-snippets', context);
         this.fs.copy(this.sourceRoot() + '/vscodeignore', context.name + '/.vscodeignore');
-        this.fs.copy(this.sourceRoot() + '/gitignore', context.name + '/.gitignore');
         if (this.extensionConfig.gitInit) {
+            this.fs.copy(this.sourceRoot() + '/gitignore', context.name + '/.gitignore');
             this.fs.copy(this.sourceRoot() + '/gitattributes', context.name + '/.gitattributes');
         }
     }
 
-    // Write Keymaps Extension
+    // Write Snippets Extension
     _writingKeymaps() {
         let context = this.extensionConfig;
 
@@ -712,25 +665,8 @@ module.exports = class extends Generator {
         this.fs.copyTpl(this.sourceRoot() + '/README.md', context.name + '/README.md', context);
         this.fs.copyTpl(this.sourceRoot() + '/CHANGELOG.md', context.name + '/CHANGELOG.md', context);
         this.fs.copy(this.sourceRoot() + '/vscodeignore', context.name + '/.vscodeignore');
-        this.fs.copy(this.sourceRoot() + '/gitignore', context.name + '/.gitignore');
         if (this.extensionConfig.gitInit) {
-            this.fs.copy(this.sourceRoot() + '/gitattributes', context.name + '/.gitattributes');
-        }
-    }
-
-    // Write Insight Extension
-    _writingInsight() {
-        let context = this.extensionConfig;
-
-        this.fs.copy(this.sourceRoot() + '/vscode', context.name + '/.vscode');
-        this.fs.copy(this.sourceRoot() + '/sql', context.name + '/sql');
-        this.fs.copyTpl(this.sourceRoot() + '/package.json', context.name + '/package.json', context);
-        this.fs.copyTpl(this.sourceRoot() + '/vsc-extension-quickstart.md', context.name + '/vsc-extension-quickstart.md', context);
-        this.fs.copyTpl(this.sourceRoot() + '/README.md', context.name + '/README.md', context);
-        this.fs.copyTpl(this.sourceRoot() + '/CHANGELOG.md', context.name + '/CHANGELOG.md', context);
-        this.fs.copy(this.sourceRoot() + '/vscodeignore', context.name + '/.vscodeignore');
-        this.fs.copy(this.sourceRoot() + '/gitignore', context.name + '/.gitignore');
-        if (this.extensionConfig.gitInit) {
+            this.fs.copy(this.sourceRoot() + '/gitignore', context.name + '/.gitignore');
             this.fs.copy(this.sourceRoot() + '/gitattributes', context.name + '/.gitattributes');
         }
     }
@@ -741,23 +677,21 @@ module.exports = class extends Generator {
 
         this.fs.copy(this.sourceRoot() + '/vscode', context.name + '/.vscode');
         this.fs.copy(this.sourceRoot() + '/src/test', context.name + '/src/test');
-        this.fs.copy(this.sourceRoot() + '/src/typings', context.name + '/src/typings');
 
         this.fs.copy(this.sourceRoot() + '/vscodeignore', context.name + '/.vscodeignore');
-        this.fs.copy(this.sourceRoot() + '/gitignore', context.name + '/.gitignore');
+        if (this.extensionConfig.gitInit) {
+            this.fs.copy(this.sourceRoot() + '/gitignore', context.name + '/.gitignore');
+        }
         this.fs.copyTpl(this.sourceRoot() + '/README.md', context.name + '/README.md', context);
         this.fs.copyTpl(this.sourceRoot() + '/CHANGELOG.md', context.name + '/CHANGELOG.md', context);
         this.fs.copyTpl(this.sourceRoot() + '/vsc-extension-quickstart.md', context.name + '/vsc-extension-quickstart.md', context);
         this.fs.copyTpl(this.sourceRoot() + '/tsconfig.json', context.name + '/tsconfig.json', context);
-        this.fs.copyTpl(this.sourceRoot() + '/installTypings.js', context.name + '/installTypings.js', context);
 
         this.fs.copyTpl(this.sourceRoot() + '/src/extension.ts', context.name + '/src/extension.ts', context);
         this.fs.copyTpl(this.sourceRoot() + '/package.json', context.name + '/package.json', context);
 
-        if (this.extensionConfig.tslint) {
-            this.fs.copy(this.sourceRoot() + '/tslint.json', context.name + '/tslint.json');
-            this.fs.copy(this.sourceRoot() + '/optional/extensions.json', context.name + '/.vscode/extensions.json');
-        }
+        this.fs.copy(this.sourceRoot() + '/.eslintrc.json', context.name + '/.eslintrc.json');
+
         this.extensionConfig.installDependencies = true;
     }
 
@@ -769,7 +703,11 @@ module.exports = class extends Generator {
         this.fs.copy(this.sourceRoot() + '/test', context.name + '/test');
 
         this.fs.copy(this.sourceRoot() + '/vscodeignore', context.name + '/.vscodeignore');
-        this.fs.copy(this.sourceRoot() + '/gitignore', context.name + '/.gitignore');
+
+        if (this.extensionConfig.gitInit) {
+            this.fs.copy(this.sourceRoot() + '/gitignore', context.name + '/.gitignore');
+        }
+
         this.fs.copyTpl(this.sourceRoot() + '/README.md', context.name + '/README.md', context);
         this.fs.copyTpl(this.sourceRoot() + '/CHANGELOG.md', context.name + '/CHANGELOG.md', context);
         this.fs.copyTpl(this.sourceRoot() + '/vsc-extension-quickstart.md', context.name + '/vsc-extension-quickstart.md', context);
@@ -779,13 +717,14 @@ module.exports = class extends Generator {
         this.fs.copyTpl(this.sourceRoot() + '/package.json', context.name + '/package.json', context);
         this.fs.copyTpl(this.sourceRoot() + '/.eslintrc.json', context.name + '/.eslintrc.json', context);
 
-        this.fs.copy(this.sourceRoot() + '/optional/extensions.json', context.name + '/.vscode/extensions.json');
-
         this.extensionConfig.installDependencies = true;
     }
 
     // Installation
     install() {
+        if (this.abort) {
+            return;
+        }
         process.chdir(this.extensionConfig.name);
 
         if (this.extensionConfig.installDependencies) {
@@ -799,6 +738,10 @@ module.exports = class extends Generator {
 
     // End
     end() {
+        if (this.abort) {
+            return;
+        }
+
 
         // Git init
         if (this.extensionConfig.gitInit) {
@@ -818,14 +761,7 @@ module.exports = class extends Generator {
         this.log('');
 
         if (this.extensionConfig.type === 'ext-extensionpack') {
-            this.log(chalk.default.yellow('Please review the "extensionPack" in the "package.json" before publishing the extension pack.'));
-            this.log('');
-        }
-
-        if (this.extensionConfig.type === 'ext-command-ts') {
-            this.log('To include proposed Azure Data Studio APIs in your extension, run the following after opening the directory:');
-            this.log('');
-            this.log(chalk.default.blue('npm run proposedapi'));
+            this.log(chalk.yellow('Please review the "extensionPack" in the "package.json" before publishing the extension pack.'));
             this.log('');
         }
 
