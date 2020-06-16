@@ -5,7 +5,8 @@
 
 var path = require('path');
 var fs = require('fs');
-var plistParser = require('fast-plist');
+var plistParser = require('./plistParser');
+var sax = require('sax');
 
 function processSnippetFolder(folderPath, generator) {
     var errors = [], snippets = {};
@@ -82,17 +83,12 @@ function processSnippetFolder(folderPath, generator) {
         if (!body) {
             return;
         }
-        var value;
-        try {
-            value = plistParser.parse(body);
-        } catch (e) {
-            generator.log(filePath + " not be parsed: " + e.toString());
-            return undefined;
+
+        var result = plistParser.parse(body);
+        if (result.errors) {
+            Array.prototype.push.apply(errors, result.errors)
         }
-        if (!value) {
-            generator.log(filePath + " not be parsed. Make sure it is a valid plist file. ");
-            return undefined;
-        }
+        var value = result.value;
 
         return {
             prefix: value.tabTrigger,
@@ -108,15 +104,46 @@ function processSnippetFolder(folderPath, generator) {
             return;
         }
 
-        var parsed = plistParser.parse(body);
-
+        var parser = sax.parser(false, { lowercase: true });
+        var text = null;
         var snippet = {
-            prefix: parsed['tabtrigger'],
-            body: parsed['content'],
-            description: parsed['description'],
-            scope: parsed['scope']
+            prefix: '',
+            body: '',
+            description: '',
+            scope: ''
         };
 
+        parser.onerror = function (e) {
+            errors.push(filePath + ": Problems parsing content content: " + e.message);
+        };
+        parser.ontext = function (s) {
+            text += s;
+        };
+        parser.oncdata = function (s) {
+            text += s;
+        };
+        parser.onopentag = function (tag) {
+            text = '';
+        };
+        parser.onclosetag = function (tagName) {
+            switch (tagName) {
+                case 'tabtrigger':
+                    snippet.prefix = text;
+                    break;
+                case 'content':
+                    snippet.body = text;
+                    break;
+                case 'description':
+                    snippet.description = text;
+                    break;
+                case 'scope':
+                    snippet.scope = text;
+                    break;
+            }
+
+        }
+
+        parser.write(body);
         return snippet;
     }
 

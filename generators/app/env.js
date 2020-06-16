@@ -2,26 +2,29 @@
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
 'use strict';
-var request = require('request-light');
+var request = require('request');
 
-var fallbackVersion = '^1.39.0';
-var promise = request.xhr({ url: 'https://vscode-update.azurewebsites.net/api/releases/stable', headers: { "X-API-Version": "2" } }).then(res => {
-    if (res.status === 200) {
-        try {
-            var tagsAndCommits = JSON.parse(res.responseText);
-            if (Array.isArray(tagsAndCommits) && tagsAndCommits.length > 0) {
-                var segments = tagsAndCommits[0].version.split('.');
-                if (segments.length === 3) {
-                    return '^' + segments[0] + '.' + segments[1] + '.0';
+var vscodeFallbackVersion = '^1.19.0';
+var vscodePromise = new Promise(function(resolve, reject) {
+    request.get('https://raw.githubusercontent.com/microsoft/azuredatastudio/master/product.json', {}, function(error, response, body) {
+        if (!error && response.statusCode === 200) {
+            try {
+                var currentAzureDataStudio = JSON.parse(body);
+                if (currentAzureDataStudio.vscodeVersion) {
+                    resolve('^'+currentAzureDataStudio.vscodeVersion);
+                    return;
                 }
+            } catch (e) {
+                console.log('Problem parsing version: ' + body, e);
             }
-        } catch (e) {
-            console.log('Problem parsing version: ' + res.responseText, e);
+        } else {
+            console.log('Unable to fetch latest vscode version: ' + (error || ('Status code: ' + response.statusCode + ', ' + body)));
         }
-    } else {
-        console.log('Unable to fetch latest vscode version: Status code: ' + res.status + ', ' + res.responseText);
-    }
-    return fallbackVersion;
+        resolve(vscodeFallbackVersion);
+    });
 });
 
-module.exports.getLatestVSCodeVersion = function() { return promise; };
+module.exports.getLatestVSCodeVersion = function() { return vscodePromise; };
+
+var azdataFallbackVersion = '*';
+module.exports.azdataVersion = azdataFallbackVersion;

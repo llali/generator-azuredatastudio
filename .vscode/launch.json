@@ -5,16 +5,11 @@
     "version": "0.2.0",
     "configurations": [
         {
-            // make sure to have this generator npm-linked:
-            // $ git clone https://github.com/Microsoft/vscode-generator-code
-            // $ cd vscode-generator-code
-            // $ npm link
-            //
             "type": "node",
             "request": "launch",
-            "name": "yeoman code",
+            "name": "azuredatastudio",
             "program": "${workspaceFolder}/node_modules/yo/lib/cli.js",
-            "args": [ "code" ],
+            "args": [ "azuredatastudio" ],
             "cwd": "${workspaceFolder}",
             "console": "integratedTerminal",
             "internalConsoleOptions": "neverOpen"
@@ -24,7 +19,14 @@
             "request": "launch",
             "name": "Mocha Tests",
             "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
-
+            "args": [
+                "-u",
+                "tdd",
+                "--timeout",
+                "999999",
+                "--colors",
+                "${workspaceFolder}/test"
+            ],
             "internalConsoleOptions": "openOnSessionStart"
         }
     ]

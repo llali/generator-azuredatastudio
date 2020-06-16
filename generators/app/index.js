@@ -38,11 +38,15 @@ module.exports = class extends Generator {
     initializing() {
 
         // Welcome
-        this.log(yosay('Welcome to the Azure Data Studio extension generator!'));
+        this.log(yosay('Welcome to the Azure Data Studio Extension generator!'));
 
         // evaluateEngineVersion
         let extensionConfig = this.extensionConfig;
-        return env.getLatestVSCodeVersion().then(version => { extensionConfig.vsCodeEngine = version; });
+        extensionConfig.azdataEngine = env.azdataVersion;
+        extensionConfig.vsCodeEngine = '^1.19.0';
+        return env.getLatestVSCodeVersion()
+        .then(function (version) { extensionConfig.vsCodeEngine = version; });
+        // TODO add tool to get latest Azure Data Studio verison on machine and set this too
     }
 
     prompting() {
@@ -762,6 +766,13 @@ module.exports = class extends Generator {
 
         if (this.extensionConfig.type === 'ext-extensionpack') {
             this.log(chalk.yellow('Please review the "extensionPack" in the "package.json" before publishing the extension pack.'));
+            this.log('');
+        }
+
+        if (this.extensionConfig.type === 'ext-command-ts') {
+            this.log('To include proposed Azure Data Studio APIs in your extension, run the following after opening the directory:');
+            this.log('');
+            this.log(chalk.blue('npm run proposedapi'));
             this.log('');
         }
 
