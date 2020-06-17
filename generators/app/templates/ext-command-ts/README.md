@@ -1,3 +1,16 @@
+**Note:**
+If you want to build your extension, run:
+
+```
+npm run compile
+```
+
+If you want to include proposed Azure Data Studio APIs, run:
+
+```
+npm run proposedapi
+```
+
 # <%= name %> README
 
 This is the README for your extension "<%= name %>". After writing up a brief description, we recommend including the following sections.

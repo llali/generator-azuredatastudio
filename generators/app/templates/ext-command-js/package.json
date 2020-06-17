@@ -6,11 +6,11 @@
 	"engines": {
 		"vscode": <%- JSON.stringify(vsCodeEngine) %>,
         "azdata": <%- JSON.stringify(azdataEngine) %>
-	},
-	"categories": [
-		"Other"
-	],
-	"activationEvents": [
+    },
+    "categories": [
+        "Other"
+    ],
+    "activationEvents": [
         "onCommand:extension.sayHello"
     ],
     "main": "./extension",
@@ -26,7 +26,8 @@
 		"test": "node ./test/runTest.js"
 	},
 	"devDependencies": {
-        "@types/vscode": <%- JSON.stringify(vsCodeEngine) %>,
+		"@types/vscode": <%- JSON.stringify(vsCodeEngine) %>,
+		"@types/azdata": <%- JSON.stringify(azdataEngine) %>,
         "@types/glob": "^7.1.1",
         "@types/mocha": "^7.0.2",
         "@types/node": "^13.11.0",

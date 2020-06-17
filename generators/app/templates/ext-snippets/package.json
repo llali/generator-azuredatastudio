@@ -4,8 +4,8 @@
     "description": <%- JSON.stringify(description) %>,
     "version": "0.0.1",
     "engines": {
+        "vscode": <%- JSON.stringify(vsCodeEngine) %>,
         "azdata": <%- JSON.stringify(azdataEngine) %>
-        "vscode": <%- JSON.stringify(vsCodeEngine) %>
     },
     "categories": [
         "Snippets"
