@@ -21,6 +21,10 @@ We pass the function containing the implementation of the command as the second 
 * You can relaunch the extension from the debug toolbar after changing code in `src/extension.ts`.
 * You can also reload (`Ctrl+R` or `Cmd+R` on Mac) the Azure Data Studio window with your extension to load your changes.
 
+## Install your extension
+* To start using your extension with Azure Data Studio copy it into the `<user home>/.azuredatastudio/extensions` folder and restart Azure Data Studio.
+* To share your extension with the world, read on https://github.com/microsoft/azuredatastudio/wiki/Getting-started-with-Extensibility about publishing an extension.
+
 ## Explore the API
 * You can open the full set of our API when you open the file:
   * SQL specific APIs: `node_modules/azdata/azdata.d.ts`.
