@@ -1,4 +1,4 @@
-# Welcome to your VS Code Extension
+# Welcome to your Azure Data Studio Extension
 
 ## What's in the folder
 
