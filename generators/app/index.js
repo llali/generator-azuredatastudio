@@ -56,7 +56,7 @@ module.exports = class extends Generator {
             askForType: () => {
                 let extensionType = generator.options['extensionType'];
                 if (extensionType) {
-                    let extensionTypes = ['colortheme', 'language', 'snippets', 'command-ts', 'command-js', 'extensionpack'];
+                    let extensionTypes = ['insight', 'colortheme', 'language', 'snippets', 'command-ts', 'command-js', 'extensionpack'];
                     if (extensionTypes.indexOf(extensionType) !== -1) {
                         generator.extensionConfig.type = 'ext-' + extensionType;
                     } else {
@@ -76,6 +76,10 @@ module.exports = class extends Generator {
                     {
                         name: 'New Extension (JavaScript)',
                         value: 'ext-command-js'
+                    },
+                    {
+                        name: 'New Dashboard Insight',
+                        value: 'ext-insight'
                     },
                     {
                         name: 'New Color Theme',
@@ -267,6 +271,25 @@ module.exports = class extends Generator {
                     if (addExtensionsAnswer.addExtensions) {
                         return getExtensionList();
                     }
+                });
+            },
+
+            askForInsightInfo: () => {
+                if (generator.extensionConfig.type !== 'ext-insight') {
+                    return Promise.resolve();
+                }
+
+                generator.extensionConfig.isCustomization = true;
+
+                return generator.prompt({
+                    type: 'confirm',
+                    name: 'addDashboardExtension',
+                    message: 'Add a full dashboard tab?',
+                    default: true
+                }).then(function (answer) {
+                    generator.extensionConfig.addDashboardTab = answer.addDashboardExtension;
+                    generator.extensionConfig.insightName = generator.extensionConfig.name + '.insight';
+                    generator.extensionConfig.tabName = generator.extensionConfig.name + '.tab';
                 });
             },
 
@@ -560,12 +583,32 @@ module.exports = class extends Generator {
             case 'ext-extensionpack':
                 this._writingExtensionPack();
                 break;
+            case 'ext-insight':
+                this._writingInsight();
+                break;
             case 'ext-localization':
                 localization.writingLocalizationExtension(this);
                 break;
             default:
                 //unknown project type
                 break;
+        }
+    }
+
+    // Write Insight Extension
+    _writingInsight() {
+        let context = this.extensionConfig;
+
+        this.fs.copy(this.sourceRoot() + '/vscode', context.name + '/.vscode');
+        this.fs.copy(this.sourceRoot() + '/sql', context.name + '/sql');
+        this.fs.copyTpl(this.sourceRoot() + '/package.json', context.name + '/package.json', context);
+        this.fs.copyTpl(this.sourceRoot() + '/vsc-extension-quickstart.md', context.name + '/vsc-extension-quickstart.md', context);
+        this.fs.copyTpl(this.sourceRoot() + '/README.md', context.name + '/README.md', context);
+        this.fs.copyTpl(this.sourceRoot() + '/CHANGELOG.md', context.name + '/CHANGELOG.md', context);
+        this.fs.copy(this.sourceRoot() + '/vscodeignore', context.name + '/.vscodeignore');
+        this.fs.copy(this.sourceRoot() + '/gitignore', context.name + '/.gitignore');
+        if (this.extensionConfig.gitInit) {
+            this.fs.copy(this.sourceRoot() + '/gitattributes', context.name + '/.gitattributes');
         }
     }
 
