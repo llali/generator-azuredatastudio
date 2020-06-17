@@ -5,8 +5,8 @@
 
 var path = require('path');
 var fs = require('fs');
-var plistParser = require('fast-plist');
-var request = require('request-light');
+var plistParser = require('./plistParser');
+var request = require('request');
 
 function convertTheme(location, extensionConfig, inline, generator) {
     if (!location) {
@@ -14,30 +14,37 @@ function convertTheme(location, extensionConfig, inline, generator) {
         extensionConfig.tmThemeContent = '';
     } else if (location.match(/\w*:\/\//)) {
         // load from url
-        return request.xhr({ url: location }).then(r => {
-            if (r.status == 200) {
-                var tmThemeFileName = null;
-                if (!inline) {
-                    var contentDisposition = r.headers && r.headers['content-disposition'];
-                    if (contentDisposition) {
-                        var fileNameMatch = contentDisposition.match(/filename="([^"]*)/);
-                        if (fileNameMatch) {
-                            tmThemeFileName = fileNameMatch[1];
+        return new Promise(function (resolve, reject) {
+            request(location, function (error, response, body) {
+                if (!error && response.statusCode == 200) {
+                    var tmThemeFileName = null;
+                    if (!inline) {
+                        var contentDisposition = response.headers['content-disposition'];
+                        if (contentDisposition) {
+                            var fileNameMatch = contentDisposition.match(/filename="([^"]*)/);
+                            if (fileNameMatch) {
+                                tmThemeFileName = fileNameMatch[1];
+                            }
+                        }
+                        if (!tmThemeFileName) {
+                            var lastSlash = location.lastIndexOf('/');
+                            if (lastSlash) {
+                                tmThemeFileName = location.substr(lastSlash + 1);
+                            } else {
+                                tmThemeFileName = 'theme.tmTheme';
+                            }
                         }
                     }
-                    if (!tmThemeFileName) {
-                        var lastSlash = location.lastIndexOf('/');
-                        if (lastSlash) {
-                            tmThemeFileName = location.substr(lastSlash + 1);
-                        } else {
-                            tmThemeFileName = 'theme.tmTheme';
-                        }
+                    processContent(extensionConfig, tmThemeFileName, body, generator);
+                    resolve();
+                } else {
+                    if (error) {
+                        reject("Problems loading theme: " + error);
+                    } else {
+                        reject("Problems loading theme: HTTP status " + response.statusCode);
                     }
                 }
-                return processContent(extensionConfig, tmThemeFileName, r.responseText, generator);
-            } else {
-                return Promise.reject("Problems loading theme: HTTP status " + r.status);
-            }
+            });
         });
     } else {
         // load from disk
@@ -52,32 +59,28 @@ function convertTheme(location, extensionConfig, inline, generator) {
             if (!inline) {
                 fileName = path.basename(location);
             }
-            return processContent(extensionConfig, fileName, body.toString(), generator);
+            processContent(extensionConfig, fileName, body.toString(), generator);
         } else {
             return Promise.reject("Problems loading theme: Not found");
         }
     }
+    return Promise.resolve();
 }
 
 function processContent(extensionConfig, tmThemeFileName, body, generator) {
     var themeNameMatch = body.match(/<key>name<\/key>\s*<string>([^<]*)/);
     var themeName = themeNameMatch ? themeNameMatch[1] : '';
-    try {
-        extensionConfig.themeContent = migrate(body, tmThemeFileName, generator);
-        if (tmThemeFileName) {
-            if (tmThemeFileName.indexOf('.tmTheme') === -1) {
-                tmThemeFileName = tmThemeFileName + '.tmTheme';
-            }
-            extensionConfig.tmThemeFileName = tmThemeFileName;
-            extensionConfig.tmThemeContent = body;
-        }
-        extensionConfig.themeName = themeName;
-        extensionConfig.displayName = themeName;
-        return Promise.resolve();
-    } catch (e) {
-        return Promise.reject(e);
-    }
 
+    extensionConfig.themeContent = migrate(body, tmThemeFileName, generator);
+    if (tmThemeFileName) {
+        if (tmThemeFileName.indexOf('.tmTheme') === -1) {
+            tmThemeFileName = tmThemeFileName + '.tmTheme';
+        }
+        extensionConfig.tmThemeFileName = tmThemeFileName;
+        extensionConfig.tmThemeContent = body;
+    }
+    extensionConfig.themeName = themeName;
+    extensionConfig.displayName = themeName;
 };
 
 // mapping from old tmTheme setting to new workbench color ids
@@ -108,52 +111,51 @@ var mappings = {
 };
 
 function migrate(content, tmThemeFileName, generator) {
-    let result = {};
-    var theme;
     try {
-        theme = plistParser.parse(content);
-    } catch (e) {
-        throw new Error(tmThemeFileName + " not be parsed: " + e.toString());
-    }
-    let settings = theme.settings;
-    if (Array.isArray(settings)) {
-        let colorMap = {};
-        for (let entry of settings) {
-            let scope = entry.scope;
-            if (scope) {
-                let parts = scope.split(',').map(p => p.trim());
-                if (parts.length > 1) {
-                    entry.scope = parts;
-                }
-            } else {
-                var entrySettings = entry.settings;
-                let notSupported = [];
-                for (let entry in entrySettings) {
-                    let mapping = mappings[entry];
-                    if (mapping) {
-                        for (let newKey of mapping) {
-                            colorMap[newKey] = entrySettings[entry];
+        let result = {};
+        let theme = plistParser.parse(content).value;
+        let settings = theme.settings;
+        if (Array.isArray(settings)) {
+            let colorMap = {};
+            for (let entry of settings) {
+                let scope = entry.scope;
+                if (scope) {
+                    let parts = scope.split(',').map(p => p.trim());
+                    if (parts.length > 1) {
+                        entry.scope = parts;
+                    }
+                } else {
+                    var entrySettings = entry.settings;
+                    let notSupported = [];
+                    for (let entry in entrySettings) {
+                        let mapping = mappings[entry];
+                        if (mapping) {
+                            for (let newKey of mapping) {
+                                colorMap[newKey] = entrySettings[entry];
+                            }
+                            if (entry !== 'foreground' && entry !== 'background') {
+                                delete entrySettings[entry];
+                            }
+                        } else {
+                            notSupported.push(entry);
                         }
-                        if (entry !== 'foreground' && entry !== 'background') {
-                            delete entrySettings[entry];
-                        }
-                    } else {
-                        notSupported.push(entry);
+                    }
+                    if (notSupported.length > 0) {
+                        generator.log('Note: the following theming properties are not supported by VSCode and will be ignored: ' + notSupported.join(', '))
                     }
                 }
-                if (notSupported.length > 0) {
-                    generator.log('Note: the following theming properties are not supported by VSCode and will be ignored: ' + notSupported.join(', '))
-                }
             }
+            if (!tmThemeFileName) {
+                result.tokenColors = settings;
+            } else {
+                result.tokenColors = './' + tmThemeFileName;
+            }
+            result.colors = colorMap;
         }
-        if (!tmThemeFileName) {
-            result.tokenColors = settings;
-        } else {
-            result.tokenColors = './' + tmThemeFileName;
-        }
-        result.colors = colorMap;
+        return result
+    } catch (e) {
+        console.log(e);
     }
-    return result;
 };
 
 
