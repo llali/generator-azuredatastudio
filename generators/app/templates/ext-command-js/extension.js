@@ -29,15 +29,15 @@ function activate(context) {
 
     context.subscriptions.push(disposable);
 
-    context.subscriptions.push(vscode.commands.registerCommand('extension.showCurrentConnection', () => {// {{ADS EDIT}}
+    context.subscriptions.push(vscode.commands.registerCommand('extension.showCurrentConnection', () => {
         // The code you place here will be executed every time your command is executed
 
         // Display a message box to the user
-        azdata.connection.getCurrentConnection().then(connection => {// {{ADS EDIT}}
-            let connectionId = connection ? connection.connectionId : 'No connection found!';// {{ADS EDIT}}
-            vscode.window.showInformationMessage(connectionId);// {{ADS EDIT}}
-        }, error => {// {{ADS EDIT}}
-             console.info(error);// {{ADS EDIT}}
+        azdata.connection.getCurrentConnection().then(connection => {
+            let connectionId = connection ? connection.connectionId : 'No connection found!';
+            vscode.window.showInformationMessage(connectionId);
+        }, error => {
+             console.info(error);
         });
     }));
 }

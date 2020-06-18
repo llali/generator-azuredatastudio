@@ -1,4 +1,4 @@
-# Welcome to your Azure Data  Studio Extension Pack
+# Welcome to your Azure Data Studio Extension Pack
 
 ## What's in the folder
 * This folder contains all of the files necessary for your extension pack.

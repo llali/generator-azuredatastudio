@@ -67,7 +67,8 @@ describe('test code generator', function () {
                     "description": "My TestTheme",
                     "version": "0.0.1",
                     "engines": {
-                        "vscode": engineVersion
+                        "vscode": engineVersion,
+                        "azdata": env.azdataVersion
                     },
                     "categories": [
                         "Themes"
@@ -132,7 +133,8 @@ describe('test code generator', function () {
                     "description": "My TestTheme",
                     "version": "0.0.1",
                     "engines": {
-                        "vscode": engineVersion
+                        "vscode": engineVersion,
+                        "azdata": env.azdataVersion
                     },
                     "categories": [
                         "Themes"
@@ -197,7 +199,8 @@ describe('test code generator', function () {
                     "description": "Theme SeventyFour",
                     "version": "0.0.1",
                     "engines": {
-                        "vscode": engineVersion
+                        "vscode": engineVersion,
+                        "azdata": env.azdataVersion
                     },
                     "categories": [
                         "Themes"
@@ -280,7 +283,8 @@ describe('test code generator', function () {
                     "description": "My TestTheme",
                     "version": "0.0.1",
                     "engines": {
-                        "vscode": engineVersion
+                        "vscode": engineVersion,
+                        "azdata": env.azdataVersion
                     },
                     "categories": [
                         "Themes"
@@ -337,7 +341,8 @@ describe('test code generator', function () {
                     "description": "My TestLan",
                     "version": "0.0.1",
                     "engines": {
-                        "vscode": engineVersion
+                        "vscode": engineVersion,
+                        "azdata": env.azdataVersion
                     },
                     "categories": [
                         "Programming Languages"
@@ -392,7 +397,8 @@ describe('test code generator', function () {
                     "description": "My TestFooLan",
                     "version": "0.0.1",
                     "engines": {
-                        "vscode": engineVersion
+                        "vscode": engineVersion,
+                        "azdata": env.azdataVersion
                     },
                     "categories": [
                         "Programming Languages"
@@ -447,7 +453,8 @@ describe('test code generator', function () {
                     "description": "Crusty, the language",
                     "version": "0.0.1",
                     "engines": {
-                        "vscode": engineVersion
+                        "vscode": engineVersion,
+                        "azdata": env.azdataVersion
                     },
                     "categories": [
                         "Programming Languages"
@@ -506,7 +513,8 @@ describe('test code generator', function () {
                     "description": "My TestSnip",
                     "version": "0.0.1",
                     "engines": {
-                        "vscode": engineVersion
+                        "vscode": engineVersion,
+                        "azdata": env.azdataVersion
                     },
                     "categories": [
                         "Snippets"
@@ -553,7 +561,8 @@ describe('test code generator', function () {
                     "description": "My TestSnip",
                     "version": "0.0.1",
                     "engines": {
-                        "vscode": engineVersion
+                        "vscode": engineVersion,
+                        "azdata": env.azdataVersion
                     },
                     "categories": [
                         "Snippets"
@@ -628,7 +637,8 @@ describe('test code generator', function () {
                     "description": "My TestKeym",
                     "version": "0.0.1",
                     "engines": {
-                        "vscode": engineVersion
+                        "vscode": engineVersion,
+                        "azdata": env.azdataVersion
                     },
                     "categories": [
                         "Keymaps"
@@ -675,13 +685,15 @@ describe('test code generator', function () {
                     "description": "My TestCom",
                     "version": "0.0.1",
                     "engines": {
-                        "vscode": engineVersion
+                        "vscode": engineVersion,
+                        "azdata": env.azdataVersion
                     },
                     "activationEvents": [
                         "onCommand:testCom.helloWorld"
                     ],
                     "devDependencies": {
                         "@types/vscode": engineVersion,
+                        "@types/azdata": env.azdataVersion,
                         "@types/glob": "^7.1.1",
                         "@types/mocha": "^7.0.2",
                         "@types/node": "^13.11.0",
@@ -747,13 +759,15 @@ describe('test code generator', function () {
                     "description": "My TestCom",
                     "version": "0.0.1",
                     "engines": {
-                        "vscode": engineVersion
+                        "vscode": engineVersion,
+                        "azdata": env.azdataVersion
                     },
                     "activationEvents": [
                         "onCommand:testCom.helloWorld"
                     ],
                     "devDependencies": {
                         "@types/vscode": engineVersion,
+                        "@types/azdata": env.azdataVersion,
                         "@types/glob": "^7.1.1",
                         "@types/mocha": "^7.0.2",
                         "@types/node": "^13.11.0",
@@ -840,13 +854,15 @@ describe('test code generator', function () {
                     "description": "My TestCom",
                     "version": "0.0.1",
                     "engines": {
-                        "vscode": engineVersion
+                        "vscode": engineVersion,
+                        "azdata": env.azdataVersion
                     },
                     "activationEvents": [
                         "onCommand:testCom.helloWorld"
                     ],
                     "devDependencies": {
                         "@types/vscode": engineVersion,
+                        "@types/azdata": env.azdataVersion,
                         "@types/glob": "^7.1.1",
                         "@types/mocha": "^7.0.2",
                         "@types/node": "^13.11.0",
@@ -946,7 +962,8 @@ describe('test code generator', function () {
                     "description": "My Test Extension Pack",
                     "version": "0.0.1",
                     "engines": {
-                        "vscode": engineVersion
+                        "vscode": engineVersion,
+                        "azdata": env.azdataVersion
                     },
                     "categories": [
                         "Extension Packs"
@@ -985,7 +1002,8 @@ describe('test code generator', function () {
                     "description": "Language pack extension for Russian",
                     "version": "0.0.1",
                     "engines": {
-                        "vscode": engineVersion
+                        "vscode": engineVersion,
+                        "azdata": env.azdataVersion
                     },
                     "categories": [
                         "Language Packs"
@@ -1031,7 +1049,8 @@ describe('test code generator', function () {
                     "description": "Language pack extension for Russian",
                     "version": "0.0.1",
                     "engines": {
-                        "vscode": engineVersion
+                        "vscode": engineVersion,
+                        "azdata": env.azdataVersion
                     },
                     "categories": [
                         "Language Packs"
