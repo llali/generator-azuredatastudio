@@ -7,7 +7,7 @@ import * as vscode from 'vscode';
 // This is a complementary set of APIs that add SQL / Data-specific functionality to the app
 // Import the module and reference it with the alias azdata in your code below
 
-import * as azdata from 'azdata';
+import * as azdata from 'azdata';// {{ADS EDIT}}
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -31,11 +31,11 @@ export function activate(context: vscode.ExtensionContext) {
         // The code you place here will be executed every time your command is executed
 
         // Display a message box to the user
-        azdata.connection.getCurrentConnection().then(connection => {
-            let connectionId = connection ? connection.connectionId : 'No connection found!';
-            vscode.window.showInformationMessage(connectionId);
-        }, error => {
-             console.info(error);
+        azdata.connection.getCurrentConnection().then(connection => {// {{ADS EDIT}}
+            let connectionId = connection ? connection.connectionId : 'No connection found!';// {{ADS EDIT}}
+            vscode.window.showInformationMessage(connectionId);// {{ADS EDIT}}
+        }, error => {// {{ADS EDIT}}
+             console.info(error);// {{ADS EDIT}}
         });
     }));
 }
