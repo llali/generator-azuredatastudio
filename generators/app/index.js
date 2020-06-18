@@ -42,7 +42,7 @@ module.exports = class extends Generator {
 
         // evaluateEngineVersion
         let extensionConfig = this.extensionConfig;
-        extensionConfig.azdataEngine = env.azdataVersion;
+        extensionConfig.azdataEngine = env.azdataVersion;// {{ADS EDIT}}
         extensionConfig.vsCodeEngine = '^1.19.0';
         return env.getLatestVSCodeVersion()
         .then(function (version) { extensionConfig.vsCodeEngine = version; });
@@ -813,9 +813,9 @@ module.exports = class extends Generator {
         }
 
         if (this.extensionConfig.type === 'ext-command-ts') {
-            this.log('To include proposed Azure Data Studio APIs in your extension, run the following after opening the directory:');
+            this.log('To include proposed Azure Data Studio APIs in your extension, run the following after opening the directory:');// {{ADS EDIT}}
             this.log('');
-            this.log(chalk.blue('npm run proposedapi'));
+            this.log(chalk.blue('npm run proposedapi'));// {{ADS EDIT}}
             this.log('');
         }
 

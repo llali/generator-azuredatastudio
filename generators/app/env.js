@@ -5,7 +5,7 @@
 var request = require('request-light');
 
 var fallbackVersion = '^1.39.0';
-var promise = request.xhr({ url: 'https://raw.githubusercontent.com/microsoft/azuredatastudio/master/product.json', headers: { "X-API-Version": "2" } }).then(res => {
+var promise = request.xhr({ url: 'https://raw.githubusercontent.com/microsoft/azuredatastudio/master/product.json', headers: { "X-API-Version": "2" } }).then(res => {// {{ADS EDIT}}
     if (res.status === 200) {
         try {
             var tagsAndCommits = JSON.parse(res.responseText);
@@ -25,5 +25,5 @@ var promise = request.xhr({ url: 'https://raw.githubusercontent.com/microsoft/az
 });
 
 module.exports.getLatestVSCodeVersion = function() { return promise; };
-var azdataFallbackVersion = '*';
-module.exports.azdataVersion = azdataFallbackVersion;
+var azdataFallbackVersion = '*';// {{ADS EDIT}}
+module.exports.azdataVersion = azdataFallbackVersion;// {{ADS EDIT}}
