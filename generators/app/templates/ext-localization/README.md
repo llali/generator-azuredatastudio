@@ -1,6 +1,6 @@
-#  <%= lpLanguageName %> Language Pack for VS Code
+#  <%= lpLanguageName %> Language Pack for Azure Data Studio
 
-Adds localization for <%= lpLanguageName %> to VS Code.
+Adds localization for <%= lpLanguageName %> to Azure Data Studio
 
 The translated strings are maintained here:
 * [vscode-editor project](https://www.transifex.com/microsoft-oss/vscode-editor/language/<%= lpLanguageId %>/)

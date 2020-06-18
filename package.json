@@ -13,16 +13,16 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/llali/generator-azuredatastudio"// {{ADS EDIT}}
+    "url": "https://github.com/llali/generator-azuredatastudio"
   },
   "bugs": {
-    "url": "https://github.com/llali/generator-azuredatastudio/issues"// {{ADS EDIT}}
+    "url": "https://github.com/llali/generator-azuredatastudio/issues"
   },
-  "homepage": "https://docs.microsoft.com/en-us/sql/azure-data-studio",// {{ADS EDIT}}
+  "homepage": "https://docs.microsoft.com/en-us/sql/azure-data-studio",
   "license": "MIT",
   "author": {
     "name": "Azure Data Studio Team",
-    "url": "https://github.com/Microsoft/azuredatastudio"// {{ADS EDIT}}
+    "url": "https://github.com/Microsoft/azuredatastudio"
   },
   "engines": {
     "node": ">=0.10.0"

@@ -23,7 +23,7 @@ We pass the function containing the implementation of the command as the second 
 
 ## Explore the API
 * You can open the full set of our API when you open the file:
-  * SQL specific APIs: `node_modules/azdata/azdata.d.ts`.
+  * Azure Data Studio specific APIs: `node_modules/azdata/azdata.d.ts`.
   * Other APIs: `node_modules/vscode/vscode.d.ts`.
 
 ## Run tests

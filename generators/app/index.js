@@ -38,7 +38,7 @@ module.exports = class extends Generator {
     initializing() {
 
         // Welcome
-        this.log(yosay('Welcome to the Azure Data Studio Extension generator!'));
+        this.log(yosay('Welcome to the Azure Data Studio Extension generator!'));// {{ADS EDIT}}
 
         // evaluateEngineVersion
         let extensionConfig = this.extensionConfig;
@@ -56,7 +56,7 @@ module.exports = class extends Generator {
             askForType: () => {
                 let extensionType = generator.options['extensionType'];
                 if (extensionType) {
-                    let extensionTypes = ['insight', 'colortheme', 'language', 'snippets', 'command-ts', 'command-js', 'extensionpack'];
+                    let extensionTypes = ['insight', 'colortheme', 'language', 'snippets', 'command-ts', 'command-js', 'extensionpack'];// {{ADS EDIT}}
                     if (extensionTypes.indexOf(extensionType) !== -1) {
                         generator.extensionConfig.type = 'ext-' + extensionType;
                     } else {
@@ -78,8 +78,8 @@ module.exports = class extends Generator {
                         value: 'ext-command-js'
                     },
                     {
-                        name: 'New Dashboard Insight',
-                        value: 'ext-insight'
+                        name: 'New Dashboard Insight',// {{ADS EDIT}}
+                        value: 'ext-insight'// {{ADS EDIT}}
                     },
                     {
                         name: 'New Color Theme',
@@ -274,22 +274,22 @@ module.exports = class extends Generator {
                 });
             },
 
-            askForInsightInfo: () => {
-                if (generator.extensionConfig.type !== 'ext-insight') {
-                    return Promise.resolve();
+            askForInsightInfo: () => {// {{ADS EDIT}}
+                if (generator.extensionConfig.type !== 'ext-insight') {// {{ADS EDIT}}
+                    return Promise.resolve();// {{ADS EDIT}}
                 }
 
-                generator.extensionConfig.isCustomization = true;
+                generator.extensionConfig.isCustomization = true;// {{ADS EDIT}}
 
-                return generator.prompt({
-                    type: 'confirm',
-                    name: 'addDashboardExtension',
-                    message: 'Add a full dashboard tab?',
-                    default: true
-                }).then(function (answer) {
-                    generator.extensionConfig.addDashboardTab = answer.addDashboardExtension;
-                    generator.extensionConfig.insightName = generator.extensionConfig.name + '.insight';
-                    generator.extensionConfig.tabName = generator.extensionConfig.name + '.tab';
+                return generator.prompt({// {{ADS EDIT}}
+                    type: 'confirm',// {{ADS EDIT}}
+                    name: 'addDashboardExtension',// {{ADS EDIT}}
+                    message: 'Add a full dashboard tab?',// {{ADS EDIT}}
+                    default: true// {{ADS EDIT}}
+                }).then(function (answer) {// {{ADS EDIT}}
+                    generator.extensionConfig.addDashboardTab = answer.addDashboardExtension;// {{ADS EDIT}}
+                    generator.extensionConfig.insightName = generator.extensionConfig.name + '.insight';// {{ADS EDIT}}
+                    generator.extensionConfig.tabName = generator.extensionConfig.name + '.tab';// {{ADS EDIT}}
                 });
             },
 
@@ -583,9 +583,9 @@ module.exports = class extends Generator {
             case 'ext-extensionpack':
                 this._writingExtensionPack();
                 break;
-            case 'ext-insight':
-                this._writingInsight();
-                break;
+            case 'ext-insight':// {{ADS EDIT}}
+                this._writingInsight();// {{ADS EDIT}}
+                break;// {{ADS EDIT}}
             case 'ext-localization':
                 localization.writingLocalizationExtension(this);
                 break;
@@ -596,19 +596,19 @@ module.exports = class extends Generator {
     }
 
     // Write Insight Extension
-    _writingInsight() {
-        let context = this.extensionConfig;
+    _writingInsight() {// {{ADS EDIT}}
+        let context = this.extensionConfig;// {{ADS EDIT}}
 
-        this.fs.copy(this.sourceRoot() + '/vscode', context.name + '/.vscode');
-        this.fs.copy(this.sourceRoot() + '/sql', context.name + '/sql');
-        this.fs.copyTpl(this.sourceRoot() + '/package.json', context.name + '/package.json', context);
-        this.fs.copyTpl(this.sourceRoot() + '/vsc-extension-quickstart.md', context.name + '/vsc-extension-quickstart.md', context);
-        this.fs.copyTpl(this.sourceRoot() + '/README.md', context.name + '/README.md', context);
-        this.fs.copyTpl(this.sourceRoot() + '/CHANGELOG.md', context.name + '/CHANGELOG.md', context);
-        this.fs.copy(this.sourceRoot() + '/vscodeignore', context.name + '/.vscodeignore');
-        this.fs.copy(this.sourceRoot() + '/gitignore', context.name + '/.gitignore');
-        if (this.extensionConfig.gitInit) {
-            this.fs.copy(this.sourceRoot() + '/gitattributes', context.name + '/.gitattributes');
+        this.fs.copy(this.sourceRoot() + '/vscode', context.name + '/.vscode');// {{ADS EDIT}}
+        this.fs.copy(this.sourceRoot() + '/sql', context.name + '/sql');// {{ADS EDIT}}
+        this.fs.copyTpl(this.sourceRoot() + '/package.json', context.name + '/package.json', context);// {{ADS EDIT}}
+        this.fs.copyTpl(this.sourceRoot() + '/vsc-extension-quickstart.md', context.name + '/vsc-extension-quickstart.md', context);// {{ADS EDIT}}
+        this.fs.copyTpl(this.sourceRoot() + '/README.md', context.name + '/README.md', context);// {{ADS EDIT}}
+        this.fs.copyTpl(this.sourceRoot() + '/CHANGELOG.md', context.name + '/CHANGELOG.md', context);// {{ADS EDIT}}
+        this.fs.copy(this.sourceRoot() + '/vscodeignore', context.name + '/.vscodeignore');// {{ADS EDIT}}
+        this.fs.copy(this.sourceRoot() + '/gitignore', context.name + '/.gitignore');// {{ADS EDIT}}
+        if (this.extensionConfig.gitInit) {// {{ADS EDIT}}
+            this.fs.copy(this.sourceRoot() + '/gitattributes', context.name + '/.gitattributes');// {{ADS EDIT}}
         }
     }
 
