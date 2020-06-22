@@ -68,7 +68,7 @@ describe('test code generator', function () {
                     "version": "0.0.1",
                     "engines": {
                         "vscode": engineVersion,
-                        "azdata": env.azdataVersion
+                        "azdata": env.azdataVersion// {{ADS EDIT}}
                     },
                     "categories": [
                         "Themes"
@@ -134,7 +134,7 @@ describe('test code generator', function () {
                     "version": "0.0.1",
                     "engines": {
                         "vscode": engineVersion,
-                        "azdata": env.azdataVersion
+                        "azdata": env.azdataVersion// {{ADS EDIT}}
                     },
                     "categories": [
                         "Themes"
@@ -200,7 +200,7 @@ describe('test code generator', function () {
                     "version": "0.0.1",
                     "engines": {
                         "vscode": engineVersion,
-                        "azdata": env.azdataVersion
+                        "azdata": env.azdataVersion// {{ADS EDIT}}
                     },
                     "categories": [
                         "Themes"
@@ -284,7 +284,7 @@ describe('test code generator', function () {
                     "version": "0.0.1",
                     "engines": {
                         "vscode": engineVersion,
-                        "azdata": env.azdataVersion
+                        "azdata": env.azdataVersion// {{ADS EDIT}}
                     },
                     "categories": [
                         "Themes"
@@ -342,7 +342,7 @@ describe('test code generator', function () {
                     "version": "0.0.1",
                     "engines": {
                         "vscode": engineVersion,
-                        "azdata": env.azdataVersion
+                        "azdata": env.azdataVersion// {{ADS EDIT}}
                     },
                     "categories": [
                         "Programming Languages"
@@ -398,7 +398,7 @@ describe('test code generator', function () {
                     "version": "0.0.1",
                     "engines": {
                         "vscode": engineVersion,
-                        "azdata": env.azdataVersion
+                        "azdata": env.azdataVersion// {{ADS EDIT}}
                     },
                     "categories": [
                         "Programming Languages"
@@ -454,7 +454,7 @@ describe('test code generator', function () {
                     "version": "0.0.1",
                     "engines": {
                         "vscode": engineVersion,
-                        "azdata": env.azdataVersion
+                        "azdata": env.azdataVersion// {{ADS EDIT}}
                     },
                     "categories": [
                         "Programming Languages"
@@ -514,7 +514,7 @@ describe('test code generator', function () {
                     "version": "0.0.1",
                     "engines": {
                         "vscode": engineVersion,
-                        "azdata": env.azdataVersion
+                        "azdata": env.azdataVersion// {{ADS EDIT}}
                     },
                     "categories": [
                         "Snippets"
@@ -562,7 +562,7 @@ describe('test code generator', function () {
                     "version": "0.0.1",
                     "engines": {
                         "vscode": engineVersion,
-                        "azdata": env.azdataVersion
+                        "azdata": env.azdataVersion// {{ADS EDIT}}
                     },
                     "categories": [
                         "Snippets"
@@ -638,7 +638,7 @@ describe('test code generator', function () {
                     "version": "0.0.1",
                     "engines": {
                         "vscode": engineVersion,
-                        "azdata": env.azdataVersion
+                        "azdata": env.azdataVersion// {{ADS EDIT}}
                     },
                     "categories": [
                         "Keymaps"
@@ -686,7 +686,7 @@ describe('test code generator', function () {
                     "version": "0.0.1",
                     "engines": {
                         "vscode": engineVersion,
-                        "azdata": env.azdataVersion
+                        "azdata": env.azdataVersion// {{ADS EDIT}}
                     },
                     "activationEvents": [
                         "onCommand:testCom.helloWorld",
@@ -694,7 +694,7 @@ describe('test code generator', function () {
                     ],
                     "devDependencies": {
                         "@types/vscode": engineVersion,
-                        "@types/azdata": env.azdataVersion,
+                        "@types/azdata": env.azdataVersion,// {{ADS EDIT}}
                         "@types/glob": "^7.1.1",
                         "@types/mocha": "^7.0.2",
                         "@types/node": "^13.11.0",
@@ -766,7 +766,7 @@ describe('test code generator', function () {
                     "version": "0.0.1",
                     "engines": {
                         "vscode": engineVersion,
-                        "azdata": env.azdataVersion
+                        "azdata": env.azdataVersion// {{ADS EDIT}}
                     },
                     "activationEvents": [
                         "onCommand:testCom.helloWorld",
@@ -774,7 +774,7 @@ describe('test code generator', function () {
                     ],
                     "devDependencies": {
                         "@types/vscode": engineVersion,
-                        "@types/azdata": env.azdataVersion,
+                        "@types/azdata": env.azdataVersion,// {{ADS EDIT}}
                         "@types/glob": "^7.1.1",
                         "@types/mocha": "^7.0.2",
                         "@types/node": "^13.11.0",
@@ -867,7 +867,7 @@ describe('test code generator', function () {
                     "version": "0.0.1",
                     "engines": {
                         "vscode": engineVersion,
-                        "azdata": env.azdataVersion
+                        "azdata": env.azdataVersion// {{ADS EDIT}}
                     },
                     "activationEvents": [
                         "onCommand:testCom.helloWorld",
@@ -875,7 +875,7 @@ describe('test code generator', function () {
                     ],
                     "devDependencies": {
                         "@types/vscode": engineVersion,
-                        "@types/azdata": env.azdataVersion,
+                        "@types/azdata": env.azdataVersion,// {{ADS EDIT}}
                         "@types/glob": "^7.1.1",
                         "@types/mocha": "^7.0.2",
                         "@types/node": "^13.11.0",
@@ -980,7 +980,7 @@ describe('test code generator', function () {
                     "version": "0.0.1",
                     "engines": {
                         "vscode": engineVersion,
-                        "azdata": env.azdataVersion
+                        "azdata": env.azdataVersion// {{ADS EDIT}}
                     },
                     "categories": [
                         "Extension Packs"
@@ -1020,7 +1020,7 @@ describe('test code generator', function () {
                     "version": "0.0.1",
                     "engines": {
                         "vscode": engineVersion,
-                        "azdata": env.azdataVersion
+                        "azdata": env.azdataVersion// {{ADS EDIT}}
                     },
                     "categories": [
                         "Language Packs"
@@ -1067,7 +1067,7 @@ describe('test code generator', function () {
                     "version": "0.0.1",
                     "engines": {
                         "vscode": engineVersion,
-                        "azdata": env.azdataVersion
+                        "azdata": env.azdataVersion// {{ADS EDIT}}
                     },
                     "categories": [
                         "Language Packs"
