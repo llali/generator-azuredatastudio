@@ -704,20 +704,20 @@ module.exports = class extends Generator {
 
      // Write Insight Extension
      _writingInsight() {// {{ADS EDIT}}
-     let context = this.extensionConfig;// {{ADS EDIT}}
+        let context = this.extensionConfig;// {{ADS EDIT}}
 
-     this.fs.copy(this.sourceRoot() + '/vscode', context.name + '/.vscode');// {{ADS EDIT}}
-     this.fs.copy(this.sourceRoot() + '/sql', context.name + '/sql');// {{ADS EDIT}}
-     this.fs.copyTpl(this.sourceRoot() + '/package.json', context.name + '/package.json', context);// {{ADS EDIT}}
-     this.fs.copyTpl(this.sourceRoot() + '/vsc-extension-quickstart.md', context.name + '/vsc-extension-quickstart.md', context);// {{ADS EDIT}}
-     this.fs.copyTpl(this.sourceRoot() + '/README.md', context.name + '/README.md', context);// {{ADS EDIT}}
-     this.fs.copyTpl(this.sourceRoot() + '/CHANGELOG.md', context.name + '/CHANGELOG.md', context);// {{ADS EDIT}}
-     this.fs.copy(this.sourceRoot() + '/vscodeignore', context.name + '/.vscodeignore');// {{ADS EDIT}}
-     this.fs.copy(this.sourceRoot() + '/gitignore', context.name + '/.gitignore');// {{ADS EDIT}}
-     if (this.extensionConfig.gitInit) {// {{ADS EDIT}}
-         this.fs.copy(this.sourceRoot() + '/gitattributes', context.name + '/.gitattributes');// {{ADS EDIT}}
-     }
- }
+        this.fs.copy(this.sourceRoot() + '/vscode', context.name + '/.vscode');// {{ADS EDIT}}
+        this.fs.copy(this.sourceRoot() + '/sql', context.name + '/sql');// {{ADS EDIT}}
+        this.fs.copyTpl(this.sourceRoot() + '/package.json', context.name + '/package.json', context);// {{ADS EDIT}}
+        this.fs.copyTpl(this.sourceRoot() + '/vsc-extension-quickstart.md', context.name + '/vsc-extension-quickstart.md', context);// {{ADS EDIT}}
+        this.fs.copyTpl(this.sourceRoot() + '/README.md', context.name + '/README.md', context);// {{ADS EDIT}}
+        this.fs.copyTpl(this.sourceRoot() + '/CHANGELOG.md', context.name + '/CHANGELOG.md', context);// {{ADS EDIT}}
+        this.fs.copy(this.sourceRoot() + '/vscodeignore', context.name + '/.vscodeignore');// {{ADS EDIT}}
+        this.fs.copy(this.sourceRoot() + '/gitignore', context.name + '/.gitignore');// {{ADS EDIT}}
+        if (this.extensionConfig.gitInit) {// {{ADS EDIT}}
+            this.fs.copy(this.sourceRoot() + '/gitattributes', context.name + '/.gitattributes');// {{ADS EDIT}}
+        }
+    }
 
     // Write Command Extension (TypeScript)
     _writingCommandTs() {
