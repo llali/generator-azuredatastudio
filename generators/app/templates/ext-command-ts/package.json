@@ -11,7 +11,8 @@
 		"Other"
 	],
 	"activationEvents": [
-        <%- JSON.stringify(`onCommand:${name}.helloWorld`) %>
+		<%- JSON.stringify(`onCommand:${name}.helloWorld`) %>,
+		<%- JSON.stringify(`onCommand:${name}.showCurrentConnection`) %>
 	],
 	"main": "./out/extension.js",
 	"contributes": {
@@ -19,6 +20,10 @@
 			{
 				"command": <%- JSON.stringify(`${name}.helloWorld`) %>,
                 "title": "Hello World"
+			},
+			{
+				"command": <%- JSON.stringify(`${name}.showCurrentConnection`) %>,
+                "title": "Show Current Connection"
 			}
 		]
 	},

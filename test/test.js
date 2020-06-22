@@ -689,7 +689,8 @@ describe('test code generator', function () {
                         "azdata": env.azdataVersion
                     },
                     "activationEvents": [
-                        "onCommand:testCom.helloWorld"
+                        "onCommand:testCom.helloWorld",
+                        "onCommand:testCom.showCurrentConnection"
                     ],
                     "devDependencies": {
                         "@types/vscode": engineVersion,
@@ -721,7 +722,12 @@ describe('test code generator', function () {
                         "commands": [{
                             "command": "testCom.helloWorld",
                             "title": "Hello World"
-                        }]
+                        },
+                        {
+                            "command": "testCom.showCurrentConnection",
+                            "title": "Show Current Connection"
+                        }
+                    ]
                     }
                 };
                 try {
@@ -763,7 +769,8 @@ describe('test code generator', function () {
                         "azdata": env.azdataVersion
                     },
                     "activationEvents": [
-                        "onCommand:testCom.helloWorld"
+                        "onCommand:testCom.helloWorld",
+                        "onCommand:testCom.showCurrentConnection"
                     ],
                     "devDependencies": {
                         "@types/vscode": engineVersion,
@@ -795,7 +802,12 @@ describe('test code generator', function () {
                         "commands": [{
                             "command": "testCom.helloWorld",
                             "title": "Hello World"
-                        }]
+                        },
+                        {
+                            "command": "testCom.showCurrentConnection",
+                            "title": "Show Current Connection"
+                        }
+                    ]
                     }
                 };
                 var expectedTsConfig = {
@@ -858,7 +870,8 @@ describe('test code generator', function () {
                         "azdata": env.azdataVersion
                     },
                     "activationEvents": [
-                        "onCommand:testCom.helloWorld"
+                        "onCommand:testCom.helloWorld",
+                        "onCommand:testCom.showCurrentConnection"
                     ],
                     "devDependencies": {
                         "@types/vscode": engineVersion,
@@ -885,6 +898,10 @@ describe('test code generator', function () {
                         "commands": [{
                             "command": "testCom.helloWorld",
                             "title": "Hello World"
+                        },
+                        {
+                            "command": "testCom.showCurrentConnection",
+                            "title": "Show Current Connection"
                         }]
                     }
                 };

@@ -11,15 +11,21 @@
 		"Other"
 	],
 	"activationEvents": [
-        <%- JSON.stringify(`onCommand:${name}.helloWorld`) %>
+		<%- JSON.stringify(`onCommand:${name}.helloWorld`) %>,
+		<%- JSON.stringify(`onCommand:${name}.showCurrentConnection`) %>
 	],
 	"main": "./extension.js",
 	"contributes": {
-		"commands": [{
-            "command": <%- JSON.stringify(`${name}.helloWorld`) %>,
-            "title": "Hello World"
-
-		}]
+		"commands": [
+			{
+				"command": <%- JSON.stringify(`${name}.helloWorld`) %>,
+                "title": "Hello World"
+			},
+			{
+				"command": <%- JSON.stringify(`${name}.showCurrentConnection`) %>,
+                "title": "Show Current Connection"
+			}
+		]
 	},
 	"scripts": {
 		"lint": "eslint .",
