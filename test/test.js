@@ -57,7 +57,6 @@ describe('test code generator', function () {
                 name: 'testTheme',
                 displayName: 'Test Theme',
                 description: 'My TestTheme',
-                publisher: 'Microsoft',
                 themeName: 'Green',
                 themeBase: 'vs-dark',
             }) // Mock the prompt answers
@@ -67,10 +66,9 @@ describe('test code generator', function () {
                     "displayName": "Test Theme",
                     "description": "My TestTheme",
                     "version": "0.0.1",
-                    "publisher": 'Microsoft',
                     "engines": {
                         "vscode": engineVersion,
-                        "azdata": env.azdataVersion
+                        "azdata": env.azdataVersion// {{ADS EDIT}}
                     },
                     "categories": [
                         "Themes"
@@ -96,7 +94,7 @@ describe('test code generator', function () {
                     "tokenColors": "./Monokai.tmTheme"
                 };
                 try {
-                    assert.file(['package.json', 'README.md', 'CHANGELOG.md', 'themes/Green-color-theme.json', 'themes/Monokai.tmTheme', 'vsc-extension-quickstart.md', '.gitignore', '.vscodeignore']);
+                    assert.file(['package.json', 'README.md', 'CHANGELOG.md', 'themes/Green-color-theme.json', 'themes/Monokai.tmTheme', 'vsc-extension-quickstart.md', '.vscodeignore']);
 
                     var body = fs.readFileSync('package.json', 'utf8');
 
@@ -125,7 +123,6 @@ describe('test code generator', function () {
                 name: 'testTheme',
                 displayName: 'Test Theme',
                 description: 'My TestTheme',
-                publisher: 'Microsoft',
                 themeName: 'Green',
                 themeBase: 'vs-dark',
             }) // Mock the prompt answers
@@ -135,10 +132,9 @@ describe('test code generator', function () {
                     "displayName": "Test Theme",
                     "description": "My TestTheme",
                     "version": "0.0.1",
-                    "publisher": 'Microsoft',
                     "engines": {
                         "vscode": engineVersion,
-                        "azdata": env.azdataVersion
+                        "azdata": env.azdataVersion// {{ADS EDIT}}
                     },
                     "categories": [
                         "Themes"
@@ -164,7 +160,7 @@ describe('test code generator', function () {
                     "tokenColors": "./new theme.tmTheme"
                 };
                 try {
-                    assert.file(['package.json', 'README.md', 'CHANGELOG.md', 'themes/Green-color-theme.json', 'themes/new theme.tmTheme', 'vsc-extension-quickstart.md', '.gitignore', '.vscodeignore']);
+                    assert.file(['package.json', 'README.md', 'CHANGELOG.md', 'themes/Green-color-theme.json', 'themes/new theme.tmTheme', 'vsc-extension-quickstart.md', '.vscodeignore']);
 
                     var body = fs.readFileSync('package.json', 'utf8');
 
@@ -193,7 +189,6 @@ describe('test code generator', function () {
                 name: 'theme74',
                 displayName: 'Theme 74',
                 description: 'Theme SeventyFour',
-                publisher: 'Microsoft',
                 themeName: 'Theme 74',
                 themeBase: 'vs-dark',
             }) // Mock the prompt answers
@@ -203,10 +198,9 @@ describe('test code generator', function () {
                     "displayName": "Theme 74",
                     "description": "Theme SeventyFour",
                     "version": "0.0.1",
-                    "publisher": 'Microsoft',
                     "engines": {
                         "vscode": engineVersion,
-                        "azdata": env.azdataVersion
+                        "azdata": env.azdataVersion// {{ADS EDIT}}
                     },
                     "categories": [
                         "Themes"
@@ -250,7 +244,7 @@ describe('test code generator', function () {
                         }]
                 };
                 try {
-                    assert.file(['package.json', 'README.md', 'CHANGELOG.md', 'themes/Theme 74-color-theme.json', 'vsc-extension-quickstart.md', '.gitignore', '.vscodeignore']);
+                    assert.file(['package.json', 'README.md', 'CHANGELOG.md', 'themes/Theme 74-color-theme.json', 'vsc-extension-quickstart.md', '.vscodeignore']);
 
                     var body = fs.readFileSync('package.json', 'utf8');
 
@@ -279,7 +273,6 @@ describe('test code generator', function () {
                 name: 'testTheme',
                 displayName: 'Test Theme',
                 description: 'My TestTheme',
-                publisher: 'Microsoft',
                 themeName: 'Funky',
                 themeBase: 'vs',
             }) // Mock the prompt answers
@@ -289,10 +282,9 @@ describe('test code generator', function () {
                     "displayName": "Test Theme",
                     "description": "My TestTheme",
                     "version": "0.0.1",
-                    "publisher": 'Microsoft',
                     "engines": {
                         "vscode": engineVersion,
-                        "azdata": env.azdataVersion
+                        "azdata": env.azdataVersion// {{ADS EDIT}}
                     },
                     "categories": [
                         "Themes"
@@ -306,7 +298,7 @@ describe('test code generator', function () {
                     }
                 };
                 try {
-                    assert.file(['package.json', 'README.md', 'CHANGELOG.md', 'themes/Funky-color-theme.json', 'vsc-extension-quickstart.md', '.gitignore', '.vscodeignore']);
+                    assert.file(['package.json', 'README.md', 'CHANGELOG.md', 'themes/Funky-color-theme.json', 'vsc-extension-quickstart.md', '.vscodeignore']);
 
                     var body = fs.readFileSync('package.json', 'utf8');
 
@@ -319,7 +311,7 @@ describe('test code generator', function () {
                     actual = JSON.parse(body);
 
                     assert.equal(actual.name, "Funky");
-                    assert.equal(actual.colors['editor.background'], "#ffffff");
+                    assert.equal(actual.colors['editor.background'], "#f5f5f5");
                     done();
                 } catch (e) {
                     done(e);
@@ -337,7 +329,6 @@ describe('test code generator', function () {
                 name: 'testLan',
                 displayName: 'Test Lan',
                 description: 'My TestLan',
-                publisher: 'Microsoft',
                 languageId: 'ant',
                 languageName: 'ANT',
                 languageScopeName: 'text.xml.ant',
@@ -349,13 +340,12 @@ describe('test code generator', function () {
                     "displayName": "Test Lan",
                     "description": "My TestLan",
                     "version": "0.0.1",
-                    "publisher": 'Microsoft',
                     "engines": {
                         "vscode": engineVersion,
-                        "azdata": env.azdataVersion
+                        "azdata": env.azdataVersion// {{ADS EDIT}}
                     },
                     "categories": [
-                        "Languages"
+                        "Programming Languages"
                     ],
                     "contributes": {
                         "languages": [{
@@ -372,7 +362,63 @@ describe('test code generator', function () {
                     }
                 };
                 try {
-                    assert.file(['package.json', 'README.md', 'CHANGELOG.md', 'syntaxes/ant.tmLanguage', 'language-configuration.json', 'vsc-extension-quickstart.md', '.gitignore', '.vscodeignore']);
+                    assert.file(['package.json', 'README.md', 'CHANGELOG.md', 'syntaxes/ant.tmLanguage', 'language-configuration.json', 'vsc-extension-quickstart.md', '.vscodeignore']);
+
+                    var body = fs.readFileSync('package.json', 'utf8');
+
+                    var actual = JSON.parse(body);
+                    assert.deepEqual(expected, actual);
+                    done();
+                } catch (e) {
+                    done(e);
+                }
+            }, done);
+    });
+
+    it('language import 2', function (done) {
+        this.timeout(10000);
+
+        helpers.run(path.join(__dirname, '../generators/app'))
+            .withPrompts({
+                type: 'ext-language',
+                tmLanguageURL: path.join(__dirname, 'fixtures/grammars/foo.tmLanguage.json'),
+                name: 'testFooLan',
+                displayName: 'Test Foo Lan',
+                description: 'My TestFooLan',
+                languageId: 'foo',
+                languageName: 'FOO',
+                languageScopeName: 'source.foo',
+                languageExtensions: '.foo'
+            }) // Mock the prompt answers
+            .toPromise().then(function () {
+                var expected = {
+                    "name": "testFooLan",
+                    "displayName": "Test Foo Lan",
+                    "description": "My TestFooLan",
+                    "version": "0.0.1",
+                    "engines": {
+                        "vscode": engineVersion,
+                        "azdata": env.azdataVersion// {{ADS EDIT}}
+                    },
+                    "categories": [
+                        "Programming Languages"
+                    ],
+                    "contributes": {
+                        "languages": [{
+                            "id": "foo",
+                            "aliases": ["FOO", "foo"],
+                            "extensions": [".foo"],
+                            "configuration": "./language-configuration.json"
+                        }],
+                        "grammars": [{
+                            "language": "foo",
+                            "scopeName": "source.foo",
+                            "path": "./syntaxes/foo.tmLanguage.json"
+                        }]
+                    }
+                };
+                try {
+                    assert.file(['package.json', 'README.md', 'CHANGELOG.md', 'syntaxes/foo.tmLanguage.json', 'language-configuration.json', 'vsc-extension-quickstart.md', '.vscodeignore']);
 
                     var body = fs.readFileSync('package.json', 'utf8');
 
@@ -395,7 +441,6 @@ describe('test code generator', function () {
                 name: 'crusty',
                 displayName: 'Crusty',
                 description: 'Crusty, the language',
-                publisher: 'Microsoft',
                 languageId: 'crusty',
                 languageName: 'Crusty',
                 languageScopeName: 'source.crusty',
@@ -407,13 +452,12 @@ describe('test code generator', function () {
                     "displayName": "Crusty",
                     "description": "Crusty, the language",
                     "version": "0.0.1",
-                    "publisher": 'Microsoft',
                     "engines": {
                         "vscode": engineVersion,
-                        "azdata": env.azdataVersion
+                        "azdata": env.azdataVersion// {{ADS EDIT}}
                     },
                     "categories": [
-                        "Languages"
+                        "Programming Languages"
                     ],
                     "contributes": {
                         "languages": [{
@@ -430,7 +474,7 @@ describe('test code generator', function () {
                     }
                 };
                 try {
-                    assert.file(['package.json', 'README.md', 'CHANGELOG.md', 'syntaxes/crusty.tmLanguage.json', 'language-configuration.json', 'vsc-extension-quickstart.md', '.gitignore', '.vscodeignore']);
+                    assert.file(['package.json', 'README.md', 'CHANGELOG.md', 'syntaxes/crusty.tmLanguage.json', 'language-configuration.json', 'vsc-extension-quickstart.md', '.vscodeignore']);
 
                     var body = fs.readFileSync('package.json', 'utf8');
 
@@ -460,7 +504,6 @@ describe('test code generator', function () {
                 name: 'testSnip',
                 displayName: 'Test Snip',
                 description: 'My TestSnip',
-                publisher: 'Microsoft',
                 languageId: 'python'
             }) // Mock the prompt answers
             .toPromise().then(function () {
@@ -469,10 +512,9 @@ describe('test code generator', function () {
                     "displayName": 'Test Snip',
                     "description": "My TestSnip",
                     "version": "0.0.1",
-                    "publisher": 'Microsoft',
                     "engines": {
                         "vscode": engineVersion,
-                        "azdata": env.azdataVersion
+                        "azdata": env.azdataVersion// {{ADS EDIT}}
                     },
                     "categories": [
                         "Snippets"
@@ -480,12 +522,12 @@ describe('test code generator', function () {
                     "contributes": {
                         "snippets": [{
                             "language": "python",
-                            "path": "./snippets/snippets.json"
+                            "path": "./snippets/snippets.code-snippets"
                         }]
                     }
                 };
                 try {
-                    assert.file(['package.json', 'README.md', 'CHANGELOG.md', 'snippets/snippets.json', 'vsc-extension-quickstart.md', '.gitignore', '.vscodeignore']);
+                    assert.file(['package.json', 'README.md', 'CHANGELOG.md', 'snippets/snippets.code-snippets', 'vsc-extension-quickstart.md', '.vscodeignore']);
 
                     var body = fs.readFileSync('package.json', 'utf8');
 
@@ -510,7 +552,6 @@ describe('test code generator', function () {
                 name: 'testSnip',
                 displayName: 'Test Snip',
                 description: 'My TestSnip',
-                publisher: 'Microsoft',
                 languageId: 'python'
             }) // Mock the prompt answers
             .toPromise().then(function () {
@@ -519,10 +560,9 @@ describe('test code generator', function () {
                     "displayName": 'Test Snip',
                     "description": "My TestSnip",
                     "version": "0.0.1",
-                    "publisher": 'Microsoft',
                     "engines": {
                         "vscode": engineVersion,
-                        "azdata": env.azdataVersion
+                        "azdata": env.azdataVersion// {{ADS EDIT}}
                     },
                     "categories": [
                         "Snippets"
@@ -530,7 +570,7 @@ describe('test code generator', function () {
                     "contributes": {
                         "snippets": [{
                             "language": "python",
-                            "path": "./snippets/snippets.json"
+                            "path": "./snippets/snippets.code-snippets"
                         }]
                     }
                 };
@@ -561,14 +601,14 @@ describe('test code generator', function () {
                     }
                 };
                 try {
-                    assert.file(['package.json', 'README.md', 'CHANGELOG.md', 'snippets/snippets.json', 'vsc-extension-quickstart.md', '.gitignore', '.vscodeignore']);
+                    assert.file(['package.json', 'README.md', 'CHANGELOG.md', 'snippets/snippets.code-snippets', 'vsc-extension-quickstart.md', '.vscodeignore']);
 
                     var body = fs.readFileSync('package.json', 'utf8');
 
                     var actual = JSON.parse(body);
                     assert.deepEqual(expected, actual);
 
-                    var snippet = fs.readFileSync('snippets/snippets.json', 'utf8');
+                    var snippet = fs.readFileSync('snippets/snippets.code-snippets', 'utf8');
 
                     var actualSnippet = JSON.parse(snippet);
                     assert.deepEqual(expectedSnippet, actualSnippet);
@@ -589,7 +629,6 @@ describe('test code generator', function () {
                 name: 'testKeym',
                 displayName: 'Test Keym',
                 description: 'My TestKeym',
-                publisher: 'Microsoft'
             }) // Mock the prompt answers
             .toPromise().then(function () {
                 var expected = {
@@ -597,10 +636,9 @@ describe('test code generator', function () {
                     "displayName": 'Test Keym',
                     "description": "My TestKeym",
                     "version": "0.0.1",
-                    "publisher": 'Microsoft',
                     "engines": {
                         "vscode": engineVersion,
-                        "azdata": env.azdataVersion
+                        "azdata": env.azdataVersion// {{ADS EDIT}}
                     },
                     "categories": [
                         "Keymaps"
@@ -613,7 +651,7 @@ describe('test code generator', function () {
                     }
                 };
                 try {
-                    assert.file(['package.json', 'README.md', 'CHANGELOG.md', 'vsc-extension-quickstart.md', '.gitignore', '.vscodeignore']);
+                    assert.file(['package.json', 'README.md', 'CHANGELOG.md', 'vsc-extension-quickstart.md', '.vscodeignore']);
 
                     var body = fs.readFileSync('package.json', 'utf8');
 
@@ -637,10 +675,7 @@ describe('test code generator', function () {
                 name: 'testCom',
                 displayName: 'Test Com',
                 description: 'My TestCom',
-                publisher: 'Microsoft',
-                strictTypeScript: false,
-                tslint: false,
-                gitInit: false,
+                gitInit: true,
                 pkgManager: 'npm'
             }) // Mock the prompt answers
             .toPromise().then(function () {
@@ -649,54 +684,60 @@ describe('test code generator', function () {
                     "displayName": 'Test Com',
                     "description": "My TestCom",
                     "version": "0.0.1",
-                    "publisher": 'Microsoft',
                     "engines": {
                         "vscode": engineVersion,
-                        "azdata": env.azdataVersion
+                        "azdata": env.azdataVersion// {{ADS EDIT}}
                     },
                     "activationEvents": [
-                        "onCommand:extension.sayHello",
-                        "onCommand:extension.showCurrentConnection"
+                        "onCommand:testCom.helloWorld",
+                        "onCommand:testCom.showCurrentConnection"
                     ],
                     "devDependencies": {
-                        "typescript": "^2.6.1",
-                        "azdata": "1.0.0",
-                        "vscode": "^1.1.6",
-                        "@types/node": "^7.0.43",
-                        "@types/mocha": "^2.2.42"
+                        "@types/vscode": engineVersion,
+                        "@types/azdata": env.azdataVersion,// {{ADS EDIT}}
+                        "@types/glob": "^7.1.1",
+                        "@types/mocha": "^7.0.2",
+                        "@types/node": "^13.11.0",
+                        "eslint": "^6.8.0",
+                        "@typescript-eslint/parser": "^2.30.0",
+                        "@typescript-eslint/eslint-plugin": "^2.30.0",
+                        "glob": "^7.1.6",
+                        "mocha": "^7.1.2",
+                        "typescript": "^3.8.3",
+                        "vscode-test": "^1.3.0"
                     },
-                    "main": "./out/extension",
+                    "main": "./out/extension.js",
                     "scripts": {
                         "vscode:prepublish": "npm run compile",
                         "compile": "tsc -p ./",
+                        "lint": "eslint src --ext ts",
                         "watch": "tsc -watch -p ./",
-                        "postinstall": "node ./node_modules/vscode/bin/install && node ./node_modules/azdata/bin/install",
-                        "proposedapi": "node installTypings.js",
-                        "test": "npm run compile && node ./node_modules/vscode/bin/test"
+                        "pretest": "npm run compile && npm run lint",
+                        "test": "node ./out/test/runTest.js"
                     },
                     "categories": [
                         "Other"
                     ],
                     "contributes": {
                         "commands": [{
-                            "command": "extension.sayHello",
+                            "command": "testCom.helloWorld",
                             "title": "Hello World"
                         },
                         {
-                            "command": "extension.showCurrentConnection",
+                            "command": "testCom.showCurrentConnection",
                             "title": "Show Current Connection"
-                        }]
+                        }
+                    ]
                     }
                 };
                 try {
 
 
-                    assert.file(['package.json', 'README.md', 'CHANGELOG.md', '.vscodeignore', 'src/extension.ts', 'src/test/extension.test.ts', 'src/test/index.ts', '.gitignore', 'tsconfig.json']);
+                    assert.file(['package.json', 'README.md', 'CHANGELOG.md', '.vscodeignore', 'src/extension.ts', 'src/test/suite/extension.test.ts', 'src/test/suite/index.ts', 'tsconfig.json']);
 
-                    var body = fs.readFileSync('package.json', 'utf8');
-
-                    var actual = JSON.parse(body);
-                    assert.deepEqual(expectedPackageJSON, actual);
+                    var packageJSONBody = fs.readFileSync('package.json', 'utf8')
+                    var actualPackageJSON = JSON.parse(packageJSONBody);
+                    assert.deepEqual(expectedPackageJSON, actualPackageJSON);
 
                     done();
                 } catch (e) {
@@ -705,7 +746,7 @@ describe('test code generator', function () {
             });
     });
 
-    it('command-ts with tslint', function (done) {
+    it('command-ts with yarn', function (done) {
         this.timeout(10000);
 
         helpers.run(path.join(__dirname, '../generators/app'))
@@ -714,91 +755,62 @@ describe('test code generator', function () {
                 name: 'testCom',
                 displayName: 'Test Com',
                 description: 'My TestCom',
-                publisher: 'Microsoft',
-                strictTypeScript: false,
-                tslint: true,
                 gitInit: false,
-                pkgManager: 'npm'
+                pkgManager: 'yarn'
             }) // Mock the prompt answers
             .toPromise().then(function () {
-                var expected = {
+                var expectedPackageJSON = {
                     "name": "testCom",
                     "displayName": 'Test Com',
                     "description": "My TestCom",
                     "version": "0.0.1",
-                    "publisher": 'Microsoft',
                     "engines": {
                         "vscode": engineVersion,
-                        "azdata": env.azdataVersion
+                        "azdata": env.azdataVersion// {{ADS EDIT}}
                     },
                     "activationEvents": [
-                        "onCommand:extension.sayHello",
-                        "onCommand:extension.showCurrentConnection"
+                        "onCommand:testCom.helloWorld",
+                        "onCommand:testCom.showCurrentConnection"
                     ],
                     "devDependencies": {
-                        "typescript": "^2.6.1",
-                        "azdata": "1.0.0",
-                        "vscode": "^1.1.6",
-                        "tslint": "^5.8.0",
-                        "@types/node": "^7.0.43",
-                        "@types/mocha": "^2.2.42"
+                        "@types/vscode": engineVersion,
+                        "@types/azdata": env.azdataVersion,// {{ADS EDIT}}
+                        "@types/glob": "^7.1.1",
+                        "@types/mocha": "^7.0.2",
+                        "@types/node": "^13.11.0",
+                        "eslint": "^6.8.0",
+                        "@typescript-eslint/parser": "^2.30.0",
+                        "@typescript-eslint/eslint-plugin": "^2.30.0",
+                        "glob": "^7.1.6",
+                        "mocha": "^7.1.2",
+                        "typescript": "^3.8.3",
+                        "vscode-test": "^1.3.0"
                     },
-                    "main": "./out/extension",
+                    "main": "./out/extension.js",
                     "scripts": {
-                        "vscode:prepublish": "npm run compile",
+                        "vscode:prepublish": "yarn run compile",
                         "compile": "tsc -p ./",
+                        "lint": "eslint src --ext ts",
                         "watch": "tsc -watch -p ./",
-                        "postinstall": "node ./node_modules/vscode/bin/install && node ./node_modules/azdata/bin/install",
-                        "proposedapi": "node installTypings.js",
-                        "test": "npm run compile && node ./node_modules/vscode/bin/test"
+                        "pretest": "yarn run compile && yarn run lint",
+                        "test": "node ./out/test/runTest.js"
                     },
                     "categories": [
                         "Other"
                     ],
                     "contributes": {
                         "commands": [{
-                            "command": "extension.sayHello",
+                            "command": "testCom.helloWorld",
                             "title": "Hello World"
                         },
                         {
-                            "command": "extension.showCurrentConnection",
+                            "command": "testCom.showCurrentConnection",
                             "title": "Show Current Connection"
-                        }]
+                        }
+                    ]
                     }
                 };
-                try {
-
-
-                    assert.file(['package.json', 'README.md', 'CHANGELOG.md', '.vscodeignore', 'src/extension.ts', 'src/test/extension.test.ts', 'src/test/index.ts', '.gitignore', 'tsconfig.json', 'tslint.json', '.vscode/extensions.json']);
-
-                    var body = fs.readFileSync('package.json', 'utf8');
-
-                    var actual = JSON.parse(body);
-                    assert.deepEqual(expected, actual);
-
-                    done();
-                } catch (e) {
-                    done(e);
-                }
-            });
-    });
-    it('command-ts with strict TS', function (done) {
-        this.timeout(10000);
-
-        helpers.run(path.join(__dirname, '../generators/app'))
-            .withPrompts({
-                type: 'ext-command-ts',
-                name: 'testCom',
-                displayName: 'Test Com',
-                description: 'My TestCom',
-                publisher: 'Microsoft',
-                strictTypeScript: true,
-                tslint: false,
-                gitInit: false,
-                pkgManager: 'npm'
-            }) // Mock the prompt answers
-            .toPromise().then(function () {
-                var expected = {
+                var expectedTsConfig = {
                     "compilerOptions": {
                         "module": "commonjs",
                         "target": "es6",
@@ -808,8 +820,7 @@ describe('test code generator', function () {
                         ],
                         "sourceMap": true,
                         "rootDir": "src",
-                        "strict": true,
-                        "noUnusedLocals": true,
+                        "strict": true
                     },
                     "exclude": [
                         "node_modules",
@@ -817,10 +828,16 @@ describe('test code generator', function () {
                     ]
                 };
                 try {
-                    var body = fs.readFileSync('tsconfig.json', 'utf8');
+                    assert.file(['package.json', 'README.md', 'CHANGELOG.md', '.vscodeignore', 'src/extension.ts', 'src/test/suite/extension.test.ts', 'src/test/suite/index.ts', 'tsconfig.json', '.eslintrc.json', '.vscode/extensions.json']);
 
-                    var actual = JSON.parse(stripComments(body));
-                    assert.deepEqual(expected, actual);
+                    var packageJSONBody = fs.readFileSync('package.json', 'utf8')
+                    var actualPackageJSON = JSON.parse(packageJSONBody);
+                    assert.deepEqual(expectedPackageJSON, actualPackageJSON);
+
+                    var tsconfigBody = fs.readFileSync('tsconfig.json', 'utf8');
+
+                    var actualTsConfig = JSON.parse(stripComments(tsconfigBody));
+                    assert.deepEqual(expectedTsConfig, actualTsConfig);
 
                     done();
                 } catch (e) {
@@ -838,7 +855,6 @@ describe('test code generator', function () {
                 name: 'testCom',
                 displayName: 'Test Com',
                 description: 'My TestCom',
-                publisher: 'Microsoft',
                 checkJavaScript: false,
                 gitInit: false,
                 pkgManager: 'npm'
@@ -849,41 +865,50 @@ describe('test code generator', function () {
                     "displayName": 'Test Com',
                     "description": "My TestCom",
                     "version": "0.0.1",
-                    "publisher": 'Microsoft',
                     "engines": {
                         "vscode": engineVersion,
-                        "azdata": env.azdataVersion
+                        "azdata": env.azdataVersion// {{ADS EDIT}}
                     },
                     "activationEvents": [
-                        "onCommand:extension.sayHello"
+                        "onCommand:testCom.helloWorld",
+                        "onCommand:testCom.showCurrentConnection"
                     ],
                     "devDependencies": {
-                        "typescript": "^2.6.1",
-                        "azdata": "1.0.0",
-                        "vscode": "^1.1.6",
-                        "eslint": "^4.11.0",
-                        "@types/node": "^7.0.43",
-                        "@types/mocha": "^2.2.42"
+                        "@types/vscode": engineVersion,
+                        "@types/azdata": env.azdataVersion,// {{ADS EDIT}}
+                        "@types/glob": "^7.1.1",
+                        "@types/mocha": "^7.0.2",
+                        "@types/node": "^13.11.0",
+                        "eslint": "^6.8.0",
+                        "glob": "^7.1.6",
+                        "mocha": "^7.1.2",
+                        "typescript": "^3.8.3",
+                        "vscode-test": "^1.3.0"
                     },
-                    "main": "./extension",
+                    "main": "./extension.js",
                     "scripts": {
-                        "postinstall": "node ./node_modules/vscode/bin/install && node ./node_modules/azdata/bin/install",
-                        "test": "node ./node_modules/vscode/bin/test"
+                        "lint": "eslint .",
+                        "pretest": "npm run lint",
+                        "test": "node ./test/runTest.js"
                     },
                     "categories": [
                         "Other"
                     ],
                     "contributes": {
                         "commands": [{
-                            "command": "extension.sayHello",
+                            "command": "testCom.helloWorld",
                             "title": "Hello World"
+                        },
+                        {
+                            "command": "testCom.showCurrentConnection",
+                            "title": "Show Current Connection"
                         }]
                     }
                 };
                 try {
 
 
-                    assert.file(['package.json', 'README.md', 'CHANGELOG.md', '.vscodeignore', 'extension.js', 'test/extension.test.js', 'test/index.js', '.gitignore', 'jsconfig.json']);
+                    assert.file(['package.json', 'README.md', 'CHANGELOG.md', '.vscodeignore', 'extension.js', 'test/suite/extension.test.js', 'test/suite/index.js', 'jsconfig.json']);
 
                     var body = fs.readFileSync('package.json', 'utf8');
 
@@ -906,10 +931,9 @@ describe('test code generator', function () {
                 name: 'testCom',
                 displayName: 'Test Com',
                 description: 'My TestCom',
-                publisher: 'Microsoft',
                 checkJavaScript: true,
                 gitInit: false,
-                pkgManager: 'npm'
+                pkgManager: 'yarn'
             }) // Mock the prompt answers
             .toPromise().then(function () {
                 var expected = {
@@ -946,8 +970,7 @@ describe('test code generator', function () {
                 type: 'ext-extensionpack',
                 name: 'testExtensionPack',
                 displayName: 'Test Extension Pack',
-                description: 'My Test Extension Pack',
-                publisher: 'Microsoft'
+                description: 'My Test Extension Pack'
             }) // Mock the prompt answers
             .toPromise().then(function () {
                 var expected = {
@@ -955,20 +978,19 @@ describe('test code generator', function () {
                     "displayName": "Test Extension Pack",
                     "description": "My Test Extension Pack",
                     "version": "0.0.1",
-                    "publisher": 'Microsoft',
                     "engines": {
                         "vscode": engineVersion,
-                        "azdata": env.azdataVersion
+                        "azdata": env.azdataVersion// {{ADS EDIT}}
                     },
                     "categories": [
                         "Extension Packs"
                     ],
-                    "extensionDependencies": [
+                    "extensionPack": [
                         "publisher.extensionName"
                     ]
                 };
                 try {
-                    assert.file(['package.json', 'README.md', 'CHANGELOG.md', 'vsc-extension-quickstart.md', '.gitignore', '.vscodeignore']);
+                    assert.file(['package.json', 'README.md', 'CHANGELOG.md', 'vsc-extension-quickstart.md', '.vscodeignore']);
 
                     var body = fs.readFileSync('package.json', 'utf8');
 
@@ -989,7 +1011,6 @@ describe('test code generator', function () {
                 lpLanguageId: 'ru',
                 lpLanguageName: 'Russian',
                 lpLocalizedLanguageName: 'русский',
-                publisher: 'Microsoft',
                 pkgManager: 'npm'
             }).toPromise().then(function () {
                 var expected = {
@@ -997,10 +1018,9 @@ describe('test code generator', function () {
                     "displayName": "Russian Language Pack",
                     "description": "Language pack extension for Russian",
                     "version": "0.0.1",
-                    "publisher": 'Microsoft',
                     "engines": {
                         "vscode": engineVersion,
-                        "azdata": env.azdataVersion
+                        "azdata": env.azdataVersion// {{ADS EDIT}}
                     },
                     "categories": [
                         "Language Packs"
@@ -1017,7 +1037,54 @@ describe('test code generator', function () {
                     }
                 };
                 try {
-                    assert.file(['package.json', 'README.md', 'CHANGELOG.md', 'vsc-extension-quickstart.md', '.gitignore', '.vscodeignore']);
+                    assert.file(['package.json', 'README.md', 'CHANGELOG.md', 'vsc-extension-quickstart.md', '.vscodeignore']);
+
+                    var body = fs.readFileSync('package.json', 'utf8');
+
+                    var actual = JSON.parse(body);
+                    assert.deepEqual(expected, actual);
+
+                    done();
+                } catch (e) {
+                    done(e);
+                }
+            }, done);
+    });
+
+    it('language pack with yarn', function (done) {
+        helpers.run(path.join(__dirname, '../generators/app'))
+            .withPrompts({
+                type: 'ext-localization',
+                lpLanguageId: 'ru',
+                lpLanguageName: 'Russian',
+                lpLocalizedLanguageName: 'русский',
+                pkgManager: 'yarn'
+            }).toPromise().then(function () {
+                var expected = {
+                    "name": "vscode-language-pack-ru",
+                    "displayName": "Russian Language Pack",
+                    "description": "Language pack extension for Russian",
+                    "version": "0.0.1",
+                    "engines": {
+                        "vscode": engineVersion,
+                        "azdata": env.azdataVersion// {{ADS EDIT}}
+                    },
+                    "categories": [
+                        "Language Packs"
+                    ],
+                    "contributes": {
+                        "localizations": [{
+                            "languageId": "ru",
+                            "languageName": "Russian",
+                            "localizedLanguageName": "русский"
+                        }]
+                    },
+                    "scripts": {
+                        "update": "cd ../vscode && yarn run update-localization-extension ru"
+                    }
+                };
+                try {
+                    assert.file(['package.json', 'README.md', 'CHANGELOG.md', 'vsc-extension-quickstart.md', '.gitignore', '.gitattributes', '.vscodeignore']);
 
                     var body = fs.readFileSync('package.json', 'utf8');
 
