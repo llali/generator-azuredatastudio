@@ -38,7 +38,7 @@ module.exports = class extends Generator {
     initializing() {
 
         // Welcome
-        this.log(yosay('Welcome to the Azure Data Studio Extension generator!'));// {{ADS EDIT}}
+        this.log(yosay('Welcome to the Azure Data Studio Extension Generator!'));// {{ADS EDIT}}
 
         // evaluateEngineVersion
         let extensionConfig = this.extensionConfig;
@@ -56,7 +56,7 @@ module.exports = class extends Generator {
             askForType: () => {
                 let extensionType = generator.options['extensionType'];
                 if (extensionType) {
-                    let extensionTypes = ['insight', 'colortheme', 'language', 'snippets', 'command-ts', 'command-js', 'extensionpack'];// {{ADS EDIT}}
+                    let extensionTypes = ['insight', 'colortheme', 'language', 'snippets', 'command-ts', 'command-js', 'extensionpack', 'jupyterbook'];// {{ADS EDIT}}
                     if (extensionTypes.indexOf(extensionType) !== -1) {
                         generator.extensionConfig.type = 'ext-' + extensionType;
                     } else {
@@ -104,6 +104,11 @@ module.exports = class extends Generator {
                     {
                         name: 'New Language Pack (Localization)',
                         value: 'ext-localization'
+                    }
+                    ,
+                    {
+                        name: 'New Jupyter Book',
+                        value: 'ext-jupyterbook'
                     }
                     ]
                 }).then(typeAnswer => {
@@ -384,6 +389,22 @@ module.exports = class extends Generator {
                 });
             },
 
+            askForBookName: () => {
+                if (generator.extensionConfig.type !== 'ext-jupyterbook') {
+                    return Promise.resolve();
+                }
+
+                return generator.prompt({
+                    type: 'input',
+                    name: 'bookTitle',
+                    message: 'What\'s the title of your Jupyter Book?',
+                    default: generator.extensionConfig.bookTitle,
+                    validate: validator.validateNonEmpty
+                }).then(titleAnswer => {
+                    generator.extensionConfig.bookTitle = titleAnswer.bookTitle;
+                });
+            },
+
             askForThemeName: () => {
                 if (generator.extensionConfig.type !== 'ext-colortheme') {
                     return Promise.resolve();
@@ -589,12 +610,29 @@ module.exports = class extends Generator {
             case 'ext-localization':
                 localization.writingLocalizationExtension(this);
                 break;
+            case 'ext-jupyterbook':
+                this._writingJupyterBook();
+                break;
             default:
                 //unknown project type
                 break;
         }
     }
 
+    _writingJupyterBook(){
+        let context = this.extensionConfig;
+
+        this.fs.copy(this.sourceRoot() + '/vscode', context.name + '/.vscode');
+        this.fs.copyTpl(this.sourceRoot() + '/package.json', context.name + '/package.json', context);
+        this.fs.copyTpl(this.sourceRoot() + '/vsc-extension-quickstart.md', context.name + '/vsc-extension-quickstart.md', context);
+        this.fs.copyTpl(this.sourceRoot() + '/README.md', context.name + '/README.md', context);
+        this.fs.copyTpl(this.sourceRoot() + '/CHANGELOG.md', context.name + '/CHANGELOG.md', context);
+        this.fs.copy(this.sourceRoot() + '/vscodeignore', context.name + '/.vscodeignore');
+        if (this.extensionConfig.gitInit) {
+            this.fs.copy(this.sourceRoot() + '/gitignore', context.name + '/.gitignore');
+            this.fs.copy(this.sourceRoot() + '/gitattributes', context.name + '/.gitattributes');
+        }
+    }
 
     // Write Color Theme Extension
     _writingExtensionPack() {
