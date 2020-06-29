@@ -1,5 +1,6 @@
-- file: intro
-- file: content
+- file: features/intro
+- file: features/content
   sections:
-    - file: markdown
-    - file: notebooks
+    - file: features/markdown
+    - file: features/notebooks
+    - file: features/sql-notebook

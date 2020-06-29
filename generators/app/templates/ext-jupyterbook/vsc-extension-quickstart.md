@@ -2,7 +2,7 @@
 
 ## What's in the folder
 * This folder contains all of the files necessary for your extension pack.
-* `package.json` - this is the manifest file that defines the list of extensions of the extension pack.
+* `requirements.txt` - this is the file that defines the list of packages necessary for the book.
 
 ## Get up and running straight away
 * Press `F5` to open a new window with your extension loaded.

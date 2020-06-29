@@ -38,6 +38,7 @@
     "cd": "^0.3.3",
     "chalk": "^4.0.0",
     "fast-plist": "^0.1.2",
+    "generator-sqlops": "^0.10.4",
     "request-light": "0.3.0",
     "sanitize-filename": "^1.6.3",
     "sax": "^1.2.4",

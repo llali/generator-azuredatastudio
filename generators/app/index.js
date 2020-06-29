@@ -610,6 +610,9 @@ module.exports = class extends Generator {
             case 'ext-localization':
                 localization.writingLocalizationExtension(this);
                 break;
+            case 'ext-notebook':
+                this._writingNotebook();
+                break;
             case 'ext-jupyterbook':
                 this._writingJupyterBook();
                 break;
@@ -619,15 +622,41 @@ module.exports = class extends Generator {
         }
     }
 
-    _writingJupyterBook(){
+    _writingNotebook(){
         let context = this.extensionConfig;
 
         this.fs.copy(this.sourceRoot() + '/vscode', context.name + '/.vscode');
+        this.fs.copy(this.sourceRoot() + '/src/test', context.name + '/src/test');
+
+        this.fs.copy(this.sourceRoot() + '/vscodeignore', context.name + '/.vscodeignore');
+        if (this.extensionConfig.gitInit) {
+            this.fs.copy(this.sourceRoot() + '/gitignore', context.name + '/.gitignore');
+        }
+        this.fs.copyTpl(this.sourceRoot() + '/README.md', context.name + '/README.md', context);
+        this.fs.copyTpl(this.sourceRoot() + '/CHANGELOG.md', context.name + '/CHANGELOG.md', context);
+        this.fs.copyTpl(this.sourceRoot() + '/vsc-extension-quickstart.md', context.name + '/vsc-extension-quickstart.md', context);
+        this.fs.copyTpl(this.sourceRoot() + '/tsconfig.json', context.name + '/tsconfig.json', context);
+
+        this.fs.copyTpl(this.sourceRoot() + '/src/extension.ts', context.name + '/src/extension.ts', context);
         this.fs.copyTpl(this.sourceRoot() + '/package.json', context.name + '/package.json', context);
+
+        this.fs.copy(this.sourceRoot() + '/.eslintrc.json', context.name + '/.eslintrc.json');
+
+        this.extensionConfig.installDependencies = true;
+    }
+
+    _writingJupyterBook(){
+        let context = this.extensionConfig;
+
+        this.fs.copy(this.sourceRoot() + '/features', context.name + '/features');
+        this.fs.copyTpl(this.sourceRoot() + '/requirements.txt', context.name + '/requirements.txt', context);
+        this.fs.copyTpl(this.sourceRoot() + '/references.bib', context.name + '/references.bib', context);
+        this.fs.copyTpl(this.sourceRoot() + '/logo.png', context.name + '/logo.png', context);
+        this.fs.copyTpl(this.sourceRoot() + '/_config.yml', context.name + '/_config.yml', context);
+        this.fs.copyTpl(this.sourceRoot() + '/_toc.yml', context.name + '/_toc.yml', context);
         this.fs.copyTpl(this.sourceRoot() + '/vsc-extension-quickstart.md', context.name + '/vsc-extension-quickstart.md', context);
         this.fs.copyTpl(this.sourceRoot() + '/README.md', context.name + '/README.md', context);
         this.fs.copyTpl(this.sourceRoot() + '/CHANGELOG.md', context.name + '/CHANGELOG.md', context);
-        this.fs.copy(this.sourceRoot() + '/vscodeignore', context.name + '/.vscodeignore');
         if (this.extensionConfig.gitInit) {
             this.fs.copy(this.sourceRoot() + '/gitignore', context.name + '/.gitignore');
             this.fs.copy(this.sourceRoot() + '/gitattributes', context.name + '/.gitattributes');
