@@ -56,7 +56,7 @@ module.exports = class extends Generator {
             askForType: () => {
                 let extensionType = generator.options['extensionType'];
                 if (extensionType) {
-                    let extensionTypes = ['insight', 'colortheme', 'language', 'snippets', 'command-ts', 'command-js', 'extensionpack', 'jupyterbook'];// {{ADS EDIT}}
+                    let extensionTypes = ['insight', 'colortheme', 'language', 'snippets', 'command-ts', 'command-js', 'extensionpack', 'notebook'];// {{ADS EDIT}}
                     if (extensionTypes.indexOf(extensionType) !== -1) {
                         generator.extensionConfig.type = 'ext-' + extensionType;
                     } else {
@@ -107,8 +107,8 @@ module.exports = class extends Generator {
                     }
                     ,
                     {
-                        name: 'New Jupyter Book',
-                        value: 'ext-jupyterbook'
+                        name: 'New Notebook',
+                        value: 'ext-notebook'
                     }
                     ]
                 }).then(typeAnswer => {
@@ -389,6 +389,64 @@ module.exports = class extends Generator {
                 });
             },
 
+            askForNotebooks: () => {
+                if (generator.extensionConfig.type !== 'ext-notebook') {
+                    return Promise.resolve();
+                }
+
+                // generator.extensionConfig.isCustomization = true;
+                // const defaultExtensionList = ['publisher.extensionName'];
+
+                // const getNotebookList = () =>
+                //     new Promise((resolve, reject) => {
+                //         childProcess.exec(
+                //             'code --list-extensions',
+                //             (error, stdout, stderr) => {
+                //                 if (error) {
+                //                     generator.env.error(error);
+                //                 } else {
+                //                     let out = stdout.trim();
+                //                     if (out.length > 0) {
+                //                         generator.extensionConfig.extensionList = out.split(/\s/);
+                //                     }
+                //                 }
+                //                 resolve();
+                //             }
+                //         );
+                //     });
+
+                // const extensionParam = generator.options['extensionParam'];
+                // if (extensionParam) {
+                //     switch (extensionParam.toString().trim().toLowerCase()) {
+                //         case 'n':
+                //             generator.extensionConfig.extensionList = defaultExtensionList;
+                //             return Promise.resolve();
+                //         case 'y':
+                //             return getExtensionList();
+                //     }
+                // }
+
+                return generator.prompt({
+                    type: 'confirm',
+                    name: 'addNotebooks',
+                    message: 'Add existing notebooks to be shipped?',
+                    default: true
+                }).then(answer => {
+                    return generator.prompt({
+                        type: 'input',
+                        name: 'selectPath',
+                        message: 'Provide the path to the folder containing your notebooks.',
+                        default: "/notebooks"
+                    })
+                })
+                // .then(addExtensionsAnswer => {
+                //     generator.extensionConfig.extensionList = defaultExtensionList;
+                //     if (addExtensionsAnswer.addExtensions) {
+                //         return getExtensionList();
+                //     }
+                // });
+            },
+
             askForBookName: () => {
                 if (generator.extensionConfig.type !== 'ext-jupyterbook') {
                     return Promise.resolve();
@@ -534,7 +592,7 @@ module.exports = class extends Generator {
             },
 
             askForPackageManager: () => {
-                if (['ext-command-ts', 'ext-command-js', 'ext-localization'].indexOf(generator.extensionConfig.type) === -1) {
+                if (['ext-command-ts', 'ext-command-js', 'ext-localization', 'ext-notebook'].indexOf(generator.extensionConfig.type) === -1) {
                     return Promise.resolve();
                 }
                 generator.extensionConfig.pkgManager = 'npm';
@@ -637,7 +695,7 @@ module.exports = class extends Generator {
         this.fs.copyTpl(this.sourceRoot() + '/vsc-extension-quickstart.md', context.name + '/vsc-extension-quickstart.md', context);
         this.fs.copyTpl(this.sourceRoot() + '/tsconfig.json', context.name + '/tsconfig.json', context);
 
-        this.fs.copyTpl(this.sourceRoot() + '/src/extension.ts', context.name + '/src/extension.ts', context);
+        this.fs.copyTpl(this.sourceRoot() + '/src/notebook.ts', context.name + '/src/notebook.ts', context);
         this.fs.copyTpl(this.sourceRoot() + '/package.json', context.name + '/package.json', context);
 
         this.fs.copy(this.sourceRoot() + '/.eslintrc.json', context.name + '/.eslintrc.json');

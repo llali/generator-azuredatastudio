@@ -11,19 +11,14 @@
 		"Other"
 	],
 	"activationEvents": [
-		<%- JSON.stringify(`onCommand:${name}.helloWorld`) %>,
-		<%- JSON.stringify(`onCommand:${name}.showCurrentConnection`) %>
+		<%- JSON.stringify(`onCommand:Launch Notebooks: ${name}`) %>
 	],
 	"main": "./out/extension.js",
 	"contributes": {
 		"commands": [
 			{
-				"command": <%- JSON.stringify(`${name}.helloWorld`) %>,
-                "title": "Hello World"
-			},
-			{
-				"command": <%- JSON.stringify(`${name}.showCurrentConnection`) %>,
-                "title": "Show Current Connection"
+				"command": <%- JSON.stringify(`Launch Notebooks: ${name}`) %>,
+                "title": "Launch Notebooks"
 			}
 		]
 	},
