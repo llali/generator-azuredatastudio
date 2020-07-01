@@ -18,7 +18,7 @@
 		"commands": [
 			{
 				"command": <%- JSON.stringify(`Launch Notebooks: ${name}`) %>,
-                "title": "Launch Notebooks"
+                "title":  <%- JSON.stringify(`Launch Notebooks: ${name}`) %>
 			}
 		]
 	},
@@ -28,19 +28,16 @@
 		"lint": "eslint src --ext ts",
 		"watch": "tsc -watch -p ./",
 		"pretest": "<%= pkgManager %> run compile && <%= pkgManager %> run lint",
-		"test": "node ./out/test/runTest.js"
 	},
 	"devDependencies": {
 		"@types/vscode": <%- JSON.stringify(vsCodeEngine) %>,
 		"@types/azdata": <%- JSON.stringify(azdataEngine) %>,
 		"@types/glob": "^7.1.1",
-		"@types/mocha": "^7.0.2",
 		"@types/node": "^13.11.0",
 		"eslint": "^6.8.0",
 		"@typescript-eslint/parser": "^2.30.0",
 		"@typescript-eslint/eslint-plugin": "^2.30.0",
 		"glob": "^7.1.6",
-		"mocha": "^7.1.2",
 		"typescript": "^3.8.3",
 		"vscode-test": "^1.3.0"
 	}

@@ -26,18 +26,6 @@ export function activate(context: vscode.ExtensionContext) {
         // Display a message box to the user
         vscode.window.showInformationMessage('Hello World!');
     }));
-
-    context.subscriptions.push(vscode.commands.registerCommand('<%= name %>.showCurrentConnection', () => {
-        // The code you place here will be executed every time your command is executed
-
-        // Display a message box to the user
-        azdata.connection.getCurrentConnection().then(connection => {
-            let connectionId = connection ? connection.connectionId : 'No connection found!';
-            vscode.window.showInformationMessage(connectionId);
-        }, error => {
-             console.info(error);
-        });
-    }));
 }
 
 // this method is called when your extension is deactivated

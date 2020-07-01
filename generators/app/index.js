@@ -11,6 +11,7 @@ let validator = require('./validator');
 let snippetConverter = require('./snippetConverter');
 let themeConverter = require('./themeConverter');
 let grammarConverter = require('./grammarConverter');
+let notebookConverter = require('./notebookConverter');
 let env = require('./env');
 let childProcess = require('child_process');
 let chalk = require('chalk');
@@ -56,7 +57,7 @@ module.exports = class extends Generator {
             askForType: () => {
                 let extensionType = generator.options['extensionType'];
                 if (extensionType) {
-                    let extensionTypes = ['insight', 'colortheme', 'language', 'snippets', 'command-ts', 'command-js', 'extensionpack', 'notebook'];// {{ADS EDIT}}
+                    let extensionTypes = ['insight', 'colortheme', 'language', 'snippets', 'command-ts', 'command-js', 'extensionpack', 'notebook','jupyterbook'];// {{ADS EDIT}}
                     if (extensionTypes.indexOf(extensionType) !== -1) {
                         generator.extensionConfig.type = 'ext-' + extensionType;
                     } else {
@@ -107,9 +108,13 @@ module.exports = class extends Generator {
                     }
                     ,
                     {
-                        name: 'New Notebook',
+                        name: 'New Notebooks (Individual)',
                         value: 'ext-notebook'
-                    }
+                    },
+                    // {
+                    //     name: 'New Jupyter Book',
+                    //     value: 'ext-jupyterbook'
+                    // }
                     ]
                 }).then(typeAnswer => {
                     generator.extensionConfig.type = typeAnswer.type;
@@ -394,60 +399,44 @@ module.exports = class extends Generator {
                     return Promise.resolve();
                 }
 
-                // generator.extensionConfig.isCustomization = true;
-                // const defaultExtensionList = ['publisher.extensionName'];
-
-                // const getNotebookList = () =>
-                //     new Promise((resolve, reject) => {
-                //         childProcess.exec(
-                //             'code --list-extensions',
-                //             (error, stdout, stderr) => {
-                //                 if (error) {
-                //                     generator.env.error(error);
-                //                 } else {
-                //                     let out = stdout.trim();
-                //                     if (out.length > 0) {
-                //                         generator.extensionConfig.extensionList = out.split(/\s/);
-                //                     }
-                //                 }
-                //                 resolve();
-                //             }
-                //         );
-                //     });
-
-                // const extensionParam = generator.options['extensionParam'];
-                // if (extensionParam) {
-                //     switch (extensionParam.toString().trim().toLowerCase()) {
-                //         case 'n':
-                //             generator.extensionConfig.extensionList = defaultExtensionList;
-                //             return Promise.resolve();
-                //         case 'y':
-                //             return getExtensionList();
-                //     }
-                // }
-
                 return generator.prompt({
                     type: 'confirm',
                     name: 'addNotebooks',
                     message: 'Add existing notebooks to be shipped?',
                     default: true
-                }).then(answer => {
-                    return generator.prompt({
-                        type: 'input',
-                        name: 'selectPath',
-                        message: 'Provide the path to the folder containing your notebooks.',
-                        default: "/notebooks"
-                    })
+                }).then(existingNotebook => {
+                    generator.extensionConfig.addNotebooks = existingNotebook.addNotebooks;
+                    if (existingNotebook.addNotebooks){
+                        return generator.prompt({
+                            type: 'input',
+                            name: 'enterPath',
+                            message: 'Provide the path to the folder containing your notebooks.',
+                            default: "/notebooks"
+                        }).then(path => {
+                            generator.extensionConfig.notebookPaths = notebookConverter.processNotebookFolder(path, generator);
+                        })
+                    } else {
+                        return generator.prompt({
+                            type: 'list',
+                            name: 'selectType',
+                            message: 'Select a sample notebook to start with:',
+                            choices: [{
+                                name: "SQL",
+                                value: "notebook-sql"
+                            },
+                            {
+                                name: "Python",
+                                value: "notebook-python"
+                            }]
+                        }).then(notebookType => {
+                            generator.extensionConfig.notebookType = notebookType.selectType;
+                        })
+                    }
+
                 })
-                // .then(addExtensionsAnswer => {
-                //     generator.extensionConfig.extensionList = defaultExtensionList;
-                //     if (addExtensionsAnswer.addExtensions) {
-                //         return getExtensionList();
-                //     }
-                // });
             },
 
-            askForBookName: () => {
+            askForJupyterBook: () => {
                 if (generator.extensionConfig.type !== 'ext-jupyterbook') {
                     return Promise.resolve();
                 }
@@ -684,7 +673,6 @@ module.exports = class extends Generator {
         let context = this.extensionConfig;
 
         this.fs.copy(this.sourceRoot() + '/vscode', context.name + '/.vscode');
-        this.fs.copy(this.sourceRoot() + '/src/test', context.name + '/src/test');
 
         this.fs.copy(this.sourceRoot() + '/vscodeignore', context.name + '/.vscodeignore');
         if (this.extensionConfig.gitInit) {
