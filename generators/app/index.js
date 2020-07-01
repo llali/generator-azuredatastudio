@@ -38,7 +38,7 @@ module.exports = class extends Generator {
     initializing() {
 
         // Welcome
-        this.log(yosay('Welcome to the Azure Data Studio Extension generator!'));// {{ADS EDIT}}
+        this.log(yosay('Welcome to the Azure Data Studio Extension generator for test!'));// {{ADS EDIT}}
 
         // evaluateEngineVersion
         let extensionConfig = this.extensionConfig;
@@ -513,7 +513,7 @@ module.exports = class extends Generator {
             },
 
             askForPackageManager: () => {
-                if (['ext-command-ts', 'ext-command-js', 'ext-localization'].indexOf(generator.extensionConfig.type) === -1) {
+                if (['ext-command-ts', 'ext-command-js', 'ext-localization', 'ext-insight'].indexOf(generator.extensionConfig.type) === -1) {
                     return Promise.resolve();
                 }
                 generator.extensionConfig.pkgManager = 'npm';
@@ -707,7 +707,7 @@ module.exports = class extends Generator {
         let context = this.extensionConfig;// {{ADS EDIT}}
 
         this.fs.copy(this.sourceRoot() + '/vscode', context.name + '/.vscode');// {{ADS EDIT}}
-        this.fs.copy(this.sourceRoot() + '/sql', context.name + '/sql');// {{ADS EDIT}}
+        this.fs.copy(this.sourceRoot() + '/src/sql', context.name + '/src/sql');// {{ADS EDIT}}
         this.fs.copyTpl(this.sourceRoot() + '/package.json', context.name + '/package.json', context);// {{ADS EDIT}}
         this.fs.copyTpl(this.sourceRoot() + '/vsc-extension-quickstart.md', context.name + '/vsc-extension-quickstart.md', context);// {{ADS EDIT}}
         this.fs.copyTpl(this.sourceRoot() + '/README.md', context.name + '/README.md', context);// {{ADS EDIT}}
@@ -717,6 +717,16 @@ module.exports = class extends Generator {
         if (this.extensionConfig.gitInit) {// {{ADS EDIT}}
             this.fs.copy(this.sourceRoot() + '/gitattributes', context.name + '/.gitattributes');// {{ADS EDIT}}
         }
+        //this.fs.copy(this.sourceRoot() + '/src/controllers', context.name + '/src/controllers');// {{ADS EDIT}}
+        this.fs.copyTpl(this.sourceRoot() + '/tsconfig.json', context.name + '/tsconfig.json', context);// {{ADS EDIT}}
+        this.fs.copyTpl(this.sourceRoot() + '/tslint.json', context.name + '/tslint.json', context);// {{ADS EDIT}}
+        this.fs.copyTpl(this.sourceRoot() + '/src/extension.js', context.name + '/src/extension.js', context);// {{ADS EDIT}}
+        this.fs.copyTpl(this.sourceRoot() + '/src/controllers/controllerBase.js', context.name + '/src/controllers/controllerBase.js', context);// {{ADS EDIT}}
+        this.fs.copyTpl(this.sourceRoot() + '/src/controllers/mainController.js', context.name + '/src/controllers/mainController.js', context);// {{ADS EDIT}}
+        this.fs.copyTpl(this.sourceRoot() + '/src/constants.js', context.name + '/src/constants.js', context);// {{ADS EDIT}}
+        this.fs.copyTpl(this.sourceRoot() + '/src/localizedConstants.js', context.name + '/src/localizedConstants.js', context);// {{ADS EDIT}}
+        this.fs.copyTpl(this.sourceRoot() + '/src/utils.js', context.name + '/src/utils.js', context);// {{ADS EDIT}}
+        this.extensionConfig.installDependencies = true;
     }
 
     // Write Command Extension (TypeScript)

@@ -10,12 +10,26 @@
     "categories": [
         "Other"
     ],
+    "activationEvents": [
+        "*"
+    ],
+    "main": "./src/extension",
     "contributes": {
+        "commands": [
+            {
+              "command": <%- JSON.stringify(`${name}.getQuery`) %>,
+              "title": "Get Query"
+            },
+            {
+              "command": <%- JSON.stringify(`${name}.getUrl`) %>,
+              "title": "Get Url"
+            }
+          ],
         "dashboard.insights": [
             {
                 "id": <%- JSON.stringify(name + '.insight') %>,
                 "contrib": {
-                    "queryFile": "./sql/query.sql",
+                    "queryFile": "./src/sql/query.sql",
                     "type": {
                         "bar": {
                             "dataDirection": "vertical",
@@ -27,30 +41,77 @@
                     }
                 }
             }
-        ]
-    <%if (addDashboardTab) {-%>
-    ,
+        ],
+        "dashboard.containers": [
+            {
+              "id": "insights",
+              "container": {
+                "widgets-container": [
+                    {
+                        "name": "Tasks",
+                        "widget": {
+                            "tasks-widget": [
+                            <%- JSON.stringify(`${name}.getQuery`) %>,
+                            <%- JSON.stringify(`${name}.getUrl`) %>
+                            ]
+                        }
+                    },
+                    {
+                    "name": "test",
+                    "gridItemConfig": {
+                        "sizex": 2,
+                        "sizey": 1
+                    },
+                    "widget": {
+                        <%- JSON.stringify(name + '.insight') %>: {}
+                    }
+                    }
+                ]
+              }
+            }
+          ],
+
         "dashboard.tabs": [
             {
                 "id": <%- JSON.stringify(name + '.tab') %>,
                 "title": <%- JSON.stringify(displayName) %>,
                 "description": "",
                 "container": {
-                    "widgets-container": [
-                        {
-                            "name": <%- JSON.stringify(displayName) %>,
-                            "gridItemConfig": {
-                                "sizex": 2,
-                                "sizey": 1
-                            },
-                            "widget": {
-                                <%- JSON.stringify(name + '.insight') %>: {}
-                            }
-                        }
-                    ]
+                    "insights":{}
                 }
             }
         ]
-    <% } -%>
-}
+    },
+    "scripts": {
+        "build": "gulp build",
+        "compile": "gulp compile",
+        "watch": "gulp watch",
+        "typings": "gulp copytypings",
+        "postinstall": "node ./node_modules/vscode/bin/install && node ./node_modules/azdata/bin/install"
+      },
+      "dependencies": {
+        "fs-extra": "^5.0.0",
+        "handlebars": "^4.5.3",
+        "openurl": "^1.1.1"
+      },
+      "devDependencies": {
+        "azdata": "^1.0.0",
+        "@types/mocha": "^2.2.42",
+        "@types/node": "^7.0.43",
+        "child-process-promise": "^2.2.1",
+        "del": "^3.0.0",
+        "gulp": "^4.0.0",
+        "gulp-color": "0.0.1",
+        "gulp-sourcemaps": "^2.6.4",
+        "gulp-tslint": "^6.0.2",
+        "gulp-typescript": "^3.2.4",
+        "should": "^13.2.1",
+        "temp-write": "^3.4.0",
+        "tslint": "^3.14.0",
+        "typemoq": "^2.1.0",
+        "typescript": "^2.6.1",
+        "vsce": "1.36.2",
+        "vscode": "^1.1.6"
+      }
+
 }
