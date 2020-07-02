@@ -8,7 +8,7 @@ var os = require('os')
 var fs = require('fs');
 
 function processNotebookFolder(folderPath, generator) {
-    var errors = [], notebooks = {};
+    var errors = [], notebooks = [];
     var notebookCount = 0;
 
     var count = convert(folderPath);
@@ -21,7 +21,6 @@ function processNotebookFolder(folderPath, generator) {
     return count;
 
     function convert(folderPath) {
-
         var files = getFolderContent(folderPath, errors);
         if (errors.length > 0) {
             return -1;
@@ -49,4 +48,4 @@ function getFolderContent(folderPath, errors) {
     }
 }
 
-exports.processNotebookFolder = this.processNotebookFolder;
+exports.processNotebookFolder = processNotebookFolder;

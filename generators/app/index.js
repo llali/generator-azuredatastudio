@@ -5,7 +5,7 @@
 
 let Generator = require('yeoman-generator');
 let yosay = require('yosay');
-
+let os = require('os');
 let path = require('path');
 let validator = require('./validator');
 let snippetConverter = require('./snippetConverter');
@@ -409,11 +409,13 @@ module.exports = class extends Generator {
                     if (existingNotebook.addNotebooks){
                         return generator.prompt({
                             type: 'input',
-                            name: 'enterPath',
-                            message: 'Provide the path to the folder containing your notebooks.',
-                            default: "/notebooks"
-                        }).then(path => {
-                            generator.extensionConfig.notebookPaths = notebookConverter.processNotebookFolder(path, generator);
+                            name: 'notebookPath',
+                            message: 'Provide the absolute path to the folder containing your notebooks.',
+                            default: "/Desktop/notebooks"
+                        }).then(pathResponse => {
+                            console.log(pathResponse.notebookPath)
+                            let tempPath = path.normalize(path.join(os.homedir(), pathResponse.notebookPath))
+                            generator.extensionConfig.notebookPaths = notebookConverter.processNotebookFolder(tempPath, generator);
                         })
                     } else {
                         return generator.prompt({
