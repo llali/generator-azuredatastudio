@@ -111,10 +111,10 @@ module.exports = class extends Generator {
                         name: 'New Notebooks (Individual)',
                         value: 'ext-notebook'
                     },
-                    // {
-                    //     name: 'New Jupyter Book',
-                    //     value: 'ext-jupyterbook'
-                    // }
+                    {
+                        name: 'New Jupyter Book',
+                        value: 'ext-jupyterbook'
+                    }
                     ]
                 }).then(typeAnswer => {
                     generator.extensionConfig.type = typeAnswer.type;
@@ -394,7 +394,7 @@ module.exports = class extends Generator {
                 });
             },
 
-            askForNotebooks: () => {
+            askForExistingNotebooks: () => {
                 if (generator.extensionConfig.type !== 'ext-notebook') {
                     return Promise.resolve();
                 }
@@ -409,7 +409,7 @@ module.exports = class extends Generator {
                 });
             },
 
-            askForSampleNotebooks: () => {
+            askForNotebooks: () => {
                 if (generator.extensionConfig.type !== 'ext-notebook') {
                     return Promise.resolve();
                 }
@@ -419,10 +419,9 @@ module.exports = class extends Generator {
                         type: 'input',
                         name: 'notebookPath',
                         message: 'Provide the absolute path to the folder containing your notebooks.',
-                        default: "/Desktop/notebooks"
+                        default: '/Desktop/notebooks'
                     }).then(pathResponse => {
                         let tempPath = path.normalize(path.join(os.homedir(), pathResponse.notebookPath))
-                        console.log(tempPath);
                         return notebookConverter.processNotebookFolder(tempPath, generator);
                     })
                 }
@@ -432,12 +431,12 @@ module.exports = class extends Generator {
                         name: 'selectType',
                         message: 'Select a sample notebook to start with:',
                         choices: [{
-                            name: "SQL",
-                            value: "notebook-sql"
+                            name: 'SQL',
+                            value: 'notebook-sql'
                         },
                         {
-                            name: "Python",
-                            value: "notebook-python"
+                            name: 'Python',
+                            value: 'notebook-python'
                         }]
                     }).then(notebookType => {
                          generator.extensionConfig.notebookType = notebookType.selectType;
@@ -445,20 +444,39 @@ module.exports = class extends Generator {
                 }
             },
 
-            askForJupyterBook: () => {
+            askForExistingBook: () => {
                 if (generator.extensionConfig.type !== 'ext-jupyterbook') {
                     return Promise.resolve();
                 }
 
                 return generator.prompt({
-                    type: 'input',
-                    name: 'bookTitle',
-                    message: 'What\'s the title of your Jupyter Book?',
-                    default: generator.extensionConfig.bookTitle,
-                    validate: validator.validateNonEmpty
-                }).then(titleAnswer => {
-                    generator.extensionConfig.bookTitle = titleAnswer.bookTitle;
+                    type: 'confirm',
+                    name: 'addBooks',
+                    message: 'Add existing Jupyter Book to be shipped?',
+                    default: true
+                }).then(existingBookAnswer => {
+                    generator.extensionConfig.addBooks = existingBookAnswer.addBooks;
                 });
+            },
+
+            askForJupyterBook: () => {
+                if (generator.extensionConfig.type !== 'ext-jupyterbook') {
+                    return Promise.resolve();
+                }
+
+                if (generator.extensionConfig.addBooks){
+                    return generator.prompt({
+                        type: 'input',
+                        name: 'bookLocation',
+                        message: 'Provide the absolute path to the folder containing your Jupyter Book:',
+                        default: '/Desktop/notebooks'
+                    }).then(locationResponse => {
+                        let tempPath = path.normalize(path.join(os.homedir(), locationResponse.bookLocation))
+                        return notebookConverter.processBookFolder(tempPath, generator);
+                    });
+                } else {
+                    generator.log('Generating sample Jupyter Book!')
+                }
             },
 
             askForThemeName: () => {
@@ -712,15 +730,20 @@ module.exports = class extends Generator {
     _writingJupyterBook(){
         let context = this.extensionConfig;
 
-        this.fs.copy(this.sourceRoot() + '/features', context.name + '/features');
-        this.fs.copyTpl(this.sourceRoot() + '/requirements.txt', context.name + '/requirements.txt', context);
-        this.fs.copyTpl(this.sourceRoot() + '/references.bib', context.name + '/references.bib', context);
-        this.fs.copyTpl(this.sourceRoot() + '/logo.png', context.name + '/logo.png', context);
-        this.fs.copyTpl(this.sourceRoot() + '/_config.yml', context.name + '/_config.yml', context);
-        this.fs.copyTpl(this.sourceRoot() + '/_toc.yml', context.name + '/_toc.yml', context);
-        this.fs.copyTpl(this.sourceRoot() + '/vsc-extension-quickstart.md', context.name + '/vsc-extension-quickstart.md', context);
-        this.fs.copyTpl(this.sourceRoot() + '/README.md', context.name + '/README.md', context);
-        this.fs.copyTpl(this.sourceRoot() + '/CHANGELOG.md', context.name + '/CHANGELOG.md', context);
+        if (context.addBooks){
+            this.fs.copy(context.bookPath, context.name + '/');
+        } else {
+            this.fs.copy(this.sourceRoot() + '/features', context.name + '/features');
+            this.fs.copyTpl(this.sourceRoot() + '/requirements.txt', context.name + '/requirements.txt', context);
+            this.fs.copyTpl(this.sourceRoot() + '/references.bib', context.name + '/references.bib', context);
+            this.fs.copyTpl(this.sourceRoot() + '/logo.png', context.name + '/logo.png', context);
+            this.fs.copyTpl(this.sourceRoot() + '/_config.yml', context.name + '/_config.yml', context);
+            this.fs.copyTpl(this.sourceRoot() + '/_toc.yml', context.name + '/_toc.yml', context);
+            this.fs.copyTpl(this.sourceRoot() + '/vsc-extension-quickstart.md', context.name + '/vsc-extension-quickstart.md', context);
+            this.fs.copyTpl(this.sourceRoot() + '/README.md', context.name + '/README.md', context);
+            this.fs.copyTpl(this.sourceRoot() + '/CHANGELOG.md', context.name + '/CHANGELOG.md', context);
+        }
+
         if (this.extensionConfig.gitInit) {
             this.fs.copy(this.sourceRoot() + '/gitignore', context.name + '/.gitignore');
             this.fs.copy(this.sourceRoot() + '/gitattributes', context.name + '/.gitattributes');
