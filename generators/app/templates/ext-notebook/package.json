@@ -11,13 +11,13 @@
 		"Other"
 	],
 	"activationEvents": [
-		<%- JSON.stringify(`Launch Notebooks: ${name}`) %>
+		<%- JSON.stringify(`onCommand:launchNotebooks.${name}`) %>
 	],
-	"main": "./out/extension.js",
+	"main": "./out/notebook.js",
 	"contributes": {
 		"commands": [
 			{
-				"command":  <%- JSON.stringify(`Launch Notebooks: ${name}`) %>,
+				"command":  <%- JSON.stringify(`launchNotebooks.${name}`) %>,
                 "title": <%- JSON.stringify(`Launch Notebooks: ${name}`) %>
 			}
 		]

@@ -8,7 +8,7 @@ var os = require('os')
 var fs = require('fs');
 
 function processNotebookFolder(folderPath, generator) {
-    var errors = [], notebooks = [];
+    var errors = [], notebooksPaths = [], notebookNames = [];
     var notebookCount = 0;
 
     var count = convert(folderPath);
@@ -31,11 +31,13 @@ function processNotebookFolder(folderPath, generator) {
             if (extension === '.md' || extension === '.ipynb') {
                 notebookCount++;
                 var filePath = path.join(folderPath, fileName);
-                notebooks.push(filePath);
+                notebookNames.push(fileName);
+                notebooksPaths.push(filePath);
             }
         });
-        generator.extensionConfig.notebooks = notebooks;
-        return notebookCount;
+        generator.extensionConfig.notebookPaths = notebooksPaths;
+        generator.extensionConfig.notebookNames = notebookNames;
+       return notebookCount;
     }
 }
 

@@ -406,36 +406,43 @@ module.exports = class extends Generator {
                     default: true
                 }).then(existingNotebook => {
                     generator.extensionConfig.addNotebooks = existingNotebook.addNotebooks;
-                    if (existingNotebook.addNotebooks){
-                        return generator.prompt({
-                            type: 'input',
-                            name: 'notebookPath',
-                            message: 'Provide the absolute path to the folder containing your notebooks.',
-                            default: "/Desktop/notebooks"
-                        }).then(pathResponse => {
-                            console.log(pathResponse.notebookPath)
-                            let tempPath = path.normalize(path.join(os.homedir(), pathResponse.notebookPath))
-                            generator.extensionConfig.notebookPaths = notebookConverter.processNotebookFolder(tempPath, generator);
-                        })
-                    } else {
-                        return generator.prompt({
-                            type: 'list',
-                            name: 'selectType',
-                            message: 'Select a sample notebook to start with:',
-                            choices: [{
-                                name: "SQL",
-                                value: "notebook-sql"
-                            },
-                            {
-                                name: "Python",
-                                value: "notebook-python"
-                            }]
-                        }).then(notebookType => {
-                            generator.extensionConfig.notebookType = notebookType.selectType;
-                        })
-                    }
+                });
+            },
 
-                })
+            askForSampleNotebooks: () => {
+                if (generator.extensionConfig.type !== 'ext-notebook') {
+                    return Promise.resolve();
+                }
+
+                if (generator.extensionConfig.addNotebooks){
+                    return generator.prompt({
+                        type: 'input',
+                        name: 'notebookPath',
+                        message: 'Provide the absolute path to the folder containing your notebooks.',
+                        default: "/Desktop/notebooks"
+                    }).then(pathResponse => {
+                        let tempPath = path.normalize(path.join(os.homedir(), pathResponse.notebookPath))
+                        console.log(tempPath);
+                        return notebookConverter.processNotebookFolder(tempPath, generator);
+                    })
+                }
+                else {
+                    return generator.prompt({
+                        type: 'list',
+                        name: 'selectType',
+                        message: 'Select a sample notebook to start with:',
+                        choices: [{
+                            name: "SQL",
+                            value: "notebook-sql"
+                        },
+                        {
+                            name: "Python",
+                            value: "notebook-python"
+                        }]
+                    }).then(notebookType => {
+                         generator.extensionConfig.notebookType = notebookType.selectType;
+                    });
+                }
             },
 
             askForJupyterBook: () => {
@@ -672,24 +679,33 @@ module.exports = class extends Generator {
     }
 
     _writingNotebook(){
+
         let context = this.extensionConfig;
 
-        this.fs.copy(this.sourceRoot() + '/vscode', context.name + '/.vscode');
-
-        this.fs.copy(this.sourceRoot() + '/vscodeignore', context.name + '/.vscodeignore');
-        if (this.extensionConfig.gitInit) {
-            this.fs.copy(this.sourceRoot() + '/gitignore', context.name + '/.gitignore');
+        if (context.addNotebooks){
+            for (let i = 0; i < context.notebookPaths.length; i++){
+                this.fs.copy(context.notebookPaths[i], context.name + '/' + context.notebookNames[i]);
+            }
+        } else {
+            if (context.notebookType === 'notebook-python'){
+                this.fs.copy(this.sourceRoot() + '/optional/pySample.ipynb', context.name + '/pySample.ipynb');
+            } else {
+                this.fs.copy(this.sourceRoot() + '/optional/sqlSample.ipynb', context.name + '/sqlSample.ipynb');
+            }
         }
+
+        this.fs.copy(this.sourceRoot() + '/vscode', context.name + '/.vscode');
+        this.fs.copy(this.sourceRoot() + '/vscodeignore', context.name + '/.vscodeignore');
         this.fs.copyTpl(this.sourceRoot() + '/README.md', context.name + '/README.md', context);
         this.fs.copyTpl(this.sourceRoot() + '/CHANGELOG.md', context.name + '/CHANGELOG.md', context);
         this.fs.copyTpl(this.sourceRoot() + '/vsc-extension-quickstart.md', context.name + '/vsc-extension-quickstart.md', context);
         this.fs.copyTpl(this.sourceRoot() + '/tsconfig.json', context.name + '/tsconfig.json', context);
-
         this.fs.copyTpl(this.sourceRoot() + '/src/notebook.ts', context.name + '/src/notebook.ts', context);
         this.fs.copyTpl(this.sourceRoot() + '/package.json', context.name + '/package.json', context);
-
         this.fs.copy(this.sourceRoot() + '/.eslintrc.json', context.name + '/.eslintrc.json');
-
+        if (this.extensionConfig.gitInit) {
+            this.fs.copy(this.sourceRoot() + '/gitignore', context.name + '/.gitignore');
+        }
         this.extensionConfig.installDependencies = true;
     }
 
