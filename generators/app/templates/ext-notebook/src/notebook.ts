@@ -7,40 +7,49 @@ import * as fs from 'fs';
 import * as os from 'os';
 
 const processNotebooks = (): Array<string> => {
-    const folderPath = path.normalize(path.join(os.homedir(), '.azuredatastudio', 'extensions'))
-    var errors: Array<string> = [], notebookNames: Array<string> = [];
+    const rootExtensionsFolder = path.normalize(path.join(os.homedir(), '.azuredatastudio', 'extensions'))
+    let errors: Array<string> = [], notebookNames: Array<string> = [];
 
-    var names = convert(folderPath);
-    return names;
+    let notebooks = convert(rootExtensionsFolder);
+    return notebooks;
 
     function convert(folderPath: string) {
-        var files = getFolderContent(folderPath, errors);
+        let subExtensionFolder = getFolderContent(folderPath, errors);
         if (errors.length > 0) {
             return [];
         }
 
-        files.forEach(function (fileName) {
-            var extension = path.extname(fileName).toLowerCase();
-            if (extension === '.ipynb') {
-                notebookNames.push(fileName);
+        subExtensionFolder.forEach((folderName) => {
+            let folderExt =  path.basename(folderName).toLowerCase();
+            if (folderExt.indexOf('<%= name%>') > -1) {
+                let fullFolderPath = path.join(rootExtensionsFolder, folderName);
+                try {
+                    extractNotebooks(fullFolderPath, errors, notebookNames);
+                } catch (e) {
+                    vscode.window.showErrorMessage("Unable to access " + fullFolderPath + ": " + e.message);
+                }
             }
         });
-
         return notebookNames;
     }
+}
 
+const extractNotebooks = (fullFolderPath: string, errors: Array<string>, notebookNames: Array<string>) => {
+    var files = getFolderContent(fullFolderPath, errors);
+    files.forEach((fileName) => {
+    var fileExtension = path.extname(fileName).toLowerCase();
+        if (fileExtension === '.ipynb'){
+            let fullFilePath = path.join(fullFolderPath, fileName)
+            notebookNames.push(path.normalize(fullFilePath));
+        }
+    })
 }
 
 const getFolderContent = (folderPath: string, errors: Array<string>) => {
-    if (folderPath.indexOf('<%= name%>') > -1){
-        try {
-            return fs.readdirSync(folderPath);
-        } catch (e) {
-            vscode.window.showErrorMessage("Unable to access " + folderPath + ": " + e.message);
-            return [];
-        }
-    } else {
-        vscode.window.showErrorMessage("Unable to find appropriate extension folder.");
+    try {
+        return fs.readdirSync(folderPath);
+    } catch (e) {
+        vscode.window.showErrorMessage("Unable to access " + folderPath + ": " + e.message);
         return [];
     }
 }
@@ -51,6 +60,5 @@ export function activate(context: vscode.ExtensionContext) {
         notebooksToDisplay.forEach(name => {
             azdata.nb.showNotebookDocument(vscode.Uri.file(name));
         });
-
     }));
 }

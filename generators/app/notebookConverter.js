@@ -12,7 +12,7 @@ exports.processNotebookFolder = (folderPath, generator) => {
     var notebookCount = 0;
 
     var count = convert(folderPath);
-    console.log(count)
+
     if (count <= 0) {
         generator.log("No valid notebooks found in " + folderPath + (errors.length > 0 ? '.\n' + errors.join('\n'): ''));
         return count;

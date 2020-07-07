@@ -394,6 +394,17 @@ module.exports = class extends Generator {
                 });
             },
 
+            askForPublisherName: () => {
+                return generator.prompt({
+                    type: 'input',
+                    name: 'publisherName',
+                    message: 'What name would you like to publish this extension under?',
+                }).then(publisherAnswer => {
+                    generator.extensionConfig.publisherName = publisherAnswer.publisherName;
+                });
+            },
+
+
             askForExistingNotebooks: () => {
                 if (generator.extensionConfig.type !== 'ext-notebook') {
                     return Promise.resolve();
