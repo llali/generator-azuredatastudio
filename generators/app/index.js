@@ -293,6 +293,24 @@ module.exports = class extends Generator {
                 });
             },
 
+            askForInsightBar: () => {// {{ADS EDIT}}
+                if (generator.extensionConfig.type !== 'ext-insight') {// {{ADS EDIT}}
+                    return Promise.resolve();// {{ADS EDIT}}
+                }
+
+                generator.extensionConfig.isCustomization = true;// {{ADS EDIT}}
+
+                return generator.prompt({// {{ADS EDIT}}
+                    type: 'confirm',// {{ADS EDIT}}
+                    name: 'addDashboardBar',// {{ADS EDIT}}
+                    message: 'Add a dashboard toolbar?',// {{ADS EDIT}}
+                    default: true// {{ADS EDIT}}
+                }).then(function (answer) {// {{ADS EDIT}}
+                    generator.extensionConfig.addDashboardBar = answer.addDashboardBar;// {{ADS EDIT}}
+                    generator.extensionConfig.insightName = generator.extensionConfig.name + '.insight';// {{ADS EDIT}}
+                });
+            },
+
             // Ask for extension display name ("displayName" in package.json)
             askForExtensionDisplayName: () => {
                 let extensionDisplayName = generator.options['extensionDisplayName'];
@@ -709,6 +727,21 @@ module.exports = class extends Generator {
         this.fs.copy(this.sourceRoot() + '/vscode', context.name + '/.vscode');// {{ADS EDIT}}
         this.fs.copy(this.sourceRoot() + '/src/sql', context.name + '/src/sql');// {{ADS EDIT}}
         this.fs.copyTpl(this.sourceRoot() + '/package.json', context.name + '/package.json', context);// {{ADS EDIT}}
+        if (this.extensionConfig.addDashboardBar) {// {{ADS EDIT}}
+            this.fs.copyTpl(this.sourceRoot() + '/package.json', context.name + '/package.json', context);// {{ADS EDIT}}
+            this.fs.copyTpl(this.sourceRoot() + '/tsconfig.json', context.name + '/tsconfig.json', context);// {{ADS EDIT}}
+            this.fs.copyTpl(this.sourceRoot() + '/tslint.json', context.name + '/tslint.json', context);// {{ADS EDIT}}
+            this.fs.copyTpl(this.sourceRoot() + '/src/extension.js', context.name + '/src/extension.js', context);// {{ADS EDIT}}
+            this.fs.copyTpl(this.sourceRoot() + '/src/controllers/controllerBase.js', context.name + '/src/controllers/controllerBase.js', context);// {{ADS EDIT}}
+            this.fs.copyTpl(this.sourceRoot() + '/src/controllers/mainController.js', context.name + '/src/controllers/mainController.js', context);// {{ADS EDIT}}
+            this.fs.copyTpl(this.sourceRoot() + '/src/constants.js', context.name + '/src/constants.js', context);// {{ADS EDIT}}
+            this.fs.copyTpl(this.sourceRoot() + '/src/localizedConstants.js', context.name + '/src/localizedConstants.js', context);// {{ADS EDIT}}
+            this.fs.copyTpl(this.sourceRoot() + '/src/utils.js', context.name + '/src/utils.js', context);// {{ADS EDIT}}
+            this.extensionConfig.installDependencies = true;
+        }
+        else{
+            this.fs.copyTpl(this.sourceRoot() + '/package2.json', context.name + '/package.json', context);// {{ADS EDIT}}
+        }
         this.fs.copyTpl(this.sourceRoot() + '/vsc-extension-quickstart.md', context.name + '/vsc-extension-quickstart.md', context);// {{ADS EDIT}}
         this.fs.copyTpl(this.sourceRoot() + '/README.md', context.name + '/README.md', context);// {{ADS EDIT}}
         this.fs.copyTpl(this.sourceRoot() + '/CHANGELOG.md', context.name + '/CHANGELOG.md', context);// {{ADS EDIT}}
@@ -718,15 +751,7 @@ module.exports = class extends Generator {
             this.fs.copy(this.sourceRoot() + '/gitattributes', context.name + '/.gitattributes');// {{ADS EDIT}}
         }
         //this.fs.copy(this.sourceRoot() + '/src/controllers', context.name + '/src/controllers');// {{ADS EDIT}}
-        this.fs.copyTpl(this.sourceRoot() + '/tsconfig.json', context.name + '/tsconfig.json', context);// {{ADS EDIT}}
-        this.fs.copyTpl(this.sourceRoot() + '/tslint.json', context.name + '/tslint.json', context);// {{ADS EDIT}}
-        this.fs.copyTpl(this.sourceRoot() + '/src/extension.js', context.name + '/src/extension.js', context);// {{ADS EDIT}}
-        this.fs.copyTpl(this.sourceRoot() + '/src/controllers/controllerBase.js', context.name + '/src/controllers/controllerBase.js', context);// {{ADS EDIT}}
-        this.fs.copyTpl(this.sourceRoot() + '/src/controllers/mainController.js', context.name + '/src/controllers/mainController.js', context);// {{ADS EDIT}}
-        this.fs.copyTpl(this.sourceRoot() + '/src/constants.js', context.name + '/src/constants.js', context);// {{ADS EDIT}}
-        this.fs.copyTpl(this.sourceRoot() + '/src/localizedConstants.js', context.name + '/src/localizedConstants.js', context);// {{ADS EDIT}}
-        this.fs.copyTpl(this.sourceRoot() + '/src/utils.js', context.name + '/src/utils.js', context);// {{ADS EDIT}}
-        this.extensionConfig.installDependencies = true;
+
     }
 
     // Write Command Extension (TypeScript)
