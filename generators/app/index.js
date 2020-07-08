@@ -17,7 +17,6 @@ let childProcess = require('child_process');
 let chalk = require('chalk');
 let sanitize = require("sanitize-filename");
 let localization = require('./localization');
-
 module.exports = class extends Generator {
 
     constructor(args, opts) {
@@ -50,8 +49,11 @@ module.exports = class extends Generator {
         // TODO add tool to get latest Azure Data Studio verison on machine and set this too
     }
 
+    // TODO: add publisherName to package.json for non-notebook extensions
+
     prompting() {
         let generator = this;
+
         let prompts = {
             // Ask for extension type
             askForType: () => {

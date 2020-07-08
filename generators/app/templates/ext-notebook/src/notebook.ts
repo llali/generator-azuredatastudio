@@ -6,37 +6,34 @@ import * as path from 'path';
 import * as fs from 'fs';
 import * as os from 'os';
 
-const processNotebooks = (): Array<string> => {
+const processNotebooks = () => {
     const rootExtensionsFolder = path.normalize(path.join(os.homedir(), '.azuredatastudio', 'extensions'))
-    let errors: Array<string> = [], notebookNames: Array<string> = [];
+    let notebookNames: Array<string> = [];
 
-    let notebooks = convert(rootExtensionsFolder);
-    return notebooks;
+    let subExtensionFolder = getFolderContent(rootExtensionsFolder);
 
-    function convert(folderPath: string) {
-        let subExtensionFolder = getFolderContent(folderPath, errors);
-        if (errors.length > 0) {
-            return [];
+    subExtensionFolder.forEach(folderName => {
+        findCorrectFolder(folderName, rootExtensionsFolder, notebookNames);
+    });
+    return notebookNames;
+}
+
+const findCorrectFolder = (folderName: string, rootExtensionsFolder: string, notebookNames: Array<string>) => {
+    let folderExt = path.basename(folderName).toLowerCase();
+
+    if (folderExt.indexOf('<%= name%>') > -1) {
+        let fullFolderPath = path.join(rootExtensionsFolder, folderName);
+        try {
+            extractNotebooksFromFolder(fullFolderPath, notebookNames);
+        } catch (e) {
+            vscode.window.showErrorMessage("Unable to access " + fullFolderPath + ": " + e.message);
         }
-
-        subExtensionFolder.forEach((folderName) => {
-            let folderExt =  path.basename(folderName).toLowerCase();
-            if (folderExt.indexOf('<%= name%>') > -1) {
-                let fullFolderPath = path.join(rootExtensionsFolder, folderName);
-                try {
-                    extractNotebooks(fullFolderPath, errors, notebookNames);
-                } catch (e) {
-                    vscode.window.showErrorMessage("Unable to access " + fullFolderPath + ": " + e.message);
-                }
-            }
-        });
-        return notebookNames;
     }
 }
 
-const extractNotebooks = (fullFolderPath: string, errors: Array<string>, notebookNames: Array<string>) => {
-    var files = getFolderContent(fullFolderPath, errors);
-    files.forEach((fileName) => {
+const extractNotebooksFromFolder = (fullFolderPath: string, notebookNames: Array<string>) => {
+    var files = getFolderContent(fullFolderPath);
+    files.forEach(fileName => {
     var fileExtension = path.extname(fileName).toLowerCase();
         if (fileExtension === '.ipynb'){
             let fullFilePath = path.join(fullFolderPath, fileName)
@@ -45,7 +42,7 @@ const extractNotebooks = (fullFolderPath: string, errors: Array<string>, noteboo
     })
 }
 
-const getFolderContent = (folderPath: string, errors: Array<string>) => {
+const getFolderContent = (folderPath: string) => {
     try {
         return fs.readdirSync(folderPath);
     } catch (e) {
