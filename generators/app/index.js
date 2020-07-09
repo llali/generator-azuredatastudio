@@ -435,7 +435,9 @@ module.exports = class extends Generator {
                         message: 'Provide the absolute path to the folder containing your notebooks.',
                         default: '/Desktop/notebooks'
                     }).then(pathResponse => {
-                        let tempPath = path.normalize(path.join(os.homedir(), pathResponse.notebookPath))
+                        let tempPath = path.normalize(path.join(os.homedir(), pathResponse.notebookPath));
+                        generator.extensionConfig.notebookNames = [];
+                        generator.extensionConfig.notebookPaths = [];
                         return notebookConverter.processNotebookFolder(tempPath, generator);
                     })
                 }
@@ -485,7 +487,9 @@ module.exports = class extends Generator {
                         message: 'Provide the absolute path to the folder containing your Jupyter Book:',
                         default: '/Desktop/notebooks'
                     }).then(locationResponse => {
-                        let tempPath = path.normalize(path.join(os.homedir(), locationResponse.bookLocation))
+                        let tempPath = path.normalize(path.join(os.homedir(), locationResponse.bookLocation));
+                        generator.extensionConfig.notebookNames = [];
+                        generator.extensionConfig.notebookPaths = [];
                         return notebookConverter.processBookFolder(tempPath, generator);
                     });
                 } else {
