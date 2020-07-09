@@ -1353,4 +1353,16 @@ describe('test code generator', function () {
             }
         }, done);
     });
+
+    it('jupyter book with existing book', function (done){
+
+    });
+
+    it('jupyter book with notebook converted to book', function (done){
+
+    });
+
+    it('jupyter book with sample book', function (done){
+
+    });
 });

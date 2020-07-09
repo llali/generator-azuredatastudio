@@ -3,6 +3,10 @@
  *--------------------------------------------------------*/
 'use strict';
 
+//TODO:
+// - copy over Jupyter Book files
+// - convert notebook => book
+
 let Generator = require('yeoman-generator');
 let yosay = require('yosay');
 let os = require('os');
@@ -404,7 +408,6 @@ module.exports = class extends Generator {
                 });
             },
 
-
             askForExistingNotebooks: () => {
                 if (generator.extensionConfig.type !== 'ext-notebook') {
                     return Promise.resolve();
@@ -742,7 +745,7 @@ module.exports = class extends Generator {
         let context = this.extensionConfig;
 
         if (context.addBooks){
-            this.fs.copy(context.bookPath, context.name + '/');
+            this.fs.copy(context.bookPath + "", context.name + '/');
         } else {
             this.fs.copy(this.sourceRoot() + '/features', context.name + '/features');
             this.fs.copyTpl(this.sourceRoot() + '/requirements.txt', context.name + '/requirements.txt', context);

@@ -5,13 +5,17 @@ If you want to build your extension, run:
 npm run compile
 ```
 
-If you want to include proposed Azure Data Studio APIs, run:
-
-```
-npm run proposedapi
-```
-
 # <%= name %> README
+
+⚠️ Work-in-progress code for custom notebook extensions in Azure Data Studio. ⚠️
+
+To create an extension:
+1. Follow the prompts from the command line, selecting 'New Notebooks (Individual)' option, providing a path to existing notebooks if needed.
+2. `cd <%= name%>` and then `code .` to open the new extension folder in VS Code.
+3. Update the README to your liking.
+4. Run `vsce package` to create a VSIX file for your extension.
+5. Run `Extensions: Install from VSIX`in Azure Data Studio to install your new extension.
+6. Run `Launch Notebooks: <%= name %>` in Azure Data Studio to open your bundled notebooks.
 
 This is the README for your extension "<%= name %>". After writing up a brief description, we recommend including the following sections.
 
