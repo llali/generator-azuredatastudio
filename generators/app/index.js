@@ -274,7 +274,24 @@ module.exports = class extends Generator {
                 });
             },
 
-            askForInsightInfo: () => {// {{ADS EDIT}}
+            askForHomepageAction: () => {// {{ADS EDIT}}
+                if (generator.extensionConfig.type !== 'ext-insight') {// {{ADS EDIT}}
+                    return Promise.resolve();// {{ADS EDIT}}
+                }
+
+                generator.extensionConfig.isCustomization = true;// {{ADS EDIT}}
+
+                return generator.prompt({// {{ADS EDIT}}
+                    type: 'confirm',// {{ADS EDIT}}
+                    name: 'addHomepageAction',// {{ADS EDIT}}
+                    message: 'Add a homepage action?',// {{ADS EDIT}}
+                    default: true// {{ADS EDIT}}
+                }).then(function (answer) {// {{ADS EDIT}}
+                    generator.extensionConfig.addHomepageAction = answer.addHomepageAction;// {{ADS EDIT}}
+                });
+            },
+
+            askForDashboardTab: () => {// {{ADS EDIT}}
                 if (generator.extensionConfig.type !== 'ext-insight') {// {{ADS EDIT}}
                     return Promise.resolve();// {{ADS EDIT}}
                 }
@@ -290,11 +307,98 @@ module.exports = class extends Generator {
                     generator.extensionConfig.addDashboardTab = answer.addDashboardExtension;// {{ADS EDIT}}
                     generator.extensionConfig.insightName = generator.extensionConfig.name + '.insight';// {{ADS EDIT}}
                     generator.extensionConfig.tabName = generator.extensionConfig.name + '.tab';// {{ADS EDIT}}
+                    if (!generator.extensionConfig.addDashboardTab){
+                        generator.extensionConfig.addDashboardBar = false;
+                    }
                 });
             },
 
-            askForInsightBar: () => {// {{ADS EDIT}}
-                if (generator.extensionConfig.type !== 'ext-insight') {// {{ADS EDIT}}
+            askForServerTab: () => {// {{ADS EDIT}}
+                if (generator.extensionConfig.type !== 'ext-insight' || !generator.extensionConfig.addDashboardTab) {// {{ADS EDIT}}
+                    return Promise.resolve();// {{ADS EDIT}}
+                }
+
+                generator.extensionConfig.isCustomization = true;// {{ADS EDIT}}
+
+                return generator.prompt({// {{ADS EDIT}}
+                    type: 'confirm',// {{ADS EDIT}}
+                    name: 'addServerTab',// {{ADS EDIT}}
+                    message: 'Add the dashboard tab on server?',// {{ADS EDIT}}
+                    default: true// {{ADS EDIT}}
+                }).then(function (answer) {// {{ADS EDIT}}
+                    generator.extensionConfig.addServerTab = answer.addServerTab;// {{ADS EDIT}}
+                });
+            },
+
+            askForDatabaseTab: () => {// {{ADS EDIT}}
+                if (generator.extensionConfig.type !== 'ext-insight' || !generator.extensionConfig.addDashboardTab) {// {{ADS EDIT}}
+                    return Promise.resolve();// {{ADS EDIT}}
+                }
+
+                generator.extensionConfig.isCustomization = true;// {{ADS EDIT}}
+
+                return generator.prompt({// {{ADS EDIT}}
+                    type: 'confirm',// {{ADS EDIT}}
+                    name: 'addDatabaseTab',// {{ADS EDIT}}
+                    message: 'Add the dashboard tab on database?',// {{ADS EDIT}}
+                    default: true// {{ADS EDIT}}
+                }).then(function (answer) {// {{ADS EDIT}}
+                    generator.extensionConfig.addDatabaseTab = answer.addDatabaseTab;// {{ADS EDIT}}
+                    generator.extensionConfig.addDashboardTab = generator.extensionConfig.addDatabaseTab || generator.extensionConfig.addServerTab;// {{ADS EDIT}}
+                });
+            },
+
+            askForTabGroup: () => {// {{ADS EDIT}}
+                if (generator.extensionConfig.type !== 'ext-insight' || !generator.extensionConfig.addDashboardTab) {// {{ADS EDIT}}
+                    return Promise.resolve();// {{ADS EDIT}}
+                }
+
+                generator.extensionConfig.isCustomization = true;// {{ADS EDIT}}
+
+                return generator.prompt({// {{ADS EDIT}}
+                    type: 'list',// {{ADS EDIT}}
+                    name: 'tabGroup',// {{ADS EDIT}}
+                    message: 'Which group to place the tab?',// {{ADS EDIT}}
+                    choices: [
+                    {
+                        name: "General",
+                        value: ""
+                    },
+                    {
+                        name: "Administration",
+                        value: "administration"
+                    },
+                    {
+                        name: "Monitoring",
+                        value: "monitoring"
+                    },
+                    {
+                        name: "Performance",
+                        value: "performance"
+                    },
+
+                    {
+                        name: "Security",
+                        value: "security"
+                    },
+
+                    {
+                        name: "Troubleshooting",
+                        value: "troubleshooting"
+                    },
+
+                    {
+                        name: "Settings",
+                        value: "settings"
+                    }
+                    ]
+                }).then(function (answer) {// {{ADS EDIT}}
+                    generator.extensionConfig.tabGroup = answer.tabGroup;// {{ADS EDIT}}
+                });
+            },
+
+            askForDashboardBar: () => {// {{ADS EDIT}}
+                if (generator.extensionConfig.type !== 'ext-insight' || !generator.extensionConfig.addDashboardTab ) {// {{ADS EDIT}}
                     return Promise.resolve();// {{ADS EDIT}}
                 }
 
@@ -307,9 +411,29 @@ module.exports = class extends Generator {
                     default: true// {{ADS EDIT}}
                 }).then(function (answer) {// {{ADS EDIT}}
                     generator.extensionConfig.addDashboardBar = answer.addDashboardBar;// {{ADS EDIT}}
-                    generator.extensionConfig.insightName = generator.extensionConfig.name + '.insight';// {{ADS EDIT}}
+                    generator.extensionConfig.addNavSection = false;// {{ADS EDIT}}
                 });
             },
+
+            askForNavSection: () => {// {{ADS EDIT}}
+                if (generator.extensionConfig.type !== 'ext-insight' || generator.extensionConfig.addDashboardBar || !generator.extensionConfig.addDashboardTab ) {// {{ADS EDIT}}
+                    return Promise.resolve();// {{ADS EDIT}}
+                }
+
+                generator.extensionConfig.isCustomization = true;// {{ADS EDIT}}
+
+                return generator.prompt({// {{ADS EDIT}}
+                    type: 'confirm',// {{ADS EDIT}}
+                    name: 'addNavSection',// {{ADS EDIT}}
+                    message: 'Add a navigation section?',// {{ADS EDIT}}
+                    default: true// {{ADS EDIT}}
+                }).then(function (answer) {// {{ADS EDIT}}
+                    generator.extensionConfig.addNavSection = answer.addNavSection;// {{ADS EDIT}}
+                });
+            },
+
+
+
 
             // Ask for extension display name ("displayName" in package.json)
             askForExtensionDisplayName: () => {
@@ -727,8 +851,7 @@ module.exports = class extends Generator {
         this.fs.copy(this.sourceRoot() + '/vscode', context.name + '/.vscode');// {{ADS EDIT}}
         this.fs.copy(this.sourceRoot() + '/src/sql', context.name + '/src/sql');// {{ADS EDIT}}
         this.fs.copyTpl(this.sourceRoot() + '/package.json', context.name + '/package.json', context);// {{ADS EDIT}}
-        if (this.extensionConfig.addDashboardBar) {// {{ADS EDIT}}
-            this.fs.copyTpl(this.sourceRoot() + '/package.json', context.name + '/package.json', context);// {{ADS EDIT}}
+        if (this.extensionConfig.addDashboardBar || this.extensionConfig.addHomepageAction) {// {{ADS EDIT}}
             this.fs.copyTpl(this.sourceRoot() + '/tsconfig.json', context.name + '/tsconfig.json', context);// {{ADS EDIT}}
             this.fs.copyTpl(this.sourceRoot() + '/tslint.json', context.name + '/tslint.json', context);// {{ADS EDIT}}
             this.fs.copyTpl(this.sourceRoot() + '/src/extension.js', context.name + '/src/extension.js', context);// {{ADS EDIT}}
@@ -737,10 +860,11 @@ module.exports = class extends Generator {
             this.fs.copyTpl(this.sourceRoot() + '/src/constants.js', context.name + '/src/constants.js', context);// {{ADS EDIT}}
             this.fs.copyTpl(this.sourceRoot() + '/src/localizedConstants.js', context.name + '/src/localizedConstants.js', context);// {{ADS EDIT}}
             this.fs.copyTpl(this.sourceRoot() + '/src/utils.js', context.name + '/src/utils.js', context);// {{ADS EDIT}}
-            this.extensionConfig.installDependencies = true;
+            this.fs.copy(this.sourceRoot() + '/src/media', context.name + '/src/media');// {{ADS EDIT}}
+            this.extensionConfig.installDependencies = true;// {{ADS EDIT}}
         }
-        else{
-            this.fs.copyTpl(this.sourceRoot() + '/package2.json', context.name + '/package.json', context);// {{ADS EDIT}}
+        else {
+            this.fs.copyTpl(this.sourceRoot() + '/src/media/tab.svg', context.name + '/src/media/tab.svg', context);// {{ADS EDIT}}
         }
         this.fs.copyTpl(this.sourceRoot() + '/vsc-extension-quickstart.md', context.name + '/vsc-extension-quickstart.md', context);// {{ADS EDIT}}
         this.fs.copyTpl(this.sourceRoot() + '/README.md', context.name + '/README.md', context);// {{ADS EDIT}}
@@ -750,7 +874,6 @@ module.exports = class extends Generator {
         if (this.extensionConfig.gitInit) {// {{ADS EDIT}}
             this.fs.copy(this.sourceRoot() + '/gitattributes', context.name + '/.gitattributes');// {{ADS EDIT}}
         }
-        //this.fs.copy(this.sourceRoot() + '/src/controllers', context.name + '/src/controllers');// {{ADS EDIT}}
 
     }
 

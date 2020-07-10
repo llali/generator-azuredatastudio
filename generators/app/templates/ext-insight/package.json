@@ -10,22 +10,77 @@
     "categories": [
         "Other"
     ],
+    <%if (addHomepageAction || addDashboardBar) {-%>
     "activationEvents": [
         "*"
     ],
     "main": "./src/extension",
+    <% } -%>
     "contributes": {
+        <%if (addHomepageAction || addDashboardBar) {-%>
+            <%if (addHomepageAction) {-%>
+        "menus": {
+            "dashboard/toolbar": [
+                {
+                    "command": <%- JSON.stringify(`${name}.getQuery`) %>
+                },
+                {
+                    "command": <%- JSON.stringify(`${name}.getUrl`) %>
+                }
+            ]
+        },
+        <% } -%>
+
         "commands": [
             {
               "command": <%- JSON.stringify(`${name}.getQuery`) %>,
-              "title": "Get Query"
+              "title": "Get Query",
+              "icon": {
+                "light": "./src/media/insights.svg",
+                "dark": "./src/media/insight_inverses.svg"
+              }
             },
             {
               "command": <%- JSON.stringify(`${name}.getUrl`) %>,
-              "title": "Get Url"
+              "title": "Get Url",
+              "icon": {
+                "light": "./src/media/launch.svg",
+                "dark": "./src/media/launch_inverse.svg"
+              }
             }
-          ],
+        ],
+        <% } -%>
         "dashboard.insights": [
+            {
+                "id": <%- JSON.stringify(name + '.space-usage') %>,
+                "contrib": {
+                  "type": {
+                    "horizontalBar": {
+                      "dataDirection": "vertical",
+                      "dataType": "number",
+                      "legendPosition": "top",
+                      "labelFirstColumn": false,
+                      "columnsAsLabels": true
+                    }
+                  },
+                  "queryFile": "./src/sql/all_db_space_used.sql"
+                }
+            },
+            {
+                "id": <%- JSON.stringify(name + '.cpu-utilization') %>,
+                "contrib": {
+                  "type": {
+                    "timeSeries": {
+                      "dataDirection": "horizontal",
+                      "dataType": "point",
+                      "legendPosition": "top",
+                      "labelFirstColumn": false,
+                      "columnsAsLabels": false
+                    }
+                  },
+                  "queryFile": "./src/sql/cpumetric.sql"
+                }
+            },
             {
                 "id": <%- JSON.stringify(name + '.insight') %>,
                 "contrib": {
@@ -47,6 +102,7 @@
                 "id": "insights",
                 "container": {
                     "widgets-container": [
+                        <%if (addDashboardBar) {-%>
                         {
                             "name": "Tasks",
                             "widget": {
@@ -56,8 +112,29 @@
                                 ]
                             }
                         },
+                        <% } -%>
                         {
-                            "name": <%- JSON.stringify(displayName) %>,
+                            "name": "Top 10 DB Space Usage",
+                            "gridItemConfig": {
+                              "sizex": 2,
+                              "sizey": 2
+                            },
+                            "widget": {
+                                <%- JSON.stringify(name + '.space-usage') %>: {}
+                            }
+                        },
+                        {
+                            "name": "CPU Utilization",
+                            "gridItemConfig": {
+                              "sizex": 2,
+                              "sizey": 1
+                            },
+                            "widget": {
+                                <%- JSON.stringify(name + '.cpu-utilization') %>: {}
+                            }
+                        },
+                        {
+                            "name": "Label",
                             "gridItemConfig": {
                                 "sizex": 2,
                                 "sizey": 1
@@ -69,17 +146,56 @@
                     ]
                 }
             }
-        ],
+        ]
+        <%if (addDashboardTab && (addServerTab || addDatabaseTab)) {-%>
+            ,
         "dashboard.tabs": [
             {
                 "id": <%- JSON.stringify(name + '.tab') %>,
                 "title": <%- JSON.stringify(displayName) %>,
                 "description": "",
+                "icon": "src/media/tab.svg",
+                "group": <%- JSON.stringify(tabGroup) %>,
+                <%if (addServerTab && !addDatabaseTab) {-%>
+                "when": "dashboardContext == 'server'",
+                <% } -%>
+                <%if (addDatabaseTab && !addServerTab) {-%>
+                    "when": "dashboardContext == 'database'",
+                <% } -%>
                 "container": {
+                    <%if (addNavSection) {-%>
+                    "nav-section": [
+                        {
+                          "id": "server-reports-monitoring",
+                          "title": "Monitor",
+                          "icon": {
+                            "light": "./src/media/monitor.svg",
+                            "dark": "./src/media/monitor_inverse.svg"
+                          },
+                          "container": {
+                            "insights":{}
+                          }
+                        },
+                        {
+                          "id": "server-reports-performance",
+                          "title": "Performance",
+                          "icon": {
+                            "light": "./src/media/performance.svg",
+                            "dark": "./src/media/performance_inverse.svg"
+                          },
+                          "container": {
+                            "modelview-container": null
+                          }
+                        }
+                      ]
+                    <% } -%>
+                    <%if (!addNavSection) {-%>
                     "insights":{}
+                    <% } -%>
                 }
             }
         ]
+        <% } -%>
     },
     "scripts": {
         "build": "gulp build",
