@@ -35,7 +35,7 @@ module.exports = class extends Generator {
         this.abort = false;
     }
 
-    // TEST
+    // TEST 2
 
     initializing() {
 
