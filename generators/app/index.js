@@ -851,12 +851,13 @@ module.exports = class extends Generator {
         this.fs.copy(this.sourceRoot() + '/vscode', context.name + '/.vscode');// {{ADS EDIT}}
         this.fs.copy(this.sourceRoot() + '/src/sql', context.name + '/src/sql');// {{ADS EDIT}}
         this.fs.copyTpl(this.sourceRoot() + '/package.json', context.name + '/package.json', context);// {{ADS EDIT}}
-        if (this.extensionConfig.addDashboardBar || this.extensionConfig.addHomepageAction) {// {{ADS EDIT}}
+        if (this.extensionConfig.addDashboardBar || this.extensionConfig.addHomepageAction || this.extensionConfig.addNavSection) {// {{ADS EDIT}}
             this.fs.copyTpl(this.sourceRoot() + '/tsconfig.json', context.name + '/tsconfig.json', context);// {{ADS EDIT}}
             this.fs.copyTpl(this.sourceRoot() + '/tslint.json', context.name + '/tslint.json', context);// {{ADS EDIT}}
             this.fs.copyTpl(this.sourceRoot() + '/src/extension.js', context.name + '/src/extension.js', context);// {{ADS EDIT}}
             this.fs.copyTpl(this.sourceRoot() + '/src/controllers/controllerBase.js', context.name + '/src/controllers/controllerBase.js', context);// {{ADS EDIT}}
             this.fs.copyTpl(this.sourceRoot() + '/src/controllers/mainController.js', context.name + '/src/controllers/mainController.js', context);// {{ADS EDIT}}
+            this.fs.copyTpl(this.sourceRoot() + '/src/controllers/webviewExample.html', context.name + '/src/controllers/webviewExample.html', context);// {{ADS EDIT}}
             this.fs.copyTpl(this.sourceRoot() + '/src/constants.js', context.name + '/src/constants.js', context);// {{ADS EDIT}}
             this.fs.copyTpl(this.sourceRoot() + '/src/localizedConstants.js', context.name + '/src/localizedConstants.js', context);// {{ADS EDIT}}
             this.fs.copyTpl(this.sourceRoot() + '/src/utils.js', context.name + '/src/utils.js', context);// {{ADS EDIT}}

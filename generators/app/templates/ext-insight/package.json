@@ -26,6 +26,12 @@
                 },
                 {
                     "command": <%- JSON.stringify(`${name}.getUrl`) %>
+                },
+                {
+                  "command": <%- JSON.stringify(`${name}.getConnection`) %>
+                },
+                {
+                  "command": <%- JSON.stringify(`${name}.getWebview`) %>
                 }
             ]
         },
@@ -43,6 +49,22 @@
             {
               "command": <%- JSON.stringify(`${name}.getUrl`) %>,
               "title": "Get Url",
+              "icon": {
+                "light": "./src/media/documentation.svg",
+                "dark": "./src/media/documentation_inverse.svg"
+              }
+            },
+            {
+              "command": <%- JSON.stringify(`${name}.getConnection`) %>,
+              "title": "Get Connection",
+              "icon": {
+                "light": "./src/media/tempdb.svg",
+                "dark": "./src/media/tempdb_inverse.svg"
+              }
+            },
+            {
+              "command": <%- JSON.stringify(`${name}.getWebview`) %>,
+              "title": "Get Webview",
               "icon": {
                 "light": "./src/media/launch.svg",
                 "dark": "./src/media/launch_inverse.svg"
@@ -108,7 +130,9 @@
                             "widget": {
                                 "tasks-widget": [
                                 <%- JSON.stringify(`${name}.getQuery`) %>,
-                                <%- JSON.stringify(`${name}.getUrl`) %>
+                                <%- JSON.stringify(`${name}.getUrl`) %>,
+                                <%- JSON.stringify(`${name}.getConnection`) %>,
+                                <%- JSON.stringify(`${name}.getWebview`) %>
                                 ]
                             }
                         },
@@ -166,7 +190,7 @@
                     <%if (addNavSection) {-%>
                     "nav-section": [
                         {
-                          "id": "server-reports-monitoring",
+                          "id": "monitoring",
                           "title": "Monitor",
                           "icon": {
                             "light": "./src/media/monitor.svg",
@@ -177,16 +201,16 @@
                           }
                         },
                         {
-                          "id": "server-reports-performance",
-                          "title": "Performance",
+                          "id": "webviewExample",
+                          "title": "Webivew",
                           "icon": {
-                            "light": "./src/media/performance.svg",
-                            "dark": "./src/media/performance_inverse.svg"
+                              "light": "./src/media/performance.svg",
+                              "dark": "./src/media/performance_inverse.svg"
                           },
                           "container": {
-                            "modelview-container": null
+                              "webview-container": null
                           }
-                        }
+                      }
                       ]
                     <% } -%>
                     <%if (!addNavSection) {-%>
