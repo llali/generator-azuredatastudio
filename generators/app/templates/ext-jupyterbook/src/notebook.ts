@@ -32,9 +32,9 @@ const findCorrectFolder = (folderName: string, rootExtensionsFolder: string, not
 }
 
 const extractNotebooksFromFolder = (fullFolderPath: string, notebookNames: Array<string>) => {
-    const files = getFolderContent(fullFolderPath);
+    var files = getFolderContent(fullFolderPath);
     files.forEach(fileName => {
-        let fileExtension = path.extname(fileName).toLowerCase();
+    var fileExtension = path.extname(fileName).toLowerCase();
         if (fileExtension === '.ipynb'){
             let fullFilePath = path.join(fullFolderPath, fileName)
             notebookNames.push(path.normalize(fullFilePath));

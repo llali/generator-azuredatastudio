@@ -3,10 +3,10 @@
  *--------------------------------------------------------*/
 'use strict';
 
-var path = require('path');
-var fs = require('fs');
-var plistParser = require('fast-plist');
-var request = require('request-light');
+let path = require('path');
+let fs = require('fs');
+let plistParser = require('fast-plist');
+let request = require('request-light');
 
 function convertTheme(location, extensionConfig, inline, generator) {
     if (!location) {
@@ -16,17 +16,17 @@ function convertTheme(location, extensionConfig, inline, generator) {
         // load from url
         return request.xhr({ url: location }).then(r => {
             if (r.status == 200) {
-                var tmThemeFileName = null;
+                let tmThemeFileName = null;
                 if (!inline) {
-                    var contentDisposition = r.headers && r.headers['content-disposition'];
+                    const contentDisposition = r.headers && r.headers['content-disposition'];
                     if (contentDisposition) {
-                        var fileNameMatch = contentDisposition.match(/filename="([^"]*)/);
+                        const fileNameMatch = contentDisposition.match(/filename="([^"]*)/);
                         if (fileNameMatch) {
                             tmThemeFileName = fileNameMatch[1];
                         }
                     }
                     if (!tmThemeFileName) {
-                        var lastSlash = location.lastIndexOf('/');
+                        const lastSlash = location.lastIndexOf('/');
                         if (lastSlash) {
                             tmThemeFileName = location.substr(lastSlash + 1);
                         } else {
@@ -41,14 +41,14 @@ function convertTheme(location, extensionConfig, inline, generator) {
         });
     } else {
         // load from disk
-        var body = null;
+        let body = null;
         try {
             body = fs.readFileSync(location);
         } catch (error) {
             return Promise.reject("Problems loading theme: " + error.message);
         }
         if (body) {
-            var fileName = null;
+            let fileName = null;
             if (!inline) {
                 fileName = path.basename(location);
             }
@@ -60,8 +60,8 @@ function convertTheme(location, extensionConfig, inline, generator) {
 }
 
 function processContent(extensionConfig, tmThemeFileName, body, generator) {
-    var themeNameMatch = body.match(/<key>name<\/key>\s*<string>([^<]*)/);
-    var themeName = themeNameMatch ? themeNameMatch[1] : '';
+    let themeNameMatch = body.match(/<key>name<\/key>\s*<string>([^<]*)/);
+    let themeName = themeNameMatch ? themeNameMatch[1] : '';
     try {
         extensionConfig.themeContent = migrate(body, tmThemeFileName, generator);
         if (tmThemeFileName) {
@@ -81,7 +81,7 @@ function processContent(extensionConfig, tmThemeFileName, body, generator) {
 };
 
 // mapping from old tmTheme setting to new workbench color ids
-var mappings = {
+const mappings = {
     "background": ["editor.background"],
     "foreground": ["editor.foreground"],
     "hoverHighlight": ["editor.hoverHighlightBackground"],
@@ -109,7 +109,7 @@ var mappings = {
 
 function migrate(content, tmThemeFileName, generator) {
     let result = {};
-    var theme;
+    let theme;
     try {
         theme = plistParser.parse(content);
     } catch (e) {
@@ -126,7 +126,7 @@ function migrate(content, tmThemeFileName, generator) {
                     entry.scope = parts;
                 }
             } else {
-                var entrySettings = entry.settings;
+                const entrySettings = entry.settings;
                 let notSupported = [];
                 for (let entry in entrySettings) {
                     let mapping = mappings[entry];

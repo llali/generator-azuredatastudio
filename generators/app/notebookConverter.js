@@ -3,12 +3,12 @@
  *--------------------------------------------------------*/
 'use strict';
 
-var path = require('path');
-var fs = require('fs');
+let path = require('path');
+let fs = require('fs');
 
 exports.processNotebookFolder = (folderPath, generator) => {
     let errors = [];
-    let count = findNotebookFiles(folderPath, errors, generator);
+    const count = findNotebookFiles(folderPath, errors, generator);
 
     if (count <= 0) {
         generator.log("No valid notebooks found in " + folderPath + (errors.length > 0 ? '.\n' + errors.join('\n'): ''));
@@ -21,17 +21,17 @@ exports.processNotebookFolder = (folderPath, generator) => {
 
 const findNotebookFiles = (folderPath, errors, generator) => {
     let notebookCount = 0;
-    let files = getFolderContent(folderPath, errors);
+    const files = getFolderContent(folderPath, errors);
 
     if (errors.length > 0) {
         return -1;
     }
 
     files.forEach(fileName => {
-        var extension = path.extname(fileName).toLowerCase();
+        let extension = path.extname(fileName).toLowerCase();
         if (extension === '.ipynb') {
             notebookCount++;
-            var filePath = path.join(folderPath, fileName);
+            let filePath = path.join(folderPath, fileName);
             generator.extensionConfig.notebookNames.push(fileName);
             generator.extensionConfig.notebookPaths.push(filePath);
         }
@@ -44,7 +44,7 @@ const findNotebookFiles = (folderPath, errors, generator) => {
 exports.processBookFolder = (folderPath, generator) => {
     let errors = [];
     try {
-        let validBook = findBookTOC(folderPath, errors, generator);
+        const validBook = findBookTOC(folderPath, errors, generator);
         if (validBook < 0) {
             generator.log("No valid Jupyter Book found in " + folderPath + (errors.length > 0 ? '.\n' + errors.join('\n'): ''));
             return validBook;
@@ -52,7 +52,7 @@ exports.processBookFolder = (folderPath, generator) => {
 
         generator.log("Jupyter Book found!" + (errors.length > 0 ? '\n\nProblems while converting: \n' + errors.join('\n'): ''));
 
-        let count = discoverFoldersContainingNotebooks(folderPath, errors, generator);
+        const count = discoverFoldersContainingNotebooks(folderPath, errors, generator);
         generator.log(count + " notebook(s) found! " + (errors.length > 0 ? '\n\nProblems while converting: \n' + errors.join('\n'): ''));
         return count;
     } catch (e) {
@@ -62,7 +62,7 @@ exports.processBookFolder = (folderPath, generator) => {
 
 const discoverFoldersContainingNotebooks = (rootFolder, errors, generator) => {
     let totalNotebookCount = 0;
-    let subfolders = getFolderContent(rootFolder);
+    const subfolders = getFolderContent(rootFolder);
     subfolders.forEach(dir => {
         totalNotebookCount += findNotebookFiles(dir, errors, generator);
         generator.extensionConfig.notebookFolders.push(dir);
@@ -71,7 +71,7 @@ const discoverFoldersContainingNotebooks = (rootFolder, errors, generator) => {
 }
 
 const findBookTOC = (folderPath, errors, generator) => {
-    let files = getFolderContent(folderPath, errors);
+    const files = getFolderContent(folderPath, errors);
     if (errors.length > 0) {
         return -1;
     }

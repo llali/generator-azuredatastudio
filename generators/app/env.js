@@ -2,15 +2,15 @@
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
 'use strict';
-var request = require('request-light');
+const request = require('request-light');
+const fallbackVersion = '^1.39.0';
 
-var fallbackVersion = '^1.39.0';
-var promise = request.xhr({ url: 'https://raw.githubusercontent.com/microsoft/azuredatastudio/master/product.json', headers: { "X-API-Version": "2" } }).then(res => {// {{ADS EDIT}}
+const promise = request.xhr({ url: 'https://raw.githubusercontent.com/microsoft/azuredatastudio/master/product.json', headers: { "X-API-Version": "2" } }).then(res => {// {{ADS EDIT}}
     if (res.status === 200) {
         try {
-            var tagsAndCommits = JSON.parse(res.responseText);
+            const tagsAndCommits = JSON.parse(res.responseText);
             if (Array.isArray(tagsAndCommits) && tagsAndCommits.length > 0) {
-                var segments = tagsAndCommits[0].version.split('.');
+                const segments = tagsAndCommits[0].version.split('.');
                 if (segments.length === 3) {
                     return '^' + segments[0] + '.' + segments[1] + '.0';
                 }
@@ -25,5 +25,5 @@ var promise = request.xhr({ url: 'https://raw.githubusercontent.com/microsoft/az
 });
 
 module.exports.getLatestVSCodeVersion = function() { return promise; };
-var azdataFallbackVersion = '*';// {{ADS EDIT}}
+let azdataFallbackVersion = '*';// {{ADS EDIT}}
 module.exports.azdataVersion = azdataFallbackVersion;// {{ADS EDIT}}

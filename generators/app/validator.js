@@ -2,6 +2,7 @@
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
 var nameRegex = /^[a-z0-9][a-z0-9\-]*$/i;
+var numberRegex = /^[0-9]*$/
 
 module.exports.validatePublisher = function(publisher) {
     if (!publisher) {
@@ -29,4 +30,11 @@ module.exports.validateExtensionId = function(id) {
 
 module.exports.validateNonEmpty = function(name) {
     return name && name.length > 0;
+}
+
+module.exports.validateNumber = function(number) {
+   if (!numberRegex.test(number)){
+       return "Invalid number";
+   }
+    return true;
 }

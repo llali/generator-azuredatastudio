@@ -3,16 +3,16 @@
  *--------------------------------------------------------*/
 'use strict';
 
-var path = require('path');
-var fs = require('fs');
-var plistParser = require('fast-plist');
+let path = require('path');
+let fs = require('fs');
+let plistParser = require('fast-plist');
 
 function processSnippetFolder(folderPath, generator) {
-    var errors = [], snippets = {};
-    var snippetCount = 0;
-    var languageId = null;
+    let errors = [], snippets = {};
+    let snippetCount = 0;
+    let languageId = null;
 
-    var count = convert(folderPath);
+    const count = convert(folderPath);
     if (count <= 0) {
         generator.log("No valid snippets found in " + folderPath + (errors.length > 0 ? '.\n' + errors.join('\n'): ''));
         return count;
@@ -24,14 +24,14 @@ function processSnippetFolder(folderPath, generator) {
 
     function convert(folderPath) {
 
-        var files = getFolderContent(folderPath, errors);
+        const files = getFolderContent(folderPath, errors);
         if (errors.length > 0) {
             return -1;
         }
 
         files.forEach(function (fileName) {
-            var extension = path.extname(fileName).toLowerCase();
-            var snippet;
+            const extension = path.extname(fileName).toLowerCase();
+            let snippet;
             if (extension === '.tmsnippet') {
                 snippet = convertTextMate(path.join(folderPath, fileName));
             } else if (extension === '.sublime-snippet') {
@@ -43,7 +43,7 @@ function processSnippetFolder(folderPath, generator) {
                     snippetCount++;
                     guessLanguage(snippet.scope);
                 } else {
-                    var filePath = path.join(folderPath, fileName);
+                    const filePath = path.join(folderPath, fileName);
                     if (!snippet.prefix) {
                         errors.push(filePath + ": Missing property 'tabTrigger'. Snippet skipped.");
                     } else {
@@ -59,7 +59,7 @@ function processSnippetFolder(folderPath, generator) {
 
     function getId(prefix) {
         if (snippets.hasOwnProperty(prefix)) {
-            var counter = 1;
+            let counter = 1;
             while (snippets.hasOwnProperty(prefix + counter)) {
                 counter++;
             }
@@ -70,7 +70,7 @@ function processSnippetFolder(folderPath, generator) {
 
     function guessLanguage(scopeName) {
         if (!languageId && scopeName) {
-            var match;
+            let match;
             if (match = /(source|text)\.(\w+)/.exec(scopeName)) {
                 languageId = match[2];
             }
@@ -78,11 +78,11 @@ function processSnippetFolder(folderPath, generator) {
     }
 
     function convertTextMate(filePath) {
-        var body = getFileContent(filePath, errors);
+        let body = getFileContent(filePath, errors);
         if (!body) {
             return;
         }
-        var value;
+        let value;
         try {
             value = plistParser.parse(body);
         } catch (e) {
@@ -103,14 +103,14 @@ function processSnippetFolder(folderPath, generator) {
     }
 
     function convertSublime(filePath) {
-        var body = getFileContent(filePath, errors);
+        let body = getFileContent(filePath, errors);
         if (!body) {
             return;
         }
 
-        var parsed = plistParser.parse(body);
+        const parsed = plistParser.parse(body);
 
-        var snippet = {
+        const snippet = {
             prefix: parsed['tabtrigger'],
             body: parsed['content'],
             description: parsed['description'],
@@ -134,7 +134,7 @@ function getFolderContent(folderPath, errors) {
 
 function getFileContent(filePath, errors) {
     try {
-        var content = fs.readFileSync(filePath).toString();
+        const content = fs.readFileSync(filePath).toString();
         if (content === '') {
             errors.push(filePath + ": Empty file content");
         }

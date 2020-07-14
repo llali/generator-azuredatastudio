@@ -403,6 +403,7 @@ module.exports = class extends Generator {
                     type: 'input',
                     name: 'publisherName',
                     message: 'What name would you like to publish this extension under?',
+                    validate: validator.validateNonEmpty,
                 }).then(publisherAnswer => {
                     generator.extensionConfig.publisherName = publisherAnswer.publisherName;
                 });
@@ -468,19 +469,28 @@ module.exports = class extends Generator {
                 return generator.prompt({
                     type: 'confirm',
                     name: 'addBooks',
-                    message: 'Add existing Jupyter Book to be shipped?',
+                    message: 'Add an existing Jupyter Book to be shipped?',
                     default: true
                 }).then(existingBookAnswer => {
                     generator.extensionConfig.addBooks = existingBookAnswer.addBooks;
                 });
             },
 
-            askForJupyterBook: () => {
+            askForBookCreation: () => {
                 if (generator.extensionConfig.type !== 'ext-jupyterbook') {
                     return Promise.resolve();
                 }
 
-                if (generator.extensionConfig.addBooks){
+                if (!generator.extensionConfig.addBooks){
+                    return generator.prompt({
+                        type: 'confirm',
+                        name: 'createBook',
+                        message: 'Do you have existing notebooks you would like to create a Jupyter Book out of?',
+                        default: true
+                    }).then(creationAnswer => {
+                        generator.extensionConfig.createBook = creationAnswer.createBook;
+                    });
+               } else {
                     return generator.prompt({
                         type: 'input',
                         name: 'bookLocation',
@@ -492,8 +502,44 @@ module.exports = class extends Generator {
                         generator.extensionConfig.notebookPaths = [];
                         return notebookConverter.processBookFolder(tempPath, generator);
                     });
-                } else {
-                    generator.log('Generating sample Jupyter Book!')
+               }
+            },
+
+            askForBookConversion: async () => {
+                if (generator.extensionConfig.type !== 'ext-jupyterbook') {
+                    return;
+                }
+
+                if (generator.extensionConfig.createBook){
+                    const answers = await generator.prompt([
+                        {
+                            type: 'input',
+                            name: 'bookTitle',
+                            message: 'What would you like the title of your book to be?',
+                            validate: validator.validateNonEmpty,
+                        },
+                        {
+                            type: 'input',
+                            name: 'bookTitle',
+                            message: 'What would you like the author name of your book to be?',
+                            validate: validator.validateNonEmpty,
+                        },
+                        {
+                            type: 'input',
+                            name: 'numberSections',
+                            message: 'How many chapters would you like in your book?',
+                            default: 1,
+                            validate: validator.validateNumber,
+                        },
+                        {
+                            type: 'input',
+                            name: 'sectionFolders',
+                            message: 'Provide the path to the root folder which contains the folders where each of your notebooks exist.',
+                            default: '/Desktop/notebooks',
+                        },
+                    ]);
+
+                    Object.assign(generator.extensionConfig, answers);
                 }
             },
 
