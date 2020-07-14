@@ -56,7 +56,7 @@ module.exports = class extends Generator {
             askForType: () => {
                 let extensionType = generator.options['extensionType'];
                 if (extensionType) {
-                    let extensionTypes = ['insight', 'colortheme', 'language', 'snippets', 'command-ts', 'command-js', 'extensionpack'];// {{ADS EDIT}}
+                    let extensionTypes = ['dashboard', 'colortheme', 'language', 'snippets', 'command-ts', 'command-js', 'extensionpack'];// {{ADS EDIT}}
                     if (extensionTypes.indexOf(extensionType) !== -1) {
                         generator.extensionConfig.type = 'ext-' + extensionType;
                     } else {
@@ -78,8 +78,8 @@ module.exports = class extends Generator {
                         value: 'ext-command-js'
                     },
                     {
-                        name: 'New Dashboard Insight',// {{ADS EDIT}}
-                        value: 'ext-insight'// {{ADS EDIT}}
+                        name: 'New Dashboard',// {{ADS EDIT}}
+                        value: 'ext-dashboard'// {{ADS EDIT}}
                     },
                     {
                         name: 'New Color Theme',
@@ -275,7 +275,7 @@ module.exports = class extends Generator {
             },
 
             askForHomepageAction: () => {// {{ADS EDIT}}
-                if (generator.extensionConfig.type !== 'ext-insight') {// {{ADS EDIT}}
+                if (generator.extensionConfig.type !== 'ext-dashboard') {// {{ADS EDIT}}
                     return Promise.resolve();// {{ADS EDIT}}
                 }
 
@@ -292,7 +292,7 @@ module.exports = class extends Generator {
             },
 
             askForDashboardTab: () => {// {{ADS EDIT}}
-                if (generator.extensionConfig.type !== 'ext-insight') {// {{ADS EDIT}}
+                if (generator.extensionConfig.type !== 'ext-dashboard') {// {{ADS EDIT}}
                     return Promise.resolve();// {{ADS EDIT}}
                 }
 
@@ -314,7 +314,7 @@ module.exports = class extends Generator {
             },
 
             askForServerTab: () => {// {{ADS EDIT}}
-                if (generator.extensionConfig.type !== 'ext-insight' || !generator.extensionConfig.addDashboardTab) {// {{ADS EDIT}}
+                if (generator.extensionConfig.type !== 'ext-dashboard' || !generator.extensionConfig.addDashboardTab) {// {{ADS EDIT}}
                     return Promise.resolve();// {{ADS EDIT}}
                 }
 
@@ -331,7 +331,7 @@ module.exports = class extends Generator {
             },
 
             askForDatabaseTab: () => {// {{ADS EDIT}}
-                if (generator.extensionConfig.type !== 'ext-insight' || !generator.extensionConfig.addDashboardTab) {// {{ADS EDIT}}
+                if (generator.extensionConfig.type !== 'ext-dashboard' || !generator.extensionConfig.addDashboardTab) {// {{ADS EDIT}}
                     return Promise.resolve();// {{ADS EDIT}}
                 }
 
@@ -349,7 +349,7 @@ module.exports = class extends Generator {
             },
 
             askForTabGroup: () => {// {{ADS EDIT}}
-                if (generator.extensionConfig.type !== 'ext-insight' || !generator.extensionConfig.addDashboardTab) {// {{ADS EDIT}}
+                if (generator.extensionConfig.type !== 'ext-dashboard' || !generator.extensionConfig.addDashboardTab) {// {{ADS EDIT}}
                     return Promise.resolve();// {{ADS EDIT}}
                 }
 
@@ -398,7 +398,7 @@ module.exports = class extends Generator {
             },
 
             askForDashboardBar: () => {// {{ADS EDIT}}
-                if (generator.extensionConfig.type !== 'ext-insight' || !generator.extensionConfig.addDashboardTab ) {// {{ADS EDIT}}
+                if (generator.extensionConfig.type !== 'ext-dashboard' || !generator.extensionConfig.addDashboardTab ) {// {{ADS EDIT}}
                     return Promise.resolve();// {{ADS EDIT}}
                 }
 
@@ -416,7 +416,7 @@ module.exports = class extends Generator {
             },
 
             askForNavSection: () => {// {{ADS EDIT}}
-                if (generator.extensionConfig.type !== 'ext-insight' || generator.extensionConfig.addDashboardBar || !generator.extensionConfig.addDashboardTab ) {// {{ADS EDIT}}
+                if (generator.extensionConfig.type !== 'ext-dashboard' || generator.extensionConfig.addDashboardBar || !generator.extensionConfig.addDashboardTab ) {// {{ADS EDIT}}
                     return Promise.resolve();// {{ADS EDIT}}
                 }
 
@@ -655,7 +655,7 @@ module.exports = class extends Generator {
             },
 
             askForPackageManager: () => {
-                if (['ext-command-ts', 'ext-command-js', 'ext-localization', 'ext-insight'].indexOf(generator.extensionConfig.type) === -1) {
+                if (['ext-command-ts', 'ext-command-js', 'ext-localization', 'ext-dashboard'].indexOf(generator.extensionConfig.type) === -1) {
                     return Promise.resolve();
                 }
                 generator.extensionConfig.pkgManager = 'npm';
@@ -725,8 +725,8 @@ module.exports = class extends Generator {
             case 'ext-extensionpack':
                 this._writingExtensionPack();
                 break;
-            case 'ext-insight':// {{ADS EDIT}}
-                this._writingInsight();// {{ADS EDIT}}
+            case 'ext-dashboard':// {{ADS EDIT}}
+                this._writingDashboard();// {{ADS EDIT}}
                 break;// {{ADS EDIT}}
             case 'ext-localization':
                 localization.writingLocalizationExtension(this);
@@ -844,8 +844,8 @@ module.exports = class extends Generator {
         }
     }
 
-     // Write Insight Extension
-     _writingInsight() {// {{ADS EDIT}}
+     // Write Dashboard Extension
+     _writingDashboard() {// {{ADS EDIT}}
         let context = this.extensionConfig;// {{ADS EDIT}}
 
         this.fs.copy(this.sourceRoot() + '/vscode', context.name + '/.vscode');// {{ADS EDIT}}
