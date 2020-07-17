@@ -850,6 +850,7 @@ module.exports = class extends Generator {
 
         this.fs.copy(this.sourceRoot() + '/vscode', context.name + '/.vscode');// {{ADS EDIT}}
         this.fs.copy(this.sourceRoot() + '/src/sql', context.name + '/src/sql');// {{ADS EDIT}}
+        this.fs.copy(this.sourceRoot() + '/src/notebook', context.name + '/src/notebook');// {{ADS EDIT}}
         this.fs.copyTpl(this.sourceRoot() + '/package.json', context.name + '/package.json', context);// {{ADS EDIT}}
         if (this.extensionConfig.addDashboardBar || this.extensionConfig.addHomepageAction || this.extensionConfig.addNavSection) {// {{ADS EDIT}}
             this.fs.copyTpl(this.sourceRoot() + '/tsconfig.json', context.name + '/tsconfig.json', context);// {{ADS EDIT}}

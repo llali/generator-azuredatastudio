@@ -29,6 +29,7 @@ class MainController extends controllerBase_1.default {
         });
         azdata.tasks.registerTask('<%= name %>.getUrl', e => this.openurl('https://github.com/microsoft/azuredatastudio'));
         azdata.tasks.registerTask('<%= name %>.getQuery', e => this.onExecute(e, 'query.sql'));
+        azdata.tasks.registerTask('<%= name %>.getNotebook', e => this.openNotebook(e, 'SampleTSQLNotebook.ipynb'));
         azdata.tasks.registerTask('<%= name %>.getConnection', e => this.showConnection());
         azdata.tasks.registerTask('<%= name %>.getWebview', e => this.showWebview());
         return Promise.resolve(true);
@@ -45,6 +46,17 @@ class MainController extends controllerBase_1.default {
             });
         });
     }
+
+    openNotebook(connection, fileName) {
+        let sqlContent = fs.readFileSync(path.join(__dirname, '..', 'notebook', fileName)).toString();
+        vscode.workspace.openTextDocument({ language: 'notebook', content: sqlContent }).then(doc => {
+            vscode.window.showNotebookDocument(doc, vscode.ViewColumn.Active, false).then(() => {
+                let filePath = doc.uri.toString();
+                azdata.queryeditor.connect(filePath, connection.id).then(() => azdata.queryeditor.runQuery(filePath));
+            });
+        });
+    }
+
     showConnection(){
         azdata.connection.getCurrentConnection().then(connection => {
             let connectionId = connection ? connection.connectionId : 'No connection found!';

@@ -32,6 +32,9 @@
                 },
                 {
                   "command": <%- JSON.stringify(`${name}.getWebview`) %>
+                },
+                {
+                  "command": <%- JSON.stringify(`${name}.getNotebook`) %>
                 }
             ]
         },
@@ -69,9 +72,18 @@
                 "light": "./src/media/launch.svg",
                 "dark": "./src/media/launch_inverse.svg"
               }
+            },
+            {
+              "command": <%- JSON.stringify(`${name}.getNotebook`) %>,
+              "title": "Get Notebook",
+              "icon": {
+                "light": "./src/media/book.svg",
+                "dark": "./src/media/book_inverse.svg"
+              }
             }
         ],
         <% } -%>
+        <%if (addDashboardTab && (addServerTab || addDatabaseTab)) {-%>
         "dashboard.insights": [
             {
                 "id": <%- JSON.stringify(name + '.space-usage') %>,
@@ -119,6 +131,7 @@
                 }
             }
         ],
+        <% } -%>
         "dashboard.containers": [
             {
                 "id": "insights",
@@ -132,7 +145,8 @@
                                 <%- JSON.stringify(`${name}.getQuery`) %>,
                                 <%- JSON.stringify(`${name}.getUrl`) %>,
                                 <%- JSON.stringify(`${name}.getConnection`) %>,
-                                <%- JSON.stringify(`${name}.getWebview`) %>
+                                <%- JSON.stringify(`${name}.getWebview`) %>,
+                                <%- JSON.stringify(`${name}.getNotebook`) %>
                                 ]
                             }
                         },
@@ -234,22 +248,14 @@
         "openurl": "^1.1.1"
       },
       "devDependencies": {
+        "@types/vscode": <%- JSON.stringify(vsCodeEngine) %>,
+		    "@types/azdata": <%- JSON.stringify(azdataEngine) %>,
         "azdata": "^1.0.0",
-        "@types/mocha": "^2.2.42",
-        "@types/node": "^7.0.43",
-        "child-process-promise": "^2.2.1",
-        "del": "^3.0.0",
-        "gulp": "^4.0.0",
-        "gulp-color": "0.0.1",
-        "gulp-sourcemaps": "^2.6.4",
-        "gulp-tslint": "^6.0.2",
-        "gulp-typescript": "^3.2.4",
-        "should": "^13.2.1",
+        "@types/mocha": "^7.0.2",
+        "@types/node": "^13.11.0",
         "temp-write": "^3.4.0",
         "tslint": "^3.14.0",
-        "typemoq": "^2.1.0",
-        "typescript": "^2.6.1",
-        "vsce": "1.36.2",
+        "typescript": "^3.8.3",
         "vscode": "^1.1.6"
       }
 
