@@ -35,8 +35,6 @@ module.exports = class extends Generator {
         this.abort = false;
     }
 
-    // TEST 2
-
     initializing() {
 
         // Welcome
@@ -58,7 +56,7 @@ module.exports = class extends Generator {
             askForType: () => {
                 let extensionType = generator.options['extensionType'];
                 if (extensionType) {
-                    let extensionTypes = ['insight', 'colortheme', 'language', 'snippets', 'command-ts', 'command-js', 'extensionpack'];// {{ADS EDIT}}
+                    let extensionTypes = ['insight', 'colortheme', 'language', 'snippets', 'command-ts', 'command-js', 'extensionpack', 'wizard'];// {{ADS EDIT}}
                     if (extensionTypes.indexOf(extensionType) !== -1) {
                         generator.extensionConfig.type = 'ext-' + extensionType;
                     } else {
@@ -106,10 +104,72 @@ module.exports = class extends Generator {
                     {
                         name: 'New Language Pack (Localization)',
                         value: 'ext-localization'
+                    },
+                    {
+                        name: 'New Wizard or Dialog',
+                        value: 'ext-wizard'
                     }
                     ]
                 }).then(typeAnswer => {
                     generator.extensionConfig.type = typeAnswer.type;
+                });
+            },
+
+            askForWizardOrDialogType : () => {
+                if (generator.extensionConfig.type !== 'ext-wizard') {
+                    return Promise.resolve();
+                }
+                generator.extensionConfig.isCustomization = true;
+                return generator.prompt({
+                    type: 'list',
+                    name: 'wizardOrDialog',
+                    message: 'Do you want to create a Wizard or a Dialog Extension?',
+                    choices: [
+                        {
+                            name: 'Wizard',
+                            value: 'Wizard'
+                        },
+                        {
+                            name: 'Dialog',
+                            value: 'Dialog'
+                        }
+                    ]
+                }).then(answer => {
+                    let type = answer.wizardOrDialog;
+                    generator.extensionConfig.wizardOrDialog = type;
+                    if (type === 'Wizard') {
+                        return generator.prompt({
+                            type: 'list',
+                            name: 'wizardType',
+                            message: 'Choose a Wizard Template:',
+                            choices: [
+                                {
+                                    name: 'Getting Started Template',
+                                    value: 'standard'
+                                },
+                                {
+                                    name: 'Sample Wizard: File Saving',
+                                    value: 'file-saving'
+                                },
+                                {
+                                    name: 'Sample Wizard: Database Querying',
+                                    value: 'db-query'
+                                },
+                                {
+                                    name: 'Sample Wizard: Custom Styles',
+                                    value: 'custom-styles'
+                                },
+                                {
+                                    name: 'Sample Wizard: Web View',
+                                    value: 'web-view'
+                                }
+                            ]
+                        }).then(typeAnswer => {
+                            generator.extensionConfig.wizardType = typeAnswer.wizardType;
+                        });
+                    } else { // type === 'Dialog'
+                        generator.extensionConfig.dialogType = 'standard';
+                    }
                 });
             },
 
@@ -372,7 +432,7 @@ module.exports = class extends Generator {
             },
 
             askForGit: () => {
-                if (['ext-command-ts', 'ext-command-js'].indexOf(generator.extensionConfig.type) === -1) {
+                if (['ext-command-ts', 'ext-command-js', 'ext-wizard'].indexOf(generator.extensionConfig.type) === -1) {
                     return Promise.resolve();
                 }
 
@@ -515,7 +575,8 @@ module.exports = class extends Generator {
             },
 
             askForPackageManager: () => {
-                if (['ext-command-ts', 'ext-command-js', 'ext-localization'].indexOf(generator.extensionConfig.type) === -1) {
+                if (['ext-command-ts', 'ext-command-js', 'ext-localization', 'ext-wizard']
+                        .indexOf(generator.extensionConfig.type) === -1) {
                     return Promise.resolve();
                 }
                 generator.extensionConfig.pkgManager = 'npm';
@@ -590,6 +651,9 @@ module.exports = class extends Generator {
                 break;// {{ADS EDIT}}
             case 'ext-localization':
                 localization.writingLocalizationExtension(this);
+                break;
+            case 'ext-wizard':
+                this._writingWizard();
                 break;
             default:
                 //unknown project type
@@ -765,6 +829,35 @@ module.exports = class extends Generator {
 
         this.fs.copyTpl(this.sourceRoot() + '/extension.js', context.name + '/extension.js', context);
         this.fs.copyTpl(this.sourceRoot() + '/package.json', context.name + '/package.json', context);
+        this.fs.copyTpl(this.sourceRoot() + '/.eslintrc.json', context.name + '/.eslintrc.json', context);
+
+        this.extensionConfig.installDependencies = true;
+    }
+
+    // TODO: Comment
+    _writingWizard() {
+        let context = this.extensionConfig;
+
+        this.fs.copy(this.sourceRoot() + '/vscode', context.name + '/.vscode');
+        this.fs.copy(this.sourceRoot() + '/src/test', context.name + '/src/test');
+
+        this.fs.copy(this.sourceRoot() + '/vscodeignore', context.name + '/.vscodeignore');
+        if (this.extensionConfig.gitInit) {
+            this.fs.copy(this.sourceRoot() + '/gitignore', context.name + '/.gitignore');
+        }
+        this.fs.copyTpl(this.sourceRoot() + '/README.md', context.name + '/README.md', context);
+        this.fs.copyTpl(this.sourceRoot() + '/CHANGELOG.md', context.name + '/CHANGELOG.md', context);
+        this.fs.copyTpl(this.sourceRoot() + '/vsc-extension-quickstart.md', context.name + '/vsc-extension-quickstart.md', context);
+        this.fs.copyTpl(this.sourceRoot() + '/tsconfig.json', context.name + '/tsconfig.json', context);
+
+        if (context.wizardOrDialog === 'Wizard') {
+            this.fs.copyTpl(this.sourceRoot() + '/src/wizards/' + context.wizardType, context.name + '/src', context);
+        } else { // context.wizardOrDialog === 'Dialog'
+            this.fs.copyTpl(this.sourceRoot() + '/src/dialogs/' + context.dialogType, context.name + '/src', context);
+        }
+
+        this.fs.copyTpl(this.sourceRoot() + '/package.json', context.name + '/package.json', context);
+
         this.fs.copyTpl(this.sourceRoot() + '/.eslintrc.json', context.name + '/.eslintrc.json', context);
 
         this.extensionConfig.installDependencies = true;
