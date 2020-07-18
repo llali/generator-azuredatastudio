@@ -66,6 +66,8 @@ const discoverFoldersContainingNotebooks = (rootFolder, errors, generator) => {
     let totalNotebookCount = 0;
     const subfolders = getFolderContent(rootFolder);
     subfolders.forEach(dir => {
+        console.log(dir);
+        console.log(totalNotebookCount);
         totalNotebookCount += findNotebookFiles(dir, errors, generator);
         generator.extensionConfig.notebookFolders.push(dir);
     })
