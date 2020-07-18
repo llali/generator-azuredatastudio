@@ -5,6 +5,8 @@
 
 let path = require('path');
 let fs = require('fs');
+const { title } = require('process');
+const { url } = require('inspector');
 
 exports.processNotebookFolder = (folderPath, generator) => {
     let errors = [];
@@ -76,13 +78,12 @@ const findBookTOC = (folderPath, errors, generator) => {
         return -1;
     }
 
-    files.forEach(fileName => {
-        let file = path.basename(fileName).toLowerCase();
-        if (file.indexOf('toc.yml') > -1){
-            generator.extensionConfig.bookPath = folderPath;
-            return 1;
-        }
-    });
+    const tocPath = path.join(folderPath, 'toc.yml');
+    const tocDataPath = path.join(folderPath, '_data', 'toc.yml');
+    console.log("attempting to find book....")
+    if (fs.existsSync(tocPath) || fs.existsSync(tocDataPath)){
+        return 1;
+    }
     return -1;
 }
 
@@ -93,4 +94,45 @@ const getFolderContent = (folderPath, errors) => {
         errors.push("Unable to access " + folderPath + ": " + e.message);
         return [];
     }
+}
+
+exports.buildCustomBook = (generator) => {
+    let context = generator.extensionConfig;
+    try {
+        moveNotebooksIntoSections(context);
+        writeToTOC(context);
+    } catch (e) {
+        generator.log("An unexpected error occurred: " + e.message);
+    }
+}
+
+const writeToTOC = (context) => {
+    const tocFilePath = path.join(context.name, '_data', 'toc.yml');
+    const bookContentPath = path.join(context.name, 'content');
+    const bookContents = fs.readdirSync(bookContentPath);
+    bookContents.forEach(file => {
+        try{
+            const dirPath = path.join(bookContentPath, file);
+            const stats = fs.statSync(dirPath);
+            if (stats.isDirectory()){
+                fs.writeFileSync(tocFilePath, `\n title: ${file}\n url: ${url}\n not_numbered: true\n expand_sections: true\n sections: `);
+                const notebooks = fs.readdirSync(file);
+                notebooks.forEach(nb => {
+                    const url = path.join(file, nb);
+                    fs.writeFileSync(tocFilePath, `\ttitle: ${nb}\n url: ${url}\n`);
+                })
+        }} catch (e){
+            console.log(e.message);
+        }
+
+    });
+
+}
+
+const moveNotebooksIntoSections = (context) => {
+    const rootContentFolder = path.join(context.name, 'content');
+    context.sectionNames.forEach(section => {
+        let contentFolder = path.join(context.name, section);
+        fs.renameSync(rootContentFolder, contentFolder);
+    });
 }

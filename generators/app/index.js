@@ -10,6 +10,7 @@
 let Generator = require('yeoman-generator');
 let yosay = require('yosay');
 let os = require('os');
+let fileSys = require('fs');
 let path = require('path');
 let validator = require('./validator');
 let snippetConverter = require('./snippetConverter');
@@ -318,10 +319,21 @@ module.exports = class extends Generator {
                 return generator.prompt({
                     type: 'input',
                     name: 'displayName',
-                    message: 'What\'s the name of your extension?',
+                    message: 'What\'s the display name of your extension?',
                     default: generator.extensionConfig.displayName
                 }).then(displayNameAnswer => {
                     generator.extensionConfig.displayName = displayNameAnswer.displayName;
+                });
+            },
+
+            askForPublisherName: () => {
+                return generator.prompt({
+                    type: 'input',
+                    name: 'publisherName',
+                    message: 'What\'s the publisher name for your extension? (e.g.: Microsoft)',
+                    validate: validator.validateNonEmpty,
+                }).then(publisherAnswer => {
+                    generator.extensionConfig.publisherName = publisherAnswer.publisherName;
                 });
             },
 
@@ -343,7 +355,7 @@ module.exports = class extends Generator {
                 return generator.prompt({
                     type: 'input',
                     name: 'name',
-                    message: 'What\'s the identifier of your extension?',
+                    message: 'What\'s the unique identifier for your extension?',
                     default: def,
                     validate: validator.validateExtensionId
                 }).then(nameAnswer => {
@@ -395,17 +407,6 @@ module.exports = class extends Generator {
                     default: true
                 }).then(gitAnswer => {
                     generator.extensionConfig.gitInit = gitAnswer.gitInit;
-                });
-            },
-
-            askForPublisherName: () => {
-                return generator.prompt({
-                    type: 'input',
-                    name: 'publisherName',
-                    message: 'What name would you like to publish this extension under?',
-                    validate: validator.validateNonEmpty,
-                }).then(publisherAnswer => {
-                    generator.extensionConfig.publisherName = publisherAnswer.publisherName;
                 });
             },
 
@@ -500,6 +501,7 @@ module.exports = class extends Generator {
                         let tempPath = path.normalize(path.join(os.homedir(), locationResponse.bookLocation));
                         generator.extensionConfig.notebookNames = [];
                         generator.extensionConfig.notebookPaths = [];
+                        generator.extensionConfig.notebookFolders = [];
                         return notebookConverter.processBookFolder(tempPath, generator);
                     });
                }
@@ -514,31 +516,29 @@ module.exports = class extends Generator {
                     const answers = await generator.prompt([
                         {
                             type: 'input',
-                            name: 'bookTitle',
-                            message: 'What would you like the title of your book to be?',
-                            validate: validator.validateNonEmpty,
-                        },
-                        {
-                            type: 'input',
-                            name: 'bookTitle',
-                            message: 'What would you like the author name of your book to be?',
-                            validate: validator.validateNonEmpty,
-                        },
-                        {
-                            type: 'input',
                             name: 'numberSections',
-                            message: 'How many chapters would you like in your book?',
+                            message: 'How many sections would you like in your book?',
                             default: 1,
                             validate: validator.validateNumber,
                         },
                         {
                             type: 'input',
+                            name: 'sectionNames',
+                            message: 'List the name(s) of your section(s), comma separated if more than one.',
+                            validate: validator.validateNonEmpty,
+                        },
+                        {
+                            type: 'input',
                             name: 'sectionFolders',
-                            message: 'Provide the path to the root folder which contains the folders where each of your notebooks exist.',
+                            message: 'Provide the path to the folders where your notebooks currently exist.',
                             default: '/Desktop/notebooks',
                         },
                     ]);
 
+                    answers.sectionNames = answers.sectionNames.replace(/[^a-z0-9]/g, '-').split(',');
+                    answers.sectionNames.forEach(name => {
+                        console.log(name);
+                    });
                     Object.assign(generator.extensionConfig, answers);
                 }
             },
@@ -794,15 +794,35 @@ module.exports = class extends Generator {
     _writingJupyterBook(){
         let context = this.extensionConfig;
 
+        console.log(context.bookPath);
+
         if (context.addBooks){
-            this.fs.copy(context.bookPath + "", context.name + '/');
+            try{
+                const files = fileSys.readdirSync(context.bookPath);
+                files.forEach(file => {
+                    this.fs.copy(context.bookPath + file, context.name + file);
+                });
+            } catch (e) {
+                console.log(e.message);
+            }
         } else {
-            this.fs.copy(this.sourceRoot() + '/features', context.name + '/features');
-            this.fs.copyTpl(this.sourceRoot() + '/requirements.txt', context.name + '/requirements.txt', context);
-            this.fs.copyTpl(this.sourceRoot() + '/references.bib', context.name + '/references.bib', context);
-            this.fs.copyTpl(this.sourceRoot() + '/logo.png', context.name + '/logo.png', context);
+            if (context.createBook){
+                try {
+                    for (let i = 0; i < context.notebookPaths.length; i++){
+                        this.fs.copy(context.notebookPaths[i], context.name + '/content/' + context.notebookNames[i]);
+                    }
+                } catch (e){
+                    console.log(e.message);
+                }
+            } else {
+                this.fs.copy(this.sourceRoot() + '/content', context.name + '/content');
+                this.fs.copyTpl(this.sourceRoot() + '/requirements.txt', context.name + '/requirements.txt', context);
+                this.fs.copyTpl(this.sourceRoot() + '/references.bib', context.name + '/references.bib', context);
+                this.fs.copyTpl(this.sourceRoot() + '/logo.png', context.name + '/logo.png', context);
+                this.fs.copyTpl(this.sourceRoot() + '/toc.yml', context.name + '/_data/toc.yml', context);
+            }
+
             this.fs.copyTpl(this.sourceRoot() + '/_config.yml', context.name + '/_config.yml', context);
-            this.fs.copyTpl(this.sourceRoot() + '/_toc.yml', context.name + '/_toc.yml', context);
             this.fs.copyTpl(this.sourceRoot() + '/vsc-extension-quickstart.md', context.name + '/vsc-extension-quickstart.md', context);
             this.fs.copyTpl(this.sourceRoot() + '/README.md', context.name + '/README.md', context);
             this.fs.copyTpl(this.sourceRoot() + '/CHANGELOG.md', context.name + '/CHANGELOG.md', context);
