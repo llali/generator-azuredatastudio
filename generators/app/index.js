@@ -908,7 +908,7 @@ module.exports = class extends Generator {
             this.log('');
         }
 
-        if (this.extensionConfig.type === 'ext-command-ts') {
+        if (this.extensionConfig.type === 'ext-command-ts' || this.extensionConfig.type === 'ext-wizard') {
             this.log('To include proposed Azure Data Studio APIs in your extension, run the following after opening the directory:');// {{ADS EDIT}}
             this.log('');
             this.log(chalk.blue('npm run proposedapi'));// {{ADS EDIT}}

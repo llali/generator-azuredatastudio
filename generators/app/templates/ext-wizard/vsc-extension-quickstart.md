@@ -1,29 +1,29 @@
 # Welcome to your Azure Data Studio Extension
 
 ## What's in the folder
-* This folder contains all of the files necessary for your extension.
-* `package.json` - this is the manifest file in which you declare your extension and command.
-The sample plugin registers a command and defines its title and command name. With this information
-Azure Data Studio can show the command in the command palette. It doesn’t yet need to load the plugin.
-* `src/extension.ts` - this is the main file where you will provide the implementation of your command.
-The file exports one function, `activate`, which is called the very first time your extension is
-activated (in this case by executing the command). Inside the `activate` function we call `registerCommand`.
-We pass the function containing the implementation of the command as the second parameter to
-`registerCommand`.
+* This folder contains all of the files necessary for your Wizard or Dialog extension.
+* `package.json` - this is the manifest file in which you declare your extension and the command to launch a Wizard or Dialog.
+The sample plugin registers the command `Launch Wizard` / `Launch Dialog`. With this information, Azure Data Studio can show the command in the command palette. It also defines the `main.js` file as the primary entry point for your extension.
+* `src/main.ts` - this is the main file that provides the implementation of the `Launch Wizard` / `Launch Dialog` command. It generates a sample Wizard / Dialog which you can edit.
+The file exports two functions, `activate`, which is called the very first time your extension is
+activated, and `deactivate`, which is called when your extension is deactivated. Inside the `activate` function we call `registerCommand`, which contains the implementation of your Wizard / Dialog.
+* `src/wizard` (optional) - this folder is not included in the `Getting Started Template`, but is in the more elaborate Sample Wizard templates. It houses the UI and models that back these Wizards.
+  ** `src/wizard/api` - this folder includes the model that the Wizard uses to communicate accross pages. Also includes base page which all other Wizard pages extend.
+  ** `src/wizard/pages` - this folder contains all of the individual Wizard pages (page1.ts, page2.ts) that are to be displayed
+  ** `src/wizard/wizard.ts` - this file creates and exports the Wizard. It defines wizard properties such as the pages and actions to be performed on page change.
 
 ## Get up and running straight away
 * Press `F5` to open a new window with your extension loaded.
-* Run your command from the command palette by pressing (`Ctrl+Shift+P` or `Cmd+Shift+P` on Mac) and typing `Hello World`.
-* Set breakpoints in your code inside `src/extension.ts` to debug your extension.
-* Find output from your extension in the debug console.
+* Run your command from the command palette by pressing (`Ctrl+Shift+P` or `Cmd+Shift+P` on Mac) and typing `Launch Wizard` or `Launch Dialog`, depending on your extension type.
+* Read the code and comments in `src/main.ts` for in-depth explanations of how the Wizard / Dialog is generated.
 
 ## Make changes
-* You can relaunch the extension from the debug toolbar after changing code in `src/extension.ts`.
+* You can relaunch the extension from the debug toolbar after changing code in `src/main.ts`.
 * You can also reload (`Ctrl+R` or `Cmd+R` on Mac) the Azure Data Studio window with your extension to load your changes.
 
 ## Explore the API
 * You can open the full set of our API when you open the file:
-  * SQL specific APIs: `node_modules/azdata/azdata.d.ts`.
+  * SQL specific APIs: `node_modules/azdata/azdata.d.ts`. This API includes creating a Wizard / Dialog, and all relevant UI elements and listener functions.
   * Other APIs: `node_modules/vscode/vscode.d.ts`.
 
 ## Run tests
