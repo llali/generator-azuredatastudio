@@ -7,10 +7,10 @@ The sample plugin registers the command `Launch Wizard` / `Launch Dialog`. With 
 * `src/main.ts` - this is the main file that provides the implementation of the `Launch Wizard` / `Launch Dialog` command. It generates a sample Wizard / Dialog which you can edit.
 The file exports two functions, `activate`, which is called the very first time your extension is
 activated, and `deactivate`, which is called when your extension is deactivated. Inside the `activate` function we call `registerCommand`, which contains the implementation of your Wizard / Dialog.
-* `src/wizard` (optional) - this folder is not included in the `Getting Started Template`, but is in the more elaborate Sample Wizard templates. It houses the UI and models that back these Wizards.
-  ** `src/wizard/api` - this folder includes the model that the Wizard uses to communicate accross pages. Also includes base page which all other Wizard pages extend.
-  ** `src/wizard/pages` - this folder contains all of the individual Wizard pages (page1.ts, page2.ts) that are to be displayed
-  ** `src/wizard/wizard.ts` - this file creates and exports the Wizard. It defines wizard properties such as the pages and actions to be performed on page change.
+* `src/wizard` (optional) - this folder is not included in the Getting Started Template, but is in the more elaborate Sample Wizard templates. It houses the UI and models that back these Wizards.
+  * `src/wizard/api` - this folder includes the model that the Wizard uses to communicate accross pages. Also includes base page which all other Wizard pages extend.
+  * `src/wizard/pages` - this folder contains all of the individual Wizard pages (page1.ts, page2.ts) that are to be displayed
+  * `src/wizard/wizard.ts` - this file creates and exports the Wizard. It defines wizard properties such as the pages and actions to be performed on page change.
 
 ## Get up and running straight away
 * Press `F5` to open a new window with your extension loaded.
