@@ -23,8 +23,18 @@ activated, and `deactivate`, which is called when your extension is deactivated.
 
 ## Explore the API
 * You can open the full set of our API when you open the file:
-  * SQL specific APIs: `node_modules/azdata/azdata.d.ts`. This API includes creating a Wizard / Dialog, and all relevant UI elements and listener functions.
+  * SQL specific APIs: `node_modules/azdata/azdata.d.ts`.
   * Other APIs: `node_modules/vscode/vscode.d.ts`.
+
+## UI API Overview
+* **Creating Wizards and Dialogs:** Wizards include wizard pages, and Dialogs include dialog tabs. To create Wizards, wizard pages, Dialogs, and dialog tabs, use the `azdata.window` namespace. For example: `let wizard = azdata.window.createWizard('Sample Wizard')`.
+* **Adding UI:** To add UI components to wizard pages and dialog tabs, call the `registerContent` function on your pages / tabs. For example: `wizardPage.registerContent(async (view) => { <code to create components> });`. Inside this function, you will declare and customize components using the `view` parameter.
+* **Declaring UI Components:** The APIs offer a wide range of components, including text, buttons, dropdowns, input boxes, as well as containers that contain components. Create them using the ModelView's modelBuilder. For example, to declare an input box component: `let input = view.modelBuilder.inputBox().component()`
+* **Customizing UI Components:** To customize a UI component, call it's `withProperties` method. For example, `let inputBox = view.modelBuilder.inputBox().withProperties({ placeHolder: 'Enter Text'}).component();` declares an inputBox component with the placeholder 'Enter Text'
+* **Adding Actions to Components:** To add actions to components, use built-in listener functions, such as `dropdown.onValueChanged((params) => {})` or `button.onClick((params) => {})`.
+* **Nesting Components:** The APIs offer container components that house other components, so that components can be organized in a tree structure. These container components include flexContainers, formContainers, and groupContainers. Place all components in a given page or tab under a single `root component`.
+* **Initializing the View:** In the `registerContent` function, after you have declared and customized components,initialize the Model View like so: `async view.initializeModel(<root component>);`.
+* **Open the Wizard / Dialog:** Call `open()` on your Wizard or Dialog once you are ready for it to display.
 
 ## Run tests
 * Open the debug viewlet (`Ctrl+Shift+D` or `Cmd+Shift+D` on Mac) and from the launch configuration dropdown pick `Launch Tests`.
