@@ -40,6 +40,8 @@
         },
         <% } -%>
 
+
+
         "commands": [
             {
               "command": <%- JSON.stringify(`${name}.getQuery`) %>,
@@ -82,8 +84,55 @@
               }
             }
         ],
+
         <% } -%>
         <%if (addDashboardTab && (addServerTab || addDatabaseTab)) {-%>
+        "dashboard.tabs": [
+          {
+              "id": <%- JSON.stringify(name + '.tab') %>,
+              "title": <%- JSON.stringify(displayName) %>,
+              "description": "",
+              "icon": "src/media/tab.svg",
+              "group": <%- JSON.stringify(tabGroup) %>,
+              <%if (addServerTab && !addDatabaseTab) {-%>
+              "when": "dashboardContext == 'server'",
+              <% } -%>
+              <%if (addDatabaseTab && !addServerTab) {-%>
+                  "when": "dashboardContext == 'database'",
+              <% } -%>
+              "container": {
+                  <%if (addNavSection) {-%>
+                  "nav-section": [
+                      {
+                        "id": "monitoring",
+                        "title": "Monitor",
+                        "icon": {
+                          "light": "./src/media/monitor.svg",
+                          "dark": "./src/media/monitor_inverse.svg"
+                        },
+                        "container": {
+                          "insights":{}
+                        }
+                      },
+                      {
+                        "id": "webviewExample",
+                        "title": "Webivew",
+                        "icon": {
+                            "light": "./src/media/performance.svg",
+                            "dark": "./src/media/performance_inverse.svg"
+                        },
+                        "container": {
+                            "webview-container": null
+                        }
+                    }
+                    ]
+                  <% } -%>
+                  <%if (!addNavSection) {-%>
+                  "insights":{}
+                  <% } -%>
+              }
+          }
+        ],
         "dashboard.insights": [
             {
                 "id": <%- JSON.stringify(name + '.space-usage') %>,
@@ -131,7 +180,11 @@
                 }
             }
         ],
+
         <% } -%>
+
+
+
         "dashboard.containers": [
             {
                 "id": "insights",
@@ -185,55 +238,6 @@
                 }
             }
         ]
-        <%if (addDashboardTab && (addServerTab || addDatabaseTab)) {-%>
-            ,
-        "dashboard.tabs": [
-            {
-                "id": <%- JSON.stringify(name + '.tab') %>,
-                "title": <%- JSON.stringify(displayName) %>,
-                "description": "",
-                "icon": "src/media/tab.svg",
-                "group": <%- JSON.stringify(tabGroup) %>,
-                <%if (addServerTab && !addDatabaseTab) {-%>
-                "when": "dashboardContext == 'server'",
-                <% } -%>
-                <%if (addDatabaseTab && !addServerTab) {-%>
-                    "when": "dashboardContext == 'database'",
-                <% } -%>
-                "container": {
-                    <%if (addNavSection) {-%>
-                    "nav-section": [
-                        {
-                          "id": "monitoring",
-                          "title": "Monitor",
-                          "icon": {
-                            "light": "./src/media/monitor.svg",
-                            "dark": "./src/media/monitor_inverse.svg"
-                          },
-                          "container": {
-                            "insights":{}
-                          }
-                        },
-                        {
-                          "id": "webviewExample",
-                          "title": "Webivew",
-                          "icon": {
-                              "light": "./src/media/performance.svg",
-                              "dark": "./src/media/performance_inverse.svg"
-                          },
-                          "container": {
-                              "webview-container": null
-                          }
-                      }
-                      ]
-                    <% } -%>
-                    <%if (!addNavSection) {-%>
-                    "insights":{}
-                    <% } -%>
-                }
-            }
-        ]
-        <% } -%>
     },
     "scripts": {
         "build": "gulp build",
@@ -251,12 +255,15 @@
         "@types/vscode": <%- JSON.stringify(vsCodeEngine) %>,
 		    "@types/azdata": <%- JSON.stringify(azdataEngine) %>,
         "azdata": "^1.0.0",
+        "@types/glob": "^7.1.1",
         "@types/mocha": "^7.0.2",
         "@types/node": "^13.11.0",
-        "temp-write": "^3.4.0",
-        "tslint": "^3.14.0",
+        "eslint": "^6.8.0",
+        "glob": "^7.1.6",
+        "mocha": "^7.1.2",
         "typescript": "^3.8.3",
+        "vscode-test": "^1.3.0",
         "vscode": "^1.1.6"
-      }
+}
 
 }

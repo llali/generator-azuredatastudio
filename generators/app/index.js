@@ -497,7 +497,7 @@ module.exports = class extends Generator {
             },
 
             askForJavaScriptInfo: () => {
-                if (generator.extensionConfig.type !== 'ext-command-js') {
+                if (generator.extensionConfig.type !== 'ext-command-js' && generator.extensionConfig.type !== 'ext-dashboard') {
                     return Promise.resolve();
                 }
                 generator.extensionConfig.checkJavaScript = false;
@@ -849,12 +849,13 @@ module.exports = class extends Generator {
         let context = this.extensionConfig;// {{ADS EDIT}}
 
         this.fs.copy(this.sourceRoot() + '/vscode', context.name + '/.vscode');// {{ADS EDIT}}
+        this.fs.copy(this.sourceRoot() + '/src/test', context.name + '/src/test');// {{ADS EDIT}}
         this.fs.copy(this.sourceRoot() + '/src/sql', context.name + '/src/sql');// {{ADS EDIT}}
         this.fs.copy(this.sourceRoot() + '/src/notebook', context.name + '/src/notebook');// {{ADS EDIT}}
         this.fs.copyTpl(this.sourceRoot() + '/package.json', context.name + '/package.json', context);// {{ADS EDIT}}
         if (this.extensionConfig.addDashboardBar || this.extensionConfig.addHomepageAction || this.extensionConfig.addNavSection) {// {{ADS EDIT}}
-            this.fs.copyTpl(this.sourceRoot() + '/tsconfig.json', context.name + '/tsconfig.json', context);// {{ADS EDIT}}
-            this.fs.copyTpl(this.sourceRoot() + '/tslint.json', context.name + '/tslint.json', context);// {{ADS EDIT}}
+            this.fs.copyTpl(this.sourceRoot() + '/jsconfig.json', context.name + '/jsconfig.json', context);// {{ADS EDIT}}
+            this.fs.copyTpl(this.sourceRoot() + '/.eslintrc.json', context.name + '/.eslintrc.json', context);// {{ADS EDIT}}
             this.fs.copyTpl(this.sourceRoot() + '/src/extension.js', context.name + '/src/extension.js', context);// {{ADS EDIT}}
             this.fs.copyTpl(this.sourceRoot() + '/src/controllers/controllerBase.js', context.name + '/src/controllers/controllerBase.js', context);// {{ADS EDIT}}
             this.fs.copyTpl(this.sourceRoot() + '/src/controllers/mainController.js', context.name + '/src/controllers/mainController.js', context);// {{ADS EDIT}}
