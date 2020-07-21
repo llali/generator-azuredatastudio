@@ -1,17 +1,21 @@
-import * as vscode from 'vscode'
 import * as azdata from 'azdata'
-import {WizardModel} from '../api/models'
+import {ProfileModel} from '../api/models'
 import {BasePage} from '../api/basePage'
 
+/**
+ * Represents the second page of the Profile Builder Wizard, that prompts user for
+ * a fun fact about themselves from a selection of options. Lays out UI elements on page and
+ * updates Profile Model according to user input.
+ */
 export class Page2 extends BasePage {
     private dropdownOptions : Map<string, azdata.FormComponent>;
     private currentOption : string;
-    
-    public constructor(wizardPage: azdata.window.WizardPage, model: WizardModel, 
+
+    public constructor(wizardPage: azdata.window.WizardPage, model: ProfileModel,
             view: azdata.ModelView, width: number) {
         super(wizardPage, model, view, width);
         this.dropdownOptions =  this.populateDropdownOptionsMap();
-        this.currentOption = ''; // TODO: Fix this
+        this.currentOption = '';
 	}
 
 	async start(): Promise<boolean> {
@@ -21,7 +25,7 @@ export class Page2 extends BasePage {
                 values: options,
                 required: true
             }).component();
-        
+
         let layout = {componentWidth: this.width};
         let formBuilder = this.view.modelBuilder.formContainer().withFormItems([{
             component: funFactDropdown,
@@ -54,17 +58,17 @@ export class Page2 extends BasePage {
     private populateDropdownOptionsMap() : Map<string, azdata.FormComponent> {
         let mapNamesToComponents : Map<string, azdata.FormComponent> = new Map();
 
-        this.addDropdownOption(mapNamesToComponents, 'Favorite Book', 'What is your favorite book?', 
+        this.addDropdownOption(mapNamesToComponents, 'Favorite Book', 'What is your favorite book?',
             '\'s favorite book is');
-        this.addDropdownOption(mapNamesToComponents, 'Favorite Food', 'What is your favorite food?', 
+        this.addDropdownOption(mapNamesToComponents, 'Favorite Food', 'What is your favorite food?',
             '\'s favorite food is');
-        this.addDropdownOption(mapNamesToComponents, 'Languages Spoken', 'What languages do you speak?' + 
+        this.addDropdownOption(mapNamesToComponents, 'Languages Spoken', 'What languages do you speak?' +
             ' (enter as comma-separated list)', ' can speak');
 
         return mapNamesToComponents;
     }
 
-    private addDropdownOption(mapNamesToComponents :  Map<string, azdata.FormComponent>, 
+    private addDropdownOption(mapNamesToComponents :  Map<string, azdata.FormComponent>,
             dropdownLabel : string, question : string, answer : string) {
         let factInput = this.view.modelBuilder.inputBox().component();
         let dropdownOption = {

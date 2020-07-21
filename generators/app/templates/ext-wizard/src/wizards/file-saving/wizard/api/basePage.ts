@@ -1,14 +1,16 @@
 import * as azdata from 'azdata';
-import { WizardModel } from './models';
+import { ProfileModel } from './models';
 
+/**
+ * Represents a Wizard Page backed by a data model and an Azure Data Model View
+ */
 export abstract class BasePage {
-
 	public readonly wizardPage: azdata.window.WizardPage;
-	protected readonly model: WizardModel;
+	protected readonly model: ProfileModel;
 	protected readonly view: azdata.ModelView;
-	protected readonly width: number;
+	protected readonly width: number; // width of the page
 
-	constructor(wizardPage: azdata.window.WizardPage, model: WizardModel, view: azdata.ModelView, width : number) {
+	constructor(wizardPage: azdata.window.WizardPage, model: ProfileModel, view: azdata.ModelView, width : number) {
 		this.wizardPage = wizardPage;
 		this.model = model;
 		this.view = view;

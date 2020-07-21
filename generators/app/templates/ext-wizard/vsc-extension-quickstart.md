@@ -33,7 +33,7 @@ activated, and `deactivate`, which is called when your extension is deactivated.
 * **Customizing UI Components:** To customize a UI component, call it's `withProperties` method. For example, `let inputBox = view.modelBuilder.inputBox().withProperties({ placeHolder: 'Enter Text'}).component();` declares an inputBox component with the placeholder 'Enter Text'
 * **Adding Actions to Components:** To add actions to components, use built-in listener functions, such as `dropdown.onValueChanged((params) => {})` or `button.onClick((params) => {})`.
 * **Nesting Components:** The APIs offer container components that house other components, so that components can be organized in a tree structure. These container components include flexContainers, formContainers, and groupContainers. Place all components in a given page or tab under a single encompassing container component, called the `root component`.
-* **Initializing the View:** In the `registerContent` function, after you have declared and customized components,initialize the Model View like so: `async view.initializeModel(<root component>);`.
+* **Initializing the View:** In the `registerContent` function, after you have declared and customized components, initialize the Model View like so: `async view.initializeModel(<root component>);`.
 * **Open the Wizard / Dialog:** Call `open()` on your Wizard or Dialog once you are ready for it to display.
 
 ## Run tests

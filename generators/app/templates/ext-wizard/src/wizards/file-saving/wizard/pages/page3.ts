@@ -1,18 +1,23 @@
 import * as vscode from 'vscode'
 import * as azdata from 'azdata'
 import * as fs from 'fs';
-import {WizardModel, PronounTypes} from '../api/models'
+import {ProfileModel, PronounTypes} from '../api/models'
 import {BasePage} from '../api/basePage'
 
-export class Page3 extends BasePage {   
-    private inputBox: azdata.InputBoxComponent; // TODO: Figure out why this is a problem but not in examples
+/**
+ * Represents the third page of the Profile Builder Wizard, which displays default
+ * profile, and allows user to update and save their profile to a txt file.
+ * Lays out UI elements on page and updates Profile Model according to user input.
+ */
+export class Page3 extends BasePage {
+    private inputBox: azdata.InputBoxComponent;
     private inputBoxWrapper: azdata.LoadingComponent;
-    private wizard: azdata.window.Wizard // TODO: maybe remove
+    private wizard: azdata.window.Wizard
 
-    public constructor(wizardPage: azdata.window.WizardPage, model: WizardModel, view: azdata.ModelView,
+    public constructor(wizardPage: azdata.window.WizardPage, model: ProfileModel, view: azdata.ModelView,
          width: number, wizard : azdata.window.Wizard) {
         super(wizardPage, model, view, width);
-        this.inputBox = this.view.modelBuilder.inputBox().component(); // TODO: Get rid of this!
+        this.inputBox = this.view.modelBuilder.inputBox().component();
         this.inputBoxWrapper = this.view.modelBuilder.loadingComponent().component();
         this.wizard = wizard;
 	}
@@ -31,7 +36,7 @@ export class Page3 extends BasePage {
 
         this.inputBoxWrapper = this.view.modelBuilder.loadingComponent().withItem(this.inputBox).component();
         this.inputBoxWrapper.loading = true;
-        
+
         let form = this.view.modelBuilder.formContainer().withFormItems([{
             component: this.inputBoxWrapper,
             title: 'Profile:'
@@ -42,14 +47,14 @@ export class Page3 extends BasePage {
         return true;
 	}
 
-    async onPageEnter(): Promise<boolean> { // TODO
-        this.model.profileParagraph = this.capitalize(this.model.name) + ' is ' + 
+    async onPageEnter(): Promise<boolean> {
+        this.model.profileParagraph = this.capitalize(this.model.name) + ' is ' +
             this.aOrAn(this.model.role) + ' ' + this.model.role + '. ' +
-            this.capitalize(this.model.pronouns.subject) + ' ' + this.conjugateToHave() + 
-            ' been in this role for ' + this.model.yearsInRole + ' years. ' + 
-            'A fun fact about ' + this.model.pronouns.object + ': ' + this.model.name + 
+            this.capitalize(this.model.pronouns.subject) + ' ' + this.conjugateToHave() +
+            ' been in this role for ' + this.model.yearsInRole + ' years. ' +
+            'A fun fact about ' + this.model.pronouns.object + ': ' + this.model.name +
             this.model.funFact + '.';
-        
+
         this.inputBox.value = this.model.profileParagraph;
 
         // To demonstrate how to create a loading component:
@@ -65,17 +70,20 @@ export class Page3 extends BasePage {
     private async createDoneButton() {
         this.wizard.doneButton.label = 'Save and Close';
         this.wizard.doneButton.onClick(async () => {
+            // Opens file-saving dialog and allows user to save a txt file
             await vscode.window.showSaveDialog({
                 filters: {
                     'Plain Text (.txt)': ['txt']
                 }
             }).then(async fileUri => {
-                if (fileUri) {
+                if (fileUri) { // if user chose to save a file
+                    // write their profile to a txt file, and display error if one occurs
                     fs.writeFile(fileUri.fsPath, this.model.profileParagraph, (error) => {
                         if (error) {
                             vscode.window.showInformationMessage(error.message);
-                        }                       
+                        }
                     });
+                    // open the txt file with user's profile in ADS
                     await vscode.workspace.openTextDocument(fileUri)
                         .then(document => {
                             vscode.window.showTextDocument(document);
@@ -87,6 +95,8 @@ export class Page3 extends BasePage {
         });
     }
 
+    // Accepts a string and returns the same string with the first character capitalized,
+    //  if it exists and is a letter. If not, returns the original string.
     private capitalize(word : string) : string{
         if (word.length === 0) {
             return word;
@@ -96,6 +106,7 @@ export class Page3 extends BasePage {
         return word.charAt(0).toUpperCase() + word.slice(1);
     }
 
+    // Accepts a string and returns 'an' if the string begins with a vowel, and 'a' otherwise
     private aOrAn(word : string) : string{
         word = word.toLowerCase();
         if (word.startsWith('a') || word.startsWith('e')
@@ -107,6 +118,7 @@ export class Page3 extends BasePage {
         }
     }
 
+    // Returns 'has' or 'have' depending on the pronoun selection of the user
     private conjugateToHave() : string{
         if (this.model.pronouns.type === PronounTypes.Neutral) {
             return 'have';

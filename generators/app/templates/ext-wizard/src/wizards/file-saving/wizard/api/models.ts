@@ -1,7 +1,8 @@
 /**
- * Data model to communicate between wizard pages
+ * Data model to communicate between wizard pages. Represents
+ * user's profile.
  */
-export interface WizardModel {
+export interface ProfileModel {
     name: string;
     role: string;
     yearsInRole: number;
@@ -10,12 +11,19 @@ export interface WizardModel {
     profileParagraph: string;
 }
 
+/**
+ * Options of Pronoun Types available to user
+ */
 export enum PronounTypes {
-    Male, 
-    Female, 
+    Male,
+    Female,
     Neutral
 }
 
+/**
+ * Represents a pronoun, conjugated for all contexts
+ * it could be used in. For example, 'she/her/hers/herself'
+ */
 export interface Pronoun {
     type: PronounTypes;
     subject: string;
@@ -23,8 +31,4 @@ export interface Pronoun {
     possessive: string;
     possessivePronoun: string;
     reflexive: string;
-}
-
-export enum FunFactOptions {
-    
 }

@@ -1,11 +1,15 @@
-import * as vscode from 'vscode'
 import * as azdata from 'azdata'
-import {WizardModel, PronounTypes} from '../api/models'
+import {ProfileModel, PronounTypes} from '../api/models'
 import {BasePage} from '../api/basePage'
 
+/**
+ * Represents the first page of the Profile Builder Wizard, that collects
+ * information like user's name, role, etc. Lays out UI elements on page and
+ * updates Profile Model according to user input.
+ */
 export class Page1 extends BasePage {
-    
-    public constructor(wizardPage: azdata.window.WizardPage, model: WizardModel, 
+
+    public constructor(wizardPage: azdata.window.WizardPage, model: ProfileModel,
             view: azdata.ModelView, width: number) {
         super(wizardPage, model, view, width);
 	}
@@ -21,7 +25,7 @@ export class Page1 extends BasePage {
             .withProperties({inputType: 'number'}).component();
         let pronounOptions = await this.createPronounOptions();
         let formItemLayout = {componentWidth: this.width};
-        
+
         this.addAction(nameInput, roleInput, yearsInput);
 
         let formBuilder = this.view.modelBuilder.formContainer().withFormItems([{
@@ -67,7 +71,7 @@ export class Page1 extends BasePage {
             possessive: 'his',
             possessivePronoun: 'his',
             reflexive: 'himself'
-        }        
+        }
         this.model.pronouns = maleModel; // make male button the default
         maleButton.onDidClick(() => {
             this.model.pronouns= maleModel;
@@ -112,9 +116,9 @@ export class Page1 extends BasePage {
         return pronounOptions;
     }
 
-    private addAction(nameInput : azdata.InputBoxComponent, roleInput : azdata.InputBoxComponent, 
+    private addAction(nameInput : azdata.InputBoxComponent, roleInput : azdata.InputBoxComponent,
             yearsInput : azdata.InputBoxComponent) {
-        
+
         nameInput.onTextChanged(text => {
 			this.model.name = text;
         });
