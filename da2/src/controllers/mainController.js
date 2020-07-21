@@ -27,11 +27,11 @@ class MainController extends controllerBase_1.default {
         azdata.dashboard.registerWebviewProvider('webviewExample', e => {
 			e.html = webviewExampleHtml;
         });
-        azdata.tasks.registerTask('<%= name %>.getUrl', e => this.openurl('https://github.com/microsoft/azuredatastudio'));
-        azdata.tasks.registerTask('<%= name %>.getQuery', e => this.onExecute(e, 'query.sql'));
-        azdata.tasks.registerTask('<%= name %>.getNotebook', e => this.openNotebook(e, 'sample.ipynb'));
-        azdata.tasks.registerTask('<%= name %>.getConnection', e => this.showConnection());
-        azdata.tasks.registerTask('<%= name %>.getWebview', e => this.showWebview());
+        azdata.tasks.registerTask('da2.getUrl', e => this.openurl('https://github.com/microsoft/azuredatastudio'));
+        azdata.tasks.registerTask('da2.getQuery', e => this.onExecute(e, 'query.sql'));
+        azdata.tasks.registerTask('da2.getNotebook', e => this.openNotebook(e, 'sample.ipynb'));
+        azdata.tasks.registerTask('da2.getConnection', e => this.showConnection());
+        azdata.tasks.registerTask('da2.getWebview', e => this.showWebview());
         return Promise.resolve(true);
     }
     openurl(link) {
