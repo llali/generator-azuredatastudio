@@ -152,15 +152,15 @@ module.exports = class extends Generator {
                                     value: 'file-saving'
                                 },
                                 {
-                                    name: 'Sample Wizard: Database Querying',
+                                    name: 'Sample Wizard: Database Querying **Still In Development',
                                     value: 'db-query'
                                 },
                                 {
-                                    name: 'Sample Wizard: Custom Styles',
+                                    name: 'Sample Wizard: Custom Styles **Still In Development',
                                     value: 'custom-styles'
                                 },
                                 {
-                                    name: 'Sample Wizard: Web View',
+                                    name: 'Sample Wizard: Web View **Still In Development',
                                     value: 'web-view'
                                 }
                             ]
