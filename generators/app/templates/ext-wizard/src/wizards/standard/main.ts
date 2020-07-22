@@ -113,14 +113,24 @@ export function activate(context: vscode.ExtensionContext) {
                 .withProperties({ name: 'buttons', label: 'Button1'}).component();
             let button2 = view.modelBuilder.radioButton()
                 .withProperties({ name: 'buttons', label: 'Button2'}).component();
-            let buttonsComponent = view.modelBuilder.groupContainer().withItems([button1, button2])
+            let radioButtons = view.modelBuilder.groupContainer().withItems([button1, button2])
                 .component();
 
+            // Initialize a 'show connection' button component
+            let connectionButton : azdata.ButtonComponent = view.modelBuilder.button()
+                .withProperties({
+                    width: 120,
+                    height: 30,
+                    label: 'Show Connection'
+                }).component();
+            connectionButton.onDidClick(() => onShowConnection());
+
+            // Initialize a 'submit' button component
             let submitButton : azdata.ButtonComponent = view.modelBuilder.button()
                 .withProperties({
                     width: 120,
                     height: 30,
-                    label: 'Submit'
+                    label: 'Submit and Clear'
                 }).component();
             submitButton.onDidClick(() => onSubmit(inputBoxComponent, dropdownComponent, button1, button2));
 
@@ -135,8 +145,9 @@ export function activate(context: vscode.ExtensionContext) {
                 component: dropdownComponent,
                 title: 'Dropdown:'
             }, {
-                component: buttonsComponent,
-                title: 'Buttons:'
+                component: radioButtons, title: 'Buttons:'
+            }, {
+                component: connectionButton, title: ''
             }, {
                 component: submitButton, title: ''
             }], {componentWidth: 800}) // defining layout of the form
@@ -150,11 +161,21 @@ export function activate(context: vscode.ExtensionContext) {
     // function called when submit button on tab2 is clicked
     function onSubmit(inputBox : azdata.InputBoxComponent, dropdown : azdata.DropDownComponent,
         button1 : azdata.RadioButtonComponent, button2 : azdata.RadioButtonComponent) {
-        vscode.window.showInformationMessage(inputBox.value + ' ' + dropdown.value);
-        inputBox.value = '';
+        vscode.window.showInformationMessage('You entered: ' + inputBox.value + ' ' + dropdown.value);
+        inputBox.value = undefined;
         dropdown.value = 'Option A';
         button1.checked = false;
         button2.checked = false;
+    }
+
+    // function called when show connection button on tab2 is clicked
+    function onShowConnection() {
+        azdata.connection.getCurrentConnection().then(connection => {
+            let connectionId = connection ? connection.connectionId : 'No connection found!';
+            vscode.window.showInformationMessage(connectionId);
+        }, error => {
+            console.info(error);
+        });
     }
 }
 
