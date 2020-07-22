@@ -532,8 +532,14 @@ module.exports = class extends Generator {
                         },
                     ]);
 
+
                     answers.notebookPath = path.normalize(answers.notebookPath);
                     Object.assign(generator.extensionConfig, answers);
+
+                    let tempPath = path.normalize(generator.extensionConfig.notebookPath);
+                    generator.extensionConfig.notebookNames = [];
+                    generator.extensionConfig.notebookPaths = [];
+                    notebookConverter.processNotebookFolder(tempPath, generator);
                 }
             },
 
@@ -560,21 +566,30 @@ module.exports = class extends Generator {
                         console.log("SECTION NAMES:" + name);
                     });
 
-                    bookSections.sectionNames.forEach(async section => {
+                    Object.assign(generator.extensionConfig, bookSections);
+                }
+            },
+
+            askForNotebooksinSections: async () => {
+                if (generator.extensionConfig.complexBook) {
+                    let choices = [], organizedNotebooks = {};
+                    generator.extensionConfig.notebookNames.forEach(name => {
+                        choices.push({ "name": name });
+                    });
+
+                    generator.extensionConfig.sectionNames.forEach(async section => {
                         let regexSection = section.replace(/[^a-z0-9]/g, '-');
-                        const organizedNotebooks = await generator.prompt([
+                        organizedNotebooks = await generator.prompt([
                             {
-                                type: 'input',
+                                type: 'checkbox',
                                 name: regexSection,
                                 message: `Select notebooks for your section, ${regexSection}`,
-                                choices: [{
-
-                                }]
+                                choices: choices
                             }
                         ])
                     });
 
-                    Object.assign(generator.extensionConfig, bookSections);
+                    Object.assign(generator.extensionConfig, organizedNotebooks);
                 }
             },
 
