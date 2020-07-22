@@ -50,7 +50,7 @@ module.exports = class extends Generator {
         extensionConfig.azdataEngine = env.azdataVersion;// {{ADS EDIT}}
         extensionConfig.vsCodeEngine = '^1.19.0';
         return env.getLatestVSCodeVersion()
-        .then(function (version) { extensionConfig.vsCodeEngine = version; });
+            .then(function (version) { extensionConfig.vsCodeEngine = version; });
         // TODO add tool to get latest Azure Data Studio verison on machine and set this too
     }
 
@@ -62,7 +62,7 @@ module.exports = class extends Generator {
             askForType: () => {
                 let extensionType = generator.options['extensionType'];
                 if (extensionType) {
-                    let extensionTypes = ['insight', 'colortheme', 'language', 'snippets', 'command-ts', 'command-js', 'extensionpack', 'notebook','jupyterbook'];// {{ADS EDIT}}
+                    let extensionTypes = ['insight', 'colortheme', 'language', 'snippets', 'command-ts', 'command-js', 'extensionpack', 'notebook', 'jupyterbook'];// {{ADS EDIT}}
                     if (extensionTypes.indexOf(extensionType) !== -1) {
                         generator.extensionConfig.type = 'ext-' + extensionType;
                     } else {
@@ -111,7 +111,7 @@ module.exports = class extends Generator {
                         name: 'New Language Pack (Localization)',
                         value: 'ext-localization'
                     }
-                    ,
+                        ,
                     {
                         name: 'New Notebooks (Individual)',
                         value: 'ext-notebook'
@@ -430,14 +430,15 @@ module.exports = class extends Generator {
                     return Promise.resolve();
                 }
 
-                if (generator.extensionConfig.addNotebooks){
+                if (generator.extensionConfig.addNotebooks) {
                     return generator.prompt({
                         type: 'input',
                         name: 'notebookPath',
                         message: 'Provide the absolute path to the folder containing your notebooks.',
-                        default: '/Desktop/notebooks'
+                        default: 'C:/Users/t-lajian/Desktop/notebooks',
+                        validate: validator.validateFilePath
                     }).then(pathResponse => {
-                        let tempPath = path.normalize(path.join(os.homedir(), pathResponse.notebookPath));
+                        let tempPath = path.normalize(pathResponse.notebookPath);
                         generator.extensionConfig.notebookNames = [];
                         generator.extensionConfig.notebookPaths = [];
                         return notebookConverter.processNotebookFolder(tempPath, generator);
@@ -457,7 +458,7 @@ module.exports = class extends Generator {
                             value: 'notebook-python'
                         }]
                     }).then(notebookType => {
-                         generator.extensionConfig.notebookType = notebookType.selectType;
+                        generator.extensionConfig.notebookType = notebookType.selectType;
                     });
                 }
             },
@@ -482,7 +483,7 @@ module.exports = class extends Generator {
                     return Promise.resolve();
                 }
 
-                if (!generator.extensionConfig.addBooks){
+                if (!generator.extensionConfig.addBooks) {
                     return generator.prompt({
                         type: 'confirm',
                         name: 'createBook',
@@ -491,20 +492,22 @@ module.exports = class extends Generator {
                     }).then(creationAnswer => {
                         generator.extensionConfig.createBook = creationAnswer.createBook;
                     });
-               } else {
+                } else {
                     return generator.prompt({
                         type: 'input',
                         name: 'bookLocation',
                         message: 'Provide the absolute path to the folder containing your Jupyter Book:',
-                        default: '/Desktop/notebooks'
+                        default: 'C:/Users/t-lajian/Desktop/mytestbook',
+                        validate: validator.validateFilePath
                     }).then(locationResponse => {
-                        let tempPath = path.normalize(path.join(os.homedir(), locationResponse.bookLocation));
+                        let tempPath = path.normalize(locationResponse.bookLocation);
+                        generator.extensionConfig.bookLocation = tempPath;
                         generator.extensionConfig.notebookNames = [];
                         generator.extensionConfig.notebookPaths = [];
                         generator.extensionConfig.notebookFolders = [];
                         return notebookConverter.processBookFolder(tempPath, generator);
                     });
-               }
+                }
             },
 
             askForBookConversion: async () => {
@@ -512,34 +515,66 @@ module.exports = class extends Generator {
                     return;
                 }
 
-                if (generator.extensionConfig.createBook){
+                if (generator.extensionConfig.createBook) {
                     const answers = await generator.prompt([
+                        {
+                            type: 'input',
+                            name: 'notebookPath',
+                            message: 'Provide the absolute path to the folders where your notebooks currently exist.',
+                            default: 'C:/Users/.../Desktop/',
+                            validate: validator.validateFilePath,
+                        },
+                        {
+                            type: 'confirm',
+                            name: 'complexBook',
+                            message: 'Would you like more than one section in your book?',
+                            default: false
+                        },
+                    ]);
+
+                    answers.notebookPath = path.normalize(answers.notebookPath);
+                    Object.assign(generator.extensionConfig, answers);
+                }
+            },
+
+            askForComplexBook: async () => {
+                if (generator.extensionConfig.complexBook) {
+                    const bookSections = await generator.prompt([
                         {
                             type: 'input',
                             name: 'numberSections',
                             message: 'How many sections would you like in your book?',
-                            default: 1,
+                            default: 2,
                             validate: validator.validateNumber,
                         },
                         {
                             type: 'input',
                             name: 'sectionNames',
-                            message: 'List the name(s) of your section(s), comma separated if more than one.',
+                            message: 'List the name(s) of your section(s), separated by a comma for each new section. (e.g.:\'Placeholder,Placeholder2\')',
                             validate: validator.validateNonEmpty,
-                        },
-                        {
-                            type: 'input',
-                            name: 'sectionFolders',
-                            message: 'Provide the path to the folders where your notebooks currently exist.',
-                            default: '/Desktop/notebooks',
                         },
                     ]);
 
-                    answers.sectionNames = answers.sectionNames.replace(/[^a-z0-9]/g, '-').split(',');
-                    answers.sectionNames.forEach(name => {
-                        console.log(name);
+                    bookSections.sectionNames = bookSections.sectionNames.split(',');
+                    bookSections.sectionNames.forEach(name => {
+                        console.log("SECTION NAMES:" + name);
                     });
-                    Object.assign(generator.extensionConfig, answers);
+
+                    bookSections.sectionNames.forEach(async section => {
+                        let regexSection = section.replace(/[^a-z0-9]/g, '-');
+                        const organizedNotebooks = await generator.prompt([
+                            {
+                                type: 'input',
+                                name: regexSection,
+                                message: `Select notebooks for your section, ${regexSection}`,
+                                choices: [{
+
+                                }]
+                            }
+                        ])
+                    });
+
+                    Object.assign(generator.extensionConfig, bookSections);
                 }
             },
 
@@ -672,7 +707,10 @@ module.exports = class extends Generator {
             },
 
             askForPackageManager: () => {
-                if (['ext-command-ts', 'ext-command-js', 'ext-localization', 'ext-notebook'].indexOf(generator.extensionConfig.type) === -1) {
+                if (['ext-command-ts', 'ext-command-js', 'ext-localization'].indexOf(generator.extensionConfig.type) === -1) {
+                    if (generator.extensionConfig.type === 'ext-jupyterbook' || generator.extensionConfig.type === 'ext-notebook') {
+                        generator.extensionConfig.pkgManager = 'npm';
+                    }
                     return Promise.resolve();
                 }
                 generator.extensionConfig.pkgManager = 'npm';
@@ -760,16 +798,16 @@ module.exports = class extends Generator {
         }
     }
 
-    _writingNotebook(){
+    _writingNotebook() {
 
         let context = this.extensionConfig;
 
-        if (context.addNotebooks){
-            for (let i = 0; i < context.notebookPaths.length; i++){
+        if (context.addNotebooks) {
+            for (let i = 0; i < context.notebookPaths.length; i++) {
                 this.fs.copy(context.notebookPaths[i], context.name + '/' + context.notebookNames[i]);
             }
         } else {
-            if (context.notebookType === 'notebook-python'){
+            if (context.notebookType === 'notebook-python') {
                 this.fs.copy(this.sourceRoot() + '/optional/pySample.ipynb', context.name + '/pySample.ipynb');
             } else {
                 this.fs.copy(this.sourceRoot() + '/optional/sqlSample.ipynb', context.name + '/sqlSample.ipynb');
@@ -791,42 +829,44 @@ module.exports = class extends Generator {
         this.extensionConfig.installDependencies = true;
     }
 
-    _writingJupyterBook(){
+    _writingJupyterBook() {
         let context = this.extensionConfig;
 
-        console.log(context.bookPath);
-
-        if (context.addBooks){
-            try{
-                const files = fileSys.readdirSync(context.bookPath);
-                files.forEach(file => {
-                    this.fs.copy(context.bookPath + file, context.name + file);
-                });
-            } catch (e) {
-                console.log(e.message);
-            }
+        if (context.addBooks) {
+            const files = fileSys.readdirSync(context.bookLocation);
+            files.forEach(file => {
+                this.fs.copy(context.bookLocation + '/' + file, context.name + '/' + file);
+            });
         } else {
-            if (context.createBook){
+            if (context.createBook) {
                 try {
-                    for (let i = 0; i < context.notebookPaths.length; i++){
-                        this.fs.copy(context.notebookPaths[i], context.name + '/content/' + context.notebookNames[i]);
-                    }
-                } catch (e){
-                    console.log(e.message);
+                    console.log(context.notebookPath + ' ' + context.sectionNames);
+                    //for (let i = 0; i < context.notebookPaths.length; i++) {
+                    this.fs.copy(context.notebookPath, context.name + '/content');
+                    //}
+                } catch (e) {
+                    console.log("Cannot copy: " + e.message);
                 }
             } else {
                 this.fs.copy(this.sourceRoot() + '/content', context.name + '/content');
                 this.fs.copyTpl(this.sourceRoot() + '/requirements.txt', context.name + '/requirements.txt', context);
                 this.fs.copyTpl(this.sourceRoot() + '/references.bib', context.name + '/references.bib', context);
                 this.fs.copyTpl(this.sourceRoot() + '/logo.png', context.name + '/logo.png', context);
-                this.fs.copyTpl(this.sourceRoot() + '/toc.yml', context.name + '/_data/toc.yml', context);
             }
 
+            this.fs.copy(this.sourceRoot() + '/toc.yml', context.name + '/_data/toc.yml', context);
             this.fs.copyTpl(this.sourceRoot() + '/_config.yml', context.name + '/_config.yml', context);
-            this.fs.copyTpl(this.sourceRoot() + '/vsc-extension-quickstart.md', context.name + '/vsc-extension-quickstart.md', context);
-            this.fs.copyTpl(this.sourceRoot() + '/README.md', context.name + '/README.md', context);
-            this.fs.copyTpl(this.sourceRoot() + '/CHANGELOG.md', context.name + '/CHANGELOG.md', context);
         }
+
+        this.fs.copy(this.sourceRoot() + '/vscode', context.name + '/.vscode');
+        this.fs.copy(this.sourceRoot() + '/vscodeignore', context.name + '/.vscodeignore');
+        this.fs.copyTpl(this.sourceRoot() + '/tsconfig.json', context.name + '/tsconfig.json', context);
+        this.fs.copyTpl(this.sourceRoot() + '/src/jupyter-book.ts', context.name + '/src/jupyter-book.ts', context);
+        this.fs.copyTpl(this.sourceRoot() + '/package.json', context.name + '/package.json', context);
+        this.fs.copy(this.sourceRoot() + '/.eslintrc.json', context.name + '/.eslintrc.json');
+        this.fs.copyTpl(this.sourceRoot() + '/vsc-extension-quickstart.md', context.name + '/vsc-extension-quickstart.md', context);
+        this.fs.copyTpl(this.sourceRoot() + '/README.md', context.name + '/README.md', context);
+        this.fs.copyTpl(this.sourceRoot() + '/CHANGELOG.md', context.name + '/CHANGELOG.md', context);
 
         if (this.extensionConfig.gitInit) {
             this.fs.copy(this.sourceRoot() + '/gitignore', context.name + '/.gitignore');
@@ -940,8 +980,8 @@ module.exports = class extends Generator {
         }
     }
 
-     // Write Insight Extension
-     _writingInsight() {// {{ADS EDIT}}
+    // Write Insight Extension
+    _writingInsight() {// {{ADS EDIT}}
         let context = this.extensionConfig;// {{ADS EDIT}}
 
         this.fs.copy(this.sourceRoot() + '/vscode', context.name + '/.vscode');// {{ADS EDIT}}
@@ -1028,6 +1068,9 @@ module.exports = class extends Generator {
             return;
         }
 
+        if (this.extensionConfig.type === 'ext-jupyterbook') {
+            notebookConverter.buildCustomBook(this.extensionConfig);
+        }
 
         // Git init
         if (this.extensionConfig.gitInit) {
@@ -1037,13 +1080,13 @@ module.exports = class extends Generator {
         this.log('');
         this.log('Your extension ' + this.extensionConfig.name + ' has been created!');
         this.log('');
-        this.log('To start editing with Visual Studio Code, use the following commands:');
+        this.log('To start editing with Visual Studio Code, navigate to your new extension folder or use the following commands:');
         this.log('');
         this.log('     cd ' + this.extensionConfig.name);
         this.log('     code .');
         this.log('');
-        this.log('Open vsc-extension-quickstart.md inside the new extension for further instructions');
-        this.log('on how to modify, test and publish your extension.');
+        this.log(chalk.cyanBright('Open vsc-extension-quickstart.md inside the new extension for further instructions'));
+        this.log(chalk.cyanBright('on how to modify, test and publish your extension.'));
         this.log('');
 
         if (this.extensionConfig.type === 'ext-extensionpack') {
