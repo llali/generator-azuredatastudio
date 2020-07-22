@@ -93,7 +93,7 @@ export function activate(context: vscode.ExtensionContext) {
                 value: 'Forms provide a clean layout to collect user input'}).component();
             let inputBoxComponent : azdata.InputBoxComponent = view.modelBuilder.inputBox()
                 .component();
-            let dropdownComponent = view.modelBuilder.dropDown()
+            let dropdownComponent : azdata.DropDownComponent = view.modelBuilder.dropDown()
                 .withProperties({
                 values: ['Option A', 'Option B', 'Option C']}).component();
 
@@ -104,8 +104,16 @@ export function activate(context: vscode.ExtensionContext) {
             let buttonsComponent = view.modelBuilder.groupContainer().withItems([button1, button2])
                 .component();
 
+            let submitButton : azdata.ButtonComponent = view.modelBuilder.button()
+                .withProperties({
+                    width: 120,
+                    height: 30,
+                    label: 'Submit'
+                }).component();
+            submitButton.onDidClick(() => onSubmit(inputBoxComponent, dropdownComponent, button1, button2));
+
             // Create the form using the above components:
-            let formContainer = view.modelBuilder.formContainer().withFormItems([{
+            let formContainer : azdata.FormContainer = view.modelBuilder.formContainer().withFormItems([{
                 component: textComponent,
                 title: 'Text:'
             }, {
@@ -116,12 +124,24 @@ export function activate(context: vscode.ExtensionContext) {
                 title: 'Dropdown:'
             }, {
                 component: buttonsComponent, title: 'Buttons:'
+            }, {
+                component: submitButton, title: ''
             }], {componentWidth: 300}) // defining layout of the form
             .component();
 
             // Initialize the model with the form container as the root component
             await view.initializeModel(formContainer);
 		});
+    }
+
+    // function called when submit button on tab2 is clicked
+    function onSubmit(inputBox : azdata.InputBoxComponent, dropdown : azdata.DropDownComponent,
+        button1 : azdata.RadioButtonComponent, button2 : azdata.RadioButtonComponent) {
+        vscode.window.showInformationMessage(inputBox.value + ' ' + dropdown.value);
+        inputBox.value = '';
+        dropdown.value = 'Option A';
+        button1.checked = false;
+        button2.checked = false;
     }
 }
 

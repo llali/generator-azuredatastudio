@@ -25,7 +25,7 @@
 	"scripts": {
 		"vscode:prepublish": "<%= pkgManager %> run compile",
 		"compile": "tsc -p ./",
-		"lint": "eslint src --ext ts",
+		"lint": "eslint src --ext wizard",
 		"watch": "tsc -watch -p ./",
 		"pretest": "<%= pkgManager %> run compile && <%= pkgManager %> run lint",
 		"test": "node ./out/test/runTest.js"

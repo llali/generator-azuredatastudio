@@ -1097,4 +1097,234 @@ describe('test code generator', function () {
                 }
             }, done);
     });
+
+    it('wizard file-saving template', function (done) {
+        this.timeout(10000);
+
+        helpers.run(path.join(__dirname, '../generators/app'))
+            .withPrompts({
+                type: 'ext-wizard',
+                wizardOrDialog: 'Wizard',
+                wizardType: 'file-saving',
+                name: 'testWiz',
+                displayName: 'Test Wiz',
+                description: 'My TestWiz',
+                gitInit: true,
+                pkgManager: 'npm'
+            }) // Mock the prompt answers
+            .toPromise().then(function () {
+                var expectedPackageJSON = {
+                    "name": "testWiz",
+                    "displayName": 'Test Wiz',
+                    "description": "My TestWiz",
+                    "version": "0.0.1",
+                    "engines": {
+                        "vscode": engineVersion,
+                        "azdata": env.azdataVersion// {{ADS EDIT}}
+                    },
+                    "activationEvents": [
+                        "onCommand:testWiz.launchWizard"
+                    ],
+                    "devDependencies": {
+                        "@types/vscode": engineVersion,
+                        "@types/azdata": env.azdataVersion,// {{ADS EDIT}}
+                        "@types/glob": "^7.1.1",
+                        "@types/mocha": "^7.0.2",
+                        "@types/node": "^13.11.0",
+                        "eslint": "^6.8.0",
+                        "@typescript-eslint/parser": "^2.30.0",
+                        "@typescript-eslint/eslint-plugin": "^2.30.0",
+                        "glob": "^7.1.6",
+                        "mocha": "^7.1.2",
+                        "typescript": "^3.8.3",
+                        "vscode-test": "^1.3.0"
+                    },
+                    "main": "./out/main.js",
+                    "scripts": {
+                        "vscode:prepublish": "npm run compile",
+                        "compile": "tsc -p ./",
+                        "lint": "eslint src --ext ts",
+                        "watch": "tsc -watch -p ./",
+                        "pretest": "npm run compile && npm run lint",
+                        "test": "node ./out/test/runTest.js"
+                    },
+                    "categories": [
+                        "Other"
+                    ],
+                    "contributes": {
+                        "commands": [{
+                            "command": "testWiz.launchWizard",
+                            "title": "Launch Wizard"
+                        }]
+                    }
+                };
+                try {
+
+
+                    assert.file(['package.json', 'README.md', 'CHANGELOG.md', '.vscodeignore', 'src/main.ts',
+                    'src/wizard/wizard.ts', 'src/wizard/api/models.ts', 'src/test/suite/extension.test.ts', 'src/test/suite/index.ts', 'tsconfig.json']);
+
+                    var packageJSONBody = fs.readFileSync('package.json', 'utf8')
+                    var actualPackageJSON = JSON.parse(packageJSONBody);
+                    assert.deepEqual(expectedPackageJSON, actualPackageJSON);
+
+                    done();
+                } catch (e) {
+                    done(e);
+                }
+            });
+    });
+
+    it('wizard standard template', function (done) {
+        this.timeout(10000);
+
+        helpers.run(path.join(__dirname, '../generators/app'))
+            .withPrompts({
+                type: 'ext-wizard',
+                wizardOrDialog: 'Wizard',
+                wizardType: 'standard',
+                name: 'testWiz',
+                displayName: 'Test Wiz',
+                description: 'My TestWiz',
+                gitInit: true,
+                pkgManager: 'npm'
+            }) // Mock the prompt answers
+            .toPromise().then(function () {
+                var expectedPackageJSON = {
+                    "name": "testWiz",
+                    "displayName": 'Test Wiz',
+                    "description": "My TestWiz",
+                    "version": "0.0.1",
+                    "engines": {
+                        "vscode": engineVersion,
+                        "azdata": env.azdataVersion// {{ADS EDIT}}
+                    },
+                    "activationEvents": [
+                        "onCommand:testWiz.launchWizard"
+                    ],
+                    "devDependencies": {
+                        "@types/vscode": engineVersion,
+                        "@types/azdata": env.azdataVersion,// {{ADS EDIT}}
+                        "@types/glob": "^7.1.1",
+                        "@types/mocha": "^7.0.2",
+                        "@types/node": "^13.11.0",
+                        "eslint": "^6.8.0",
+                        "@typescript-eslint/parser": "^2.30.0",
+                        "@typescript-eslint/eslint-plugin": "^2.30.0",
+                        "glob": "^7.1.6",
+                        "mocha": "^7.1.2",
+                        "typescript": "^3.8.3",
+                        "vscode-test": "^1.3.0"
+                    },
+                    "main": "./out/main.js",
+                    "scripts": {
+                        "vscode:prepublish": "npm run compile",
+                        "compile": "tsc -p ./",
+                        "lint": "eslint src --ext ts",
+                        "watch": "tsc -watch -p ./",
+                        "pretest": "npm run compile && npm run lint",
+                        "test": "node ./out/test/runTest.js"
+                    },
+                    "categories": [
+                        "Other"
+                    ],
+                    "contributes": {
+                        "commands": [{
+                            "command": "testWiz.launchWizard",
+                            "title": "Launch Wizard"
+                        }]
+                    }
+                };
+                try {
+
+
+                    assert.file(['package.json', 'README.md', 'CHANGELOG.md', '.vscodeignore', 'src/main.ts', 'src/test/suite/extension.test.ts', 'src/test/suite/index.ts', 'tsconfig.json']);
+
+                    var packageJSONBody = fs.readFileSync('package.json', 'utf8')
+                    var actualPackageJSON = JSON.parse(packageJSONBody);
+                    assert.deepEqual(expectedPackageJSON, actualPackageJSON);
+
+                    done();
+                } catch (e) {
+                    done(e);
+                }
+            });
+    });
+
+
+    it('dialog standard template', function (done) {
+        this.timeout(10000);
+
+        helpers.run(path.join(__dirname, '../generators/app'))
+            .withPrompts({
+                type: 'ext-wizard',
+                wizardOrDialog: 'Dialog',
+                dialogType: 'standard',
+                name: 'testDialog',
+                displayName: 'Test Dialog',
+                description: 'My TestDialog',
+                gitInit: true,
+                pkgManager: 'npm'
+            }) // Mock the prompt answers
+            .toPromise().then(function () {
+                var expectedPackageJSON = {
+                    "name": "testDialog",
+                    "displayName": 'Test Dialog',
+                    "description": "My TestDialog",
+                    "version": "0.0.1",
+                    "engines": {
+                        "vscode": engineVersion,
+                        "azdata": env.azdataVersion// {{ADS EDIT}}
+                    },
+                    "activationEvents": [
+                        "onCommand:testDialog.launchDialog"
+                    ],
+                    "devDependencies": {
+                        "@types/vscode": engineVersion,
+                        "@types/azdata": env.azdataVersion,// {{ADS EDIT}}
+                        "@types/glob": "^7.1.1",
+                        "@types/mocha": "^7.0.2",
+                        "@types/node": "^13.11.0",
+                        "eslint": "^6.8.0",
+                        "@typescript-eslint/parser": "^2.30.0",
+                        "@typescript-eslint/eslint-plugin": "^2.30.0",
+                        "glob": "^7.1.6",
+                        "mocha": "^7.1.2",
+                        "typescript": "^3.8.3",
+                        "vscode-test": "^1.3.0"
+                    },
+                    "main": "./out/main.js",
+                    "scripts": {
+                        "vscode:prepublish": "npm run compile",
+                        "compile": "tsc -p ./",
+                        "lint": "eslint src --ext ts",
+                        "watch": "tsc -watch -p ./",
+                        "pretest": "npm run compile && npm run lint",
+                        "test": "node ./out/test/runTest.js"
+                    },
+                    "categories": [
+                        "Other"
+                    ],
+                    "contributes": {
+                        "commands": [{
+                            "command": "testDialog.launchDialog",
+                            "title": "Launch Dialog"
+                        }]
+                    }
+                };
+                try {
+
+
+                    assert.file(['package.json', 'README.md', 'CHANGELOG.md', '.vscodeignore', 'src/main.ts', 'src/test/suite/extension.test.ts', 'src/test/suite/index.ts', 'tsconfig.json']);
+
+                    var packageJSONBody = fs.readFileSync('package.json', 'utf8')
+                    var actualPackageJSON = JSON.parse(packageJSONBody);
+                    assert.deepEqual(expectedPackageJSON, actualPackageJSON);
+
+                    done();
+                } catch (e) {
+                    done(e);
+                }
+            });
+    });
 });

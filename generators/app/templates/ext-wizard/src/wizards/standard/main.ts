@@ -116,6 +116,14 @@ export function activate(context: vscode.ExtensionContext) {
             let buttonsComponent = view.modelBuilder.groupContainer().withItems([button1, button2])
                 .component();
 
+            let submitButton : azdata.ButtonComponent = view.modelBuilder.button()
+                .withProperties({
+                    width: 120,
+                    height: 30,
+                    label: 'Submit'
+                }).component();
+            submitButton.onDidClick(() => onSubmit(inputBoxComponent, dropdownComponent, button1, button2));
+
             // Create the form using the above components:
             let formContainer = view.modelBuilder.formContainer().withFormItems([{
                 component: textComponent,
@@ -129,12 +137,24 @@ export function activate(context: vscode.ExtensionContext) {
             }, {
                 component: buttonsComponent,
                 title: 'Buttons:'
+            }, {
+                component: submitButton, title: ''
             }], {componentWidth: 800}) // defining layout of the form
             .component();
 
             // Create the page
             await view.initializeModel(formContainer);
 		});
+    }
+
+    // function called when submit button on tab2 is clicked
+    function onSubmit(inputBox : azdata.InputBoxComponent, dropdown : azdata.DropDownComponent,
+        button1 : azdata.RadioButtonComponent, button2 : azdata.RadioButtonComponent) {
+        vscode.window.showInformationMessage(inputBox.value + ' ' + dropdown.value);
+        inputBox.value = '';
+        dropdown.value = 'Option A';
+        button1.checked = false;
+        button2.checked = false;
     }
 }
 
