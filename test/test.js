@@ -1143,10 +1143,11 @@ describe('test code generator', function () {
                     "scripts": {
                         "vscode:prepublish": "npm run compile",
                         "compile": "tsc -p ./",
-                        "lint": "eslint src --ext ts",
+                        "lint": "eslint src --ext wizard",
                         "watch": "tsc -watch -p ./",
                         "pretest": "npm run compile && npm run lint",
-                        "test": "node ./out/test/runTest.js"
+                        "test": "node ./out/test/runTest.js",
+                        "proposedapi": "node installTypings.js"
                     },
                     "categories": [
                         "Other"
@@ -1220,10 +1221,11 @@ describe('test code generator', function () {
                     "scripts": {
                         "vscode:prepublish": "npm run compile",
                         "compile": "tsc -p ./",
-                        "lint": "eslint src --ext ts",
+                        "lint": "eslint src --ext wizard",
                         "watch": "tsc -watch -p ./",
                         "pretest": "npm run compile && npm run lint",
-                        "test": "node ./out/test/runTest.js"
+                        "test": "node ./out/test/runTest.js",
+                        "proposedapi": "node installTypings.js"
                     },
                     "categories": [
                         "Other"
@@ -1297,10 +1299,11 @@ describe('test code generator', function () {
                     "scripts": {
                         "vscode:prepublish": "npm run compile",
                         "compile": "tsc -p ./",
-                        "lint": "eslint src --ext ts",
+                        "lint": "eslint src --ext wizard",
                         "watch": "tsc -watch -p ./",
                         "pretest": "npm run compile && npm run lint",
-                        "test": "node ./out/test/runTest.js"
+                        "test": "node ./out/test/runTest.js",
+                        "proposedapi": "node installTypings.js"
                     },
                     "categories": [
                         "Other"

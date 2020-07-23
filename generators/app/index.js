@@ -840,6 +840,7 @@ module.exports = class extends Generator {
 
         this.fs.copy(this.sourceRoot() + '/vscode', context.name + '/.vscode');
         this.fs.copy(this.sourceRoot() + '/src/test', context.name + '/src/test');
+        this.fs.copy(this.sourceRoot() + '/src/typings', context.name + '/src/typings');
 
         this.fs.copy(this.sourceRoot() + '/vscodeignore', context.name + '/.vscodeignore');
         if (this.extensionConfig.gitInit) {
@@ -855,7 +856,7 @@ module.exports = class extends Generator {
         } else { // context.wizardOrDialog === 'Dialog'
             this.fs.copyTpl(this.sourceRoot() + '/src/dialogs/' + context.dialogType, context.name + '/src', context);
         }
-
+        this.fs.copyTpl(this.sourceRoot() + '/installTypings.js', context.name + '/installTypings.js', context);
         this.fs.copyTpl(this.sourceRoot() + '/package.json', context.name + '/package.json', context);
 
         this.fs.copyTpl(this.sourceRoot() + '/.eslintrc.json', context.name + '/.eslintrc.json', context);

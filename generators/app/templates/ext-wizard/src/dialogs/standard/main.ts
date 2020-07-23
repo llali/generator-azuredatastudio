@@ -1,12 +1,12 @@
 'use strict';
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
-import * as vscode from 'vscode';
+import * as vscode from 'vscode'; // Refer to `node_modules/@types/vscode/index.d.ts` for full API
 
 // The module 'azdata' contains the Azure Data Studio extensibility API
 // This is a complementary set of APIs that add SQL / Data-specific functionality to the app
-// Import the module and reference it with the alias azdata in your code below
-import * as azdata from 'azdata';
+// Import the module and reference it with the alias azdata in your code below.
+import * as azdata from 'azdata'; // Refer to `node_modules/@types/azdata/index.d.ts` for full API
 
 // Refer to https://github.com/Microsoft/azuredatastudio/blob/main/src/sql/azdata.d.ts
 // for full API documentation
