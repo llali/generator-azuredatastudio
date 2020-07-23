@@ -870,7 +870,7 @@ module.exports = class extends Generator {
                 this.fs.copyTpl(this.sourceRoot() + '/logo.png', context.name + '/logo.png', context);
             }
 
-            this.fs.copy(this.sourceRoot() + '/toc.yml', context.name + '/_data/toc.yml', context);
+            this.fs.copy(this.sourceRoot() + '/_data/toc.yml', context.name + '/_data/toc.yml', context);
             this.fs.copyTpl(this.sourceRoot() + '/_config.yml', context.name + '/_config.yml', context);
         }
 
@@ -1086,7 +1086,7 @@ module.exports = class extends Generator {
             return;
         }
 
-        if (this.extensionConfig.type === 'ext-jupyterbook') {
+        if (this.extensionConfig.type === 'ext-jupyterbook' && (this.extensionConfig.addBooks === false)) {
             notebookConverter.buildCustomBook(this.extensionConfig);
         }
 

@@ -1188,7 +1188,7 @@ describe('test code generator', function () {
                     "contributes": {
                         "commands": [{
                             "command": "launchNotebooks.testNotebook",
-                            "title": "Launch Notebooks: testNotebook"
+                            "title": "Launch Notebooks: Test Notebook"
                         }]
                     }
                 };
@@ -1262,7 +1262,7 @@ describe('test code generator', function () {
                     "contributes": {
                         "commands": [{
                             "command": "launchNotebooks.testNotebook",
-                            "title": "Launch Notebooks: testNotebook"
+                            "title": "Launch Notebooks: Test Notebook"
                         }]
                     }
                 };
@@ -1289,6 +1289,7 @@ describe('test code generator', function () {
                 displayName: 'Test Book',
                 description: 'My Test Book',
                 publisherName: 'test',
+                bookLocation: path.join(__dirname, '../generators/app/templates/ext-jupyterbook/'),
                 addBooks: true,
                 pkgManager: 'npm'
             }) // Mock the prompt answers
@@ -1335,7 +1336,7 @@ describe('test code generator', function () {
                     "contributes": {
                         "commands": [{
                             "command": "launchBook.testBook",
-                            "title": "Launch Book: testBook"
+                            "title": "Launch Book: Test Book"
                         }]
                     }
                 };
@@ -1362,7 +1363,8 @@ describe('test code generator', function () {
                 displayName: 'Test Book',
                 description: 'My Test Book',
                 publisherName: 'test',
-                addBooks: true,
+                notebookPath: path.join(__dirname, '../generators/app/templates/ext-jupyterbook/content'),
+                addBooks: false,
                 pkgManager: 'npm'
             }) // Mock the prompt answers
             .toPromise().then(function () {
@@ -1408,7 +1410,7 @@ describe('test code generator', function () {
                     "contributes": {
                         "commands": [{
                             "command": "launchBook.testBook",
-                            "title": "Launch Book: testBook"
+                            "title": "Launch Book: Test Book"
                         }]
                     }
                 };
@@ -1482,7 +1484,7 @@ describe('test code generator', function () {
                     "contributes": {
                         "commands": [{
                             "command": "launchBook.testBook",
-                            "title": "Launch Book: testBook"
+                            "title": "Launch Book: Test Book"
                         }]
                     }
                 };
