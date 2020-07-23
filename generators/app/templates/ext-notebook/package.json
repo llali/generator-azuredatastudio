@@ -19,7 +19,7 @@
 		"commands": [
 			{
 				"command":  <%- JSON.stringify(`launchNotebooks.${name}`) %>,
-                "title": <%- JSON.stringify(`Launch Notebooks: ${name}`) %>
+                "title": <%- JSON.stringify(`Launch Notebooks: ${displayName}`) %>
 			}
 		]
 	},

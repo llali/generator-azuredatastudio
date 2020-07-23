@@ -320,7 +320,7 @@ module.exports = class extends Generator {
                     type: 'input',
                     name: 'displayName',
                     message: 'What\'s the display name of your extension?',
-                    default: generator.extensionConfig.displayName
+                    default: "My Test Extension"
                 }).then(displayNameAnswer => {
                     generator.extensionConfig.displayName = displayNameAnswer.displayName;
                 });
@@ -330,7 +330,8 @@ module.exports = class extends Generator {
                 return generator.prompt({
                     type: 'input',
                     name: 'publisherName',
-                    message: 'What\'s the publisher name for your extension? (e.g.: Microsoft)',
+                    message: 'What\'s the publisher name for your extension?',
+                    default: "Microsoft",
                     validate: validator.validateNonEmpty,
                 }).then(publisherAnswer => {
                     generator.extensionConfig.publisherName = publisherAnswer.publisherName;
@@ -355,7 +356,7 @@ module.exports = class extends Generator {
                 return generator.prompt({
                     type: 'input',
                     name: 'name',
-                    message: 'What\'s the unique identifier for your extension?',
+                    message: `What\'s the unique identifier for your extension? (Appears as ${generator.extensionConfig.publisherName}.your-identifier)`,
                     default: def,
                     validate: validator.validateExtensionId
                 }).then(nameAnswer => {
@@ -887,6 +888,8 @@ module.exports = class extends Generator {
             this.fs.copy(this.sourceRoot() + '/gitignore', context.name + '/.gitignore');
             this.fs.copy(this.sourceRoot() + '/gitattributes', context.name + '/.gitattributes');
         }
+
+        this.extensionConfig.installDependencies = true;
     }
 
     // Write Color Theme Extension

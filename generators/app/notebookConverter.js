@@ -5,10 +5,6 @@
 
 let path = require('path');
 let fs = require('fs');
-const { title } = require('process');
-const { url } = require('inspector');
-const { dir } = require('console');
-const { file } = require('assert');
 
 exports.processNotebookFolder = (folderPath, generator) => {
     let errors = [];
@@ -48,7 +44,7 @@ const findNotebookFiles = (folderPath, errors, generator) => {
 exports.processBookFolder = (folderPath, generator) => {
     let errors = [];
     try {
-        const validBook = findBookTOC(folderPath, errors, generator);
+        const validBook = findBookTOC(folderPath, errors);
         if (validBook < 0) {
             generator.log("No valid Jupyter Book found in " + folderPath + (errors.length > 0 ? '.\n' + errors.join('\n') : ''));
             return validBook;
@@ -150,7 +146,7 @@ const writeForEachNotebook = (notebookDir, tocFilePath) => {
             fileName = fileName.slice(0, -3);
         }
         console.log("For notebook, writing: " + `title: ${fileName} \t url: ${fileName.toLowerCase()}\n`);
-        fileContent += `title: ${fileName}\nurl: ${fileName.toLowerCase()}\n`;
+        fileContent += `\t- title: ${fileName}\n\turl: ${fileName.toLowerCase()}\n`;
     });
     fs.writeFileSync(tocFilePath, fileContent);
 }
