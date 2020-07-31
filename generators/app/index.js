@@ -49,7 +49,7 @@ module.exports = class extends Generator {
         extensionConfig.azdataEngine = env.azdataVersion;// {{ADS EDIT}}
         extensionConfig.vsCodeEngine = '^1.19.0';
         return env.getLatestVSCodeVersion()
-        .then(function (version) { extensionConfig.vsCodeEngine = version; });
+            .then(function (version) { extensionConfig.vsCodeEngine = version; });
         // TODO add tool to get latest Azure Data Studio verison on machine and set this too
     }
 
@@ -61,7 +61,7 @@ module.exports = class extends Generator {
             askForType: () => {
                 let extensionType = generator.options['extensionType'];
                 if (extensionType) {
-                    let extensionTypes = ['insight', 'colortheme', 'language', 'snippets', 'command-ts', 'command-js', 'extensionpack', 'notebook','jupyterbook'];// {{ADS EDIT}}
+                    let extensionTypes = ['insight', 'colortheme', 'language', 'snippets', 'command-ts', 'command-js', 'extensionpack', 'notebook'];// {{ADS EDIT}}
                     if (extensionTypes.indexOf(extensionType) !== -1) {
                         generator.extensionConfig.type = 'ext-' + extensionType;
                     } else {
@@ -110,14 +110,10 @@ module.exports = class extends Generator {
                         name: 'New Language Pack (Localization)',
                         value: 'ext-localization'
                     }
-                    ,
+                        ,
                     {
                         name: 'New Notebooks (Individual)',
                         value: 'ext-notebook'
-                    },
-                    {
-                        name: 'New Jupyter Book',
-                        value: 'ext-jupyterbook'
                     }
                     ]
                 }).then(typeAnswer => {
@@ -428,7 +424,7 @@ module.exports = class extends Generator {
                     return Promise.resolve();
                 }
 
-                if (generator.extensionConfig.addNotebooks){
+                if (generator.extensionConfig.addNotebooks) {
                     return generator.prompt({
                         type: 'input',
                         name: 'notebookPath',
@@ -455,7 +451,7 @@ module.exports = class extends Generator {
                             value: 'notebook-python'
                         }]
                     }).then(notebookType => {
-                         generator.extensionConfig.notebookType = notebookType.selectType;
+                        generator.extensionConfig.notebookType = notebookType.selectType;
                     });
                 }
             },
@@ -480,7 +476,7 @@ module.exports = class extends Generator {
                     return Promise.resolve();
                 }
 
-                if (generator.extensionConfig.addBooks){
+                if (generator.extensionConfig.addBooks) {
                     return generator.prompt({
                         type: 'input',
                         name: 'bookLocation',
@@ -705,25 +701,22 @@ module.exports = class extends Generator {
             case 'ext-notebook':
                 this._writingNotebook();
                 break;
-            case 'ext-jupyterbook':
-                this._writingJupyterBook();
-                break;
             default:
                 //unknown project type
                 break;
         }
     }
 
-    _writingNotebook(){
+    _writingNotebook() {
 
         let context = this.extensionConfig;
 
-        if (context.addNotebooks){
-            for (let i = 0; i < context.notebookPaths.length; i++){
+        if (context.addNotebooks) {
+            for (let i = 0; i < context.notebookPaths.length; i++) {
                 this.fs.copy(context.notebookPaths[i], context.name + '/' + context.notebookNames[i]);
             }
         } else {
-            if (context.notebookType === 'notebook-python'){
+            if (context.notebookType === 'notebook-python') {
                 this.fs.copy(this.sourceRoot() + '/optional/pySample.ipynb', context.name + '/pySample.ipynb');
             } else {
                 this.fs.copy(this.sourceRoot() + '/optional/sqlSample.ipynb', context.name + '/sqlSample.ipynb');
@@ -745,10 +738,10 @@ module.exports = class extends Generator {
         this.extensionConfig.installDependencies = true;
     }
 
-    _writingJupyterBook(){
+    _writingJupyterBook() {
         let context = this.extensionConfig;
 
-        if (context.addBooks){
+        if (context.addBooks) {
             this.fs.copy(context.bookPath + "", context.name + '/');
         } else {
             this.fs.copy(this.sourceRoot() + '/features', context.name + '/features');
@@ -874,8 +867,8 @@ module.exports = class extends Generator {
         }
     }
 
-     // Write Insight Extension
-     _writingInsight() {// {{ADS EDIT}}
+    // Write Insight Extension
+    _writingInsight() {// {{ADS EDIT}}
         let context = this.extensionConfig;// {{ADS EDIT}}
 
         this.fs.copy(this.sourceRoot() + '/vscode', context.name + '/.vscode');// {{ADS EDIT}}
