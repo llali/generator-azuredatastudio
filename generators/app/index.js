@@ -38,7 +38,7 @@ module.exports = class extends Generator {
     initializing() {
 
         // Welcome
-        this.log(yosay('Welcome to the Azure Data Studio Extension generator for test!'));// {{ADS EDIT}}
+        this.log(yosay('Welcome to the Azure Data Studio Extension generator!'));// {{ADS EDIT}}
 
         // evaluateEngineVersion
         let extensionConfig = this.extensionConfig;
@@ -431,9 +431,6 @@ module.exports = class extends Generator {
                     generator.extensionConfig.addNavSection = answer.addNavSection;// {{ADS EDIT}}
                 });
             },
-
-
-
 
             // Ask for extension display name ("displayName" in package.json)
             askForExtensionDisplayName: () => {
