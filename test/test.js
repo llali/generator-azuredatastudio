@@ -1131,6 +1131,80 @@ describe('test code generator', function () {
             }, done);
     });
 
+    it('notebook with existing notebook', function (done) {
+        helpers.run(path.join(__dirname, '../generators/app'))
+            .withPrompts({
+                addExtensions: false,
+                type: 'ext-notebook',
+                name: 'testNotebook',
+                displayName: 'Test Notebook',
+                description: 'My Test Notebook',
+                publisherName: 'test',
+                addNotebooks: true,
+                notebookPath: path.join(__dirname, '/fixtures/jupyterbook'),
+                pkgManager: 'npm'
+            }) // Mock the prompt answers
+            .toPromise().then(function () {
+                var expected = {
+                    "name": "testNotebook",
+                    "displayName": 'Test Notebook',
+                    "description": "My Test Notebook",
+                    "publisher": "test",
+                    "version": "0.0.1",
+                    "engines": {
+                        "vscode": engineVersion,
+                        "azdata": "*"
+                    },
+                    "activationEvents": [
+                        "onCommand:launchNotebooks.testNotebook"
+                    ],
+                    "devDependencies": {
+                        "@types/vscode": engineVersion,
+                        "@types/azdata": "*",
+                        "@types/glob": "^7.1.1",
+                        "@types/mocha": "^7.0.2",
+                        "@types/node": "^13.11.0",
+                        "eslint": "^6.8.0",
+                        "@typescript-eslint/parser": "^2.30.0",
+                        "@typescript-eslint/eslint-plugin": "^2.30.0",
+                        "glob": "^7.1.6",
+                        "mocha": "^7.1.2",
+                        "typescript": "^3.8.3",
+                        "vscode-test": "^1.3.0"
+                    },
+                    "main": "./out/notebook.js",
+                    "scripts": {
+                        "vscode:prepublish": "npm run compile",
+                        "compile": "tsc -p ./",
+                        "lint": "eslint src --ext ts",
+                        "watch": "tsc -watch -p ./",
+                        "pretest": "npm run compile && npm run lint",
+                        "test": "node ./out/test/runTest.js"
+                    },
+                    "categories": [
+                        "Other"
+                    ],
+                    "contributes": {
+                        "commands": [{
+                            "command": "launchNotebooks.testNotebook",
+                            "title": "Launch Notebooks: Test Notebook"
+                        }]
+                    }
+                };
+                try {
+                    assert.file(['package.json', 'README.md', 'CHANGELOG.md', 'vsc-extension-quickstart.md', '.vscodeignore', 'src/notebook.ts', 'pySample.ipynb', 'tsconfig.json']);
+
+                    var body = fs.readFileSync('package.json', 'utf8');
+                    var actual = JSON.parse(body);
+
+                    assert.deepEqual(expected, actual);
+                    done();
+                } catch (e) {
+                    done(e);
+                }
+            }, done);
+    });
+
 
     it('notebook with python sample', function (done) {
         helpers.run(path.join(__dirname, '../generators/app'))
@@ -1289,7 +1363,7 @@ describe('test code generator', function () {
                 displayName: 'Test Book',
                 description: 'My Test Book',
                 publisherName: 'test',
-                bookLocation: path.join(__dirname, '../generators/app/templates/ext-jupyterbook/'),
+                bookLocation: path.join(__dirname, '/fixtures/jupyterbook'),
                 addBooks: true,
                 pkgManager: 'npm'
             }) // Mock the prompt answers
@@ -1363,7 +1437,7 @@ describe('test code generator', function () {
                 displayName: 'Test Book',
                 description: 'My Test Book',
                 publisherName: 'test',
-                notebookPath: path.join(__dirname, '../generators/app/templates/ext-jupyterbook/content'),
+                notebookPath: path.join(__dirname, '/fixtures/jupyterbook'),
                 addBooks: false,
                 pkgManager: 'npm'
             }) // Mock the prompt answers

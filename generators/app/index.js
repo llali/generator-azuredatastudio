@@ -522,7 +522,7 @@ module.exports = class extends Generator {
                             type: 'input',
                             name: 'notebookPath',
                             message: 'Provide the absolute path to the folders where your notebooks currently exist.',
-                            default: 'C:/Users/.../Desktop/',
+                            default: '/users/laurajiang/desktop/notebooks',
                             validate: validator.validateFilePath,
                         },
                         {
@@ -573,24 +573,32 @@ module.exports = class extends Generator {
 
             askForNotebooksinSections: async () => {
                 if (generator.extensionConfig.complexBook) {
-                    let choices = [], organizedNotebooks = {};
-                    generator.extensionConfig.notebookNames.forEach(name => {
-                        choices.push({ "name": name });
+                    let availableSectionNames = generator.extensionConfig.notebookNames;
+                    let sectionNames = generator.extensionConfig.sectionNames;
+                    let availableChoices = [], organizedNotebooks = [];
+                    availableSectionNames.forEach(name => {
+                        availableChoices.push({ "name": name });
                     });
 
-                    generator.extensionConfig.sectionNames.forEach(async section => {
-                        let regexSection = section.replace(/[^a-z0-9]/g, '-');
-                        organizedNotebooks = await generator.prompt([
-                            {
-                                type: 'checkbox',
-                                name: regexSection,
-                                message: `Select notebooks for your section, ${regexSection}`,
-                                choices: choices
-                            }
-                        ])
-                    });
+                    for (let i = 0; i < sectionNames.length; i++) {
+                        let regexSection = sectionNames[i].replace(/[^a-z0-9]/g, '-');
+                        const response = await generator.prompt([{
+                            type: 'checkbox',
+                            name: regexSection,
+                            message: `Select notebooks for your section, ${regexSection}:`,
+                            choices: availableChoices
+                        }]);
 
-                    Object.assign(generator.extensionConfig, organizedNotebooks);
+                        organizedNotebooks.push(response);
+                        availableSectionNames = availableSectionNames.filter(element => !response[sectionNames[i]].includes(element));
+                        availableChoices = [];
+                        availableSectionNames.forEach(name => {
+                            availableChoices.push({ "name": name });
+                        });
+
+                    }
+                    console.log(organizedNotebooks);
+                    generator.extensionConfig.organizedNotebooks = organizedNotebooks;
                 }
             },
 
@@ -854,16 +862,29 @@ module.exports = class extends Generator {
                 this.fs.copy(context.bookLocation + '/' + file, context.name + '/' + file);
             });
         } else {
-            if (context.createBook) {
+            if (context.createBook && context.sectionNames) {
                 try {
-                    console.log(context.notebookPath + ' ' + context.sectionNames);
-                    //for (let i = 0; i < context.notebookPaths.length; i++) {
-                    this.fs.copy(context.notebookPath, context.name + '/content');
-                    //}
+                    let idx = 0;
+                    context.sectionNames.forEach(section => {
+                        context.organizedNotebooks[idx][section].push("readme.md");   
+                        context.organizedNotebooks[idx][section].forEach(item => {
+                            let srcPath = path.join(context.notebookPath, item);
+                            let destPath = path.join(context.name, 'content', section, item);
+                            this.fs.copy(srcPath, destPath);
+                        });
+                        idx += 1;
+                    });
+
                 } catch (e) {
                     console.log("Cannot copy: " + e.message);
                 }
-            } else {
+            } else if (context.createBook) {
+                const files = fileSys.readdirSync(context.notebookLocation);
+                files.forEach(file => {
+                    this.fs.copy(context.notebookLocation + '/' + file, context.name + '/content' + file);
+                });
+            }
+            else {
                 this.fs.copy(this.sourceRoot() + '/content', context.name + '/content');
                 this.fs.copyTpl(this.sourceRoot() + '/requirements.txt', context.name + '/requirements.txt', context);
                 this.fs.copyTpl(this.sourceRoot() + '/references.bib', context.name + '/references.bib', context);
@@ -1106,6 +1127,11 @@ module.exports = class extends Generator {
         this.log(chalk.cyanBright('Open vsc-extension-quickstart.md inside the new extension for further instructions'));
         this.log(chalk.cyanBright('on how to modify, test and publish your extension.'));
         this.log('');
+
+        if (this.extensionConfig.type === 'ext-jupyterbook') {
+            this.log(chalk.yellow('Please review the "toc.yml" in the "_data" folder and edit as appropriate before publishing the Jupyter Book.'));
+            this.log('');
+        }
 
         if (this.extensionConfig.type === 'ext-extensionpack') {
             this.log(chalk.yellow('Please review the "extensionPack" in the "package.json" before publishing the extension pack.'));

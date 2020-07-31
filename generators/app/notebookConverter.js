@@ -25,7 +25,7 @@ const findNotebookFiles = (folderPath, errors, generator) => {
     files.forEach(fileName => {
         try {
             let extension = path.extname(fileName).toLowerCase();
-            if (extension === '.ipynb') {
+            if (extension === '.ipynb' || extension === '.md') {
                 notebookCount++;
                 let filePath = path.join(folderPath, fileName);
                 generator.extensionConfig.notebookNames.push(fileName);
@@ -113,27 +113,27 @@ const writeToTOC = (context) => {
     const presentDirectory = __dirname.split('generators');
     const tocFilePath = path.join(presentDirectory[0], context.name, '_data', 'toc.yml');
     const bookContentPath = path.join(presentDirectory[0], context.name, 'content');
-    //const bookContents = fs.readdirSync(bookContentPath);
-    writeForEachNotebook(bookContentPath, tocFilePath);
-    // bookContents.forEach(file => {
-    //     try {
-    //         console.log("Looking at file: ")
-    //         const dirPath = path.join(bookContentPath, file);
-    //         const stats = fs.statSync(dirPath);
-    //         if (stats.isDirectory()) {
-    //             fs.writeFileSync(tocFilePath, `\n title: ${file}\n url: ${url}\n not_numbered: true\n expand_sections: true\n sections: `);
-    //             writeForEachNotebook(dirPath, tocFilePath);
-    //         } else {
-    //             writeForEachNotebook(dirPath, tocFilePath);
-    //         }
-    //     } catch (e) {
-    //         console.log(e.message);
-    //     }
-    // });
-
+    const bookContents = fs.readdirSync(bookContentPath);
+    bookContents.forEach(file => {
+        try {
+            console.log("Looking at file: ")
+            const dirPath = path.join(bookContentPath, file);
+            const stats = fs.statSync(dirPath);
+            if (stats.isDirectory()) {
+                let section = file;
+                console.log(file);
+                fs.writeFileSync(tocFilePath, `\n- title: ${section}\n  url: ${section}/readme\n  not_numbered: true\n  expand_sections: true\n  sections: `);
+                writeForEachNotebook(dirPath, tocFilePath, true);
+            } else {
+                writeForEachNotebook(dirPath, tocFilePath, false);
+            }
+        } catch (e) {
+            console.log(e.message);
+        }
+    });
 }
 
-const writeForEachNotebook = (notebookDir, tocFilePath) => {
+const writeForEachNotebook = (notebookDir, tocFilePath, expandSection) => {
     const notebooks = fs.readdirSync(notebookDir);
     let fileContent = "";
     notebooks.forEach(nb => {
@@ -146,15 +146,32 @@ const writeForEachNotebook = (notebookDir, tocFilePath) => {
             fileName = fileName.slice(0, -3);
         }
         console.log("For notebook, writing: " + `title: ${fileName} \t url: ${fileName.toLowerCase()}\n`);
-        fileContent += `\t- title: ${fileName}\n\turl: ${fileName.toLowerCase()}\n`;
+        if (expandSection) {
+            fileContent += `  - title: ${fileName}\n  url: ${fileName.toLowerCase()}\n`;
+        } else {
+            fileContent += `- title: ${fileName}\n  url: ${fileName.toLowerCase()}\n`;
+        }
+
     });
     fs.writeFileSync(tocFilePath, fileContent);
 }
 
-const moveNotebooksIntoSections = (context) => {
-    const rootContentFolder = path.join(context.name, 'content');
-    context.sectionNames.forEach(section => {
-        let contentFolder = path.join(context.name, section);
-        fs.renameSync(rootContentFolder, contentFolder);
-    });
+const writeToReadme = (readmeFilePath, contentFilePath) => {
+    let titles = []
+    let fileContent = "## Notebooks in this Chapter\n"
+    const files = fs.readdirSync(contentFilePath);
+    files.forEach(file => {
+        if (file.indexOf("readme") === -1) {
+            const data = fs.readFileSync(file, 'UTF-8');
+            // split the contents by new line
+            const lines = data.split(/\r?\n/);
+            // print all lines
+            console.log(lines[6]);
+            let title = lines[6].trim().replace(/"+/g, '').replace(/\\n/, '');
+            titles.push(title);
+            console.log(title);
+            fileContent += `- [${title}](${file})\n`
+        }
+    })
+
 }
