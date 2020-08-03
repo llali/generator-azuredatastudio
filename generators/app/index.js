@@ -211,7 +211,6 @@ module.exports = class extends Generator {
                 return snippetPrompt();
             },
 
-
             askForLocalizationLanguageId: () => {
                 return localization.askForLanguageId(generator);
             },
@@ -947,7 +946,6 @@ module.exports = class extends Generator {
         if (this.abort) {
             return;
         }
-
 
         // Git init
         if (this.extensionConfig.gitInit) {
