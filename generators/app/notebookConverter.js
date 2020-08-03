@@ -5,17 +5,18 @@
 
 var path = require('path');
 var fs = require('fs');
+let os = require('os')
 
 exports.processNotebookFolder = (folderPath, generator) => {
     let errors = [];
     let count = findNotebookFiles(folderPath, errors, generator);
 
     if (count <= 0) {
-        generator.log("No valid notebooks found in " + folderPath + (errors.length > 0 ? '.\n' + errors.join('\n'): ''));
+        generator.log("No valid notebooks found in " + folderPath + (errors.length > 0 ? '.\n' + errors.join(os.EOL) : ''));
         return count;
     }
 
-    generator.log(count + " notebook(s) found." + (errors.length > 0 ? '\n\nProblems while converting: \n' + errors.join('\n'): ''));
+    generator.log(count + " notebook(s) found." + (errors.length > 0 ? '\n\nProblems while converting: \n' + errors.join(os.EOL) : ''));
     return count;
 }
 
@@ -46,14 +47,14 @@ exports.processBookFolder = (folderPath, generator) => {
     try {
         let validBook = findBookTOC(folderPath, errors, generator);
         if (validBook < 0) {
-            generator.log("No valid Jupyter Book found in " + folderPath + (errors.length > 0 ? '.\n' + errors.join('\n'): ''));
+            generator.log("No valid Jupyter Book found in " + folderPath + (errors.length > 0 ? '.\n' + errors.join('\n') : ''));
             return validBook;
         }
 
-        generator.log("Jupyter Book found!" + (errors.length > 0 ? '\n\nProblems while converting: \n' + errors.join('\n'): ''));
+        generator.log("Jupyter Book found!" + (errors.length > 0 ? '\n\nProblems while converting: \n' + errors.join('\n') : ''));
 
         let count = discoverFoldersContainingNotebooks(folderPath, errors, generator);
-        generator.log(count + " notebook(s) found! " + (errors.length > 0 ? '\n\nProblems while converting: \n' + errors.join('\n'): ''));
+        generator.log(count + " notebook(s) found! " + (errors.length > 0 ? '\n\nProblems while converting: \n' + errors.join('\n') : ''));
         return count;
     } catch (e) {
         generator.log("An unexpected error occurred: " + e.message);
@@ -78,7 +79,7 @@ const findBookTOC = (folderPath, errors, generator) => {
 
     files.forEach(fileName => {
         let file = path.basename(fileName).toLowerCase();
-        if (file.indexOf('toc.yml') > -1){
+        if (file.indexOf('toc.yml') > -1) {
             generator.extensionConfig.bookPath = folderPath;
             return 1;
         }

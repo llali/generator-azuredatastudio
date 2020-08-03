@@ -3,10 +3,6 @@
  *--------------------------------------------------------*/
 'use strict';
 
-//TODO:
-// - copy over Jupyter Book files
-// - convert notebook => book
-
 let Generator = require('yeoman-generator');
 let yosay = require('yosay');
 let os = require('os');
@@ -112,7 +108,7 @@ module.exports = class extends Generator {
                     }
                         ,
                     {
-                        name: 'New Notebooks (Individual)',
+                        name: 'New Notebooks (Individual)', // {{ADS EDIT}}
                         value: 'ext-notebook'
                     }
                     ]
@@ -404,6 +400,7 @@ module.exports = class extends Generator {
                 });
             },
 
+            // {{ADS EDIT}}
             askForExistingNotebooks: () => {
                 if (generator.extensionConfig.type !== 'ext-notebook') {
                     return Promise.resolve();
@@ -419,6 +416,7 @@ module.exports = class extends Generator {
                 });
             },
 
+            // {{ADS EDIT}}
             askForNotebooks: () => {
                 if (generator.extensionConfig.type !== 'ext-notebook') {
                     return Promise.resolve();
@@ -429,12 +427,11 @@ module.exports = class extends Generator {
                         type: 'input',
                         name: 'notebookPath',
                         message: 'Provide the absolute path to the folder containing your notebooks.',
-                        default: '/Desktop/notebooks'
+                        default: path.join(os.homedir(), 'Desktop', 'notebooks')
                     }).then(pathResponse => {
-                        let tempPath = path.normalize(path.join(os.homedir(), pathResponse.notebookPath));
                         generator.extensionConfig.notebookNames = [];
                         generator.extensionConfig.notebookPaths = [];
-                        return notebookConverter.processNotebookFolder(tempPath, generator);
+                        return notebookConverter.processNotebookFolder(pathResponse.notebookPath, generator);
                     })
                 }
                 else {
@@ -456,6 +453,7 @@ module.exports = class extends Generator {
                 }
             },
 
+            // {{ADS EDIT}}
             askForExistingBook: () => {
                 if (generator.extensionConfig.type !== 'ext-jupyterbook') {
                     return Promise.resolve();
@@ -471,6 +469,7 @@ module.exports = class extends Generator {
                 });
             },
 
+            // {{ADS EDIT}}
             askForJupyterBook: () => {
                 if (generator.extensionConfig.type !== 'ext-jupyterbook') {
                     return Promise.resolve();
@@ -481,12 +480,11 @@ module.exports = class extends Generator {
                         type: 'input',
                         name: 'bookLocation',
                         message: 'Provide the absolute path to the folder containing your Jupyter Book:',
-                        default: '/Desktop/notebooks'
+                        default: path.join(os.homedir(), 'Desktop', 'jupyter-book')
                     }).then(locationResponse => {
-                        let tempPath = path.normalize(path.join(os.homedir(), locationResponse.bookLocation));
                         generator.extensionConfig.notebookNames = [];
                         generator.extensionConfig.notebookPaths = [];
-                        return notebookConverter.processBookFolder(tempPath, generator);
+                        return notebookConverter.processBookFolder(locationResponse.bookLocation, generator);
                     });
                 } else {
                     generator.log('Generating sample Jupyter Book!')
@@ -707,6 +705,7 @@ module.exports = class extends Generator {
         }
     }
 
+    // {{ADS EDIT}}
     _writingNotebook() {
 
         let context = this.extensionConfig;
@@ -738,6 +737,7 @@ module.exports = class extends Generator {
         this.extensionConfig.installDependencies = true;
     }
 
+    // {{ADS EDIT}}
     _writingJupyterBook() {
         let context = this.extensionConfig;
 
