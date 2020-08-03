@@ -19,6 +19,7 @@ exports.processNotebookFolder = (folderPath, generator) => {
     return count;
 }
 
+// Searches for all possible notebook or markdown files in specificed folder
 const findNotebookFiles = (folderPath, errors, generator) => {
     let notebookCount = 0;
     const files = getFolderContent(folderPath, errors);
@@ -40,7 +41,6 @@ const findNotebookFiles = (folderPath, errors, generator) => {
     return notebookCount;
 }
 
-
 exports.processBookFolder = (folderPath, generator) => {
     let errors = [];
     try {
@@ -60,6 +60,7 @@ exports.processBookFolder = (folderPath, generator) => {
     }
 }
 
+// Finds all possible locations for notebooks in specified folder
 const discoverFoldersContainingNotebooks = (rootFolder, errors, generator) => {
     let totalNotebookCount = 0;
     const subfolders = getFolderContent(rootFolder);
@@ -67,13 +68,13 @@ const discoverFoldersContainingNotebooks = (rootFolder, errors, generator) => {
         console.log(dir);
         console.log(totalNotebookCount);
         let dirPath = path.join(rootFolder, dir);
-        console.log("Attempting to find notebooks " + dirPath);
         totalNotebookCount += findNotebookFiles(dirPath, errors, generator);
         generator.extensionConfig.notebookFolders.push(dir);
     })
     return totalNotebookCount;
 }
 
+// Determines if this book is valid by attempting to locate a TOC (Jupyter Book v0.6.4 and 0.7.1)
 const findBookTOC = (folderPath, errors) => {
     if (errors.length > 0) {
         return -1;
@@ -86,6 +87,7 @@ const findBookTOC = (folderPath, errors) => {
     }
     return -1;
 }
+
 
 const getFolderContent = (folderPath, errors) => {
     try {
@@ -102,76 +104,97 @@ const getFolderContent = (folderPath, errors) => {
 
 exports.buildCustomBook = (context) => {
     try {
-        console.log("Inside build custom book");
-        writeToTOC(context);
+        customizeJupyterBook(context);
     } catch (e) {
         console.log("An unexpected error occurred: " + e.message);
     }
 }
 
-const writeToTOC = (context) => {
+// Following functions are to perform file input/output to create a custom readme.md
+// for each chapter and a custom toc.yml for the overall book in line with the
+// SQL Server 2019 Jupyter Book in ADS
+const customizeJupyterBook = (context) => {
+    let tocContent = "";
     const presentDirectory = __dirname.split('generators');
     const tocFilePath = path.join(presentDirectory[0], context.name, '_data', 'toc.yml');
     const bookContentPath = path.join(presentDirectory[0], context.name, 'content');
     const bookContents = fs.readdirSync(bookContentPath);
+
     bookContents.forEach(file => {
         try {
-            console.log("Looking at file: ")
             const dirPath = path.join(bookContentPath, file);
             const stats = fs.statSync(dirPath);
             if (stats.isDirectory()) {
-                let section = file;
-                console.log(file);
-                fs.writeFileSync(tocFilePath, `\n- title: ${section}\n  url: ${section}/readme\n  not_numbered: true\n  expand_sections: true\n  sections: `);
-                writeForEachNotebook(dirPath, tocFilePath, true);
+                const chapterFilePath = path.join(presentDirectory[0], context.name, 'content', file);
+                const chapterTitle = file[0].toUpperCase() + file.slice(1);
+                tocContent += `- title: ${chapterTitle}\n  url: ${file}/readme\n  not_numbered: true\n  expand_sections: true\n  sections: \n`;
+                tocContent += writeForEachNotebook(chapterFilePath, true);
+                writeToReadme(chapterFilePath, presentDirectory, context.name, file);
             } else {
-                writeForEachNotebook(dirPath, tocFilePath, false);
+                console.log("Not a directory, looking at this file: ", file);
+                tocContent += writeForEachNotebook(bookContentPath, false);
             }
         } catch (e) {
             console.log(e.message);
         }
     });
+    fs.writeFileSync(tocFilePath, tocContent);
 }
 
-const writeForEachNotebook = (notebookDir, tocFilePath, expandSection) => {
+const writeForEachNotebook = (notebookDir, expandSection) => {
+    let content = "";
     const notebooks = fs.readdirSync(notebookDir);
-    let fileContent = "";
-    notebooks.forEach(nb => {
-        console.log("Writing to TOC file: " + nb);
-        let fileName = path.basename(nb);
-        let url = path.join(notebookDir, nb).split('content')[1];
-        if (path.extname(fileName) === '.ipynb') {
-            fileName = fileName.slice(0, -6);
-        } else {
-            fileName = fileName.slice(0, -3);
-        }
-        console.log("For notebook, writing: " + `title: ${fileName} \t url: ${fileName.toLowerCase()}\n`);
+    notebooks.forEach(file => {
+        console.log("Writing to TOC file: " + file);
+        let fullFilePath = path.join(notebookDir, file);
+        let fileName = path.basename(file);
+        const slicedFileName = getSlicedFilename(fileName);
         if (expandSection) {
-            fileContent += `  - title: ${fileName}\n  url: ${fileName.toLowerCase()}\n`;
+            let title = findTitle(file, fullFilePath);
+            content += `  - title: ${title}\n  url: ${slicedFileName.toLowerCase()}\n`;
         } else {
-            fileContent += `- title: ${fileName}\n  url: ${fileName.toLowerCase()}\n`;
+            let title = findTitle(file, fullFilePath);
+            content += `- title: ${title}\n  url: ${slicedFileName.toLowerCase()}\n`;
         }
-
     });
-    fs.writeFileSync(tocFilePath, fileContent);
+    return content;
 }
 
-const writeToReadme = (readmeFilePath, contentFilePath) => {
-    let titles = []
-    let fileContent = "## Notebooks in this Chapter\n"
+const getSlicedFilename = (fileName) => {
+    if (path.extname(fileName) === '.ipynb') {
+        return fileName.slice(0, -6);
+    } else {
+        return fileName.slice(0, -3);
+    }
+}
+
+const writeToReadme = (contentFilePath, presentDirectory, extensionName, file) => {
+    const readmeFilePath = path.join(presentDirectory[0], extensionName, 'content', file, 'readme.md');
+
+    let fileContent = "## Notebooks in this Chapter\n";
     const files = fs.readdirSync(contentFilePath);
     files.forEach(file => {
-        if (file.indexOf("readme") === -1) {
-            const data = fs.readFileSync(file, 'UTF-8');
-            // split the contents by new line
-            const lines = data.split(/\r?\n/);
-            // print all lines
-            console.log(lines[6]);
-            let title = lines[6].trim().replace(/"+/g, '').replace(/\\n/, '');
-            titles.push(title);
-            console.log(title);
-            fileContent += `- [${title}](${file})\n`
+        if (file.indexOf('readme') === -1) { // don't include readme because it already has its own place
+            let fullFilePath = path.join(contentFilePath, file);
+            let title = findTitle(file, fullFilePath);
+            //console.log(title);
+            fileContent += `- [${title}](${file})\n`;
         }
-    })
+    });
+    fs.writeFileSync(readmeFilePath, fileContent);
+}
 
+// Need to grab title from inside each file, dependent on if markdown or notebook file
+const findTitle = (file, filePath) => {
+    //console.log("filePath is ", filePath);
+    const data = fs.readFileSync(filePath, 'UTF-8');
+    const lines = data.split(/\r?\n/);
+    if (path.extname(file) === '.ipynb') {
+        //console.log("Pre-trim ", lines[6])
+        return lines[6].trim().replace(/["#]+/g, '');
+    } else {
+        if (path.extname(file) === '.md') {
+            return lines[0].trim().replace(/["#]+/g, '');
+        }
+    }
 }

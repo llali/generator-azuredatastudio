@@ -866,20 +866,20 @@ module.exports = class extends Generator {
                 try {
                     let idx = 0;
                     context.sectionNames.forEach(section => {
-                        context.organizedNotebooks[idx][section].push("readme.md");   
                         context.organizedNotebooks[idx][section].forEach(item => {
                             let srcPath = path.join(context.notebookPath, item);
                             let destPath = path.join(context.name, 'content', section, item);
                             this.fs.copy(srcPath, destPath);
                         });
                         idx += 1;
+                        this.fs.copy(this.sourceRoot() + '/optional/readme.md', context.name + '/content/' + section + '/readme.md')
                     });
 
                 } catch (e) {
                     console.log("Cannot copy: " + e.message);
                 }
             } else if (context.createBook) {
-                const files = fileSys.readdirSync(context.notebookLocation);
+                const files = fileSys.readdirSync(context.notebookPath);
                 files.forEach(file => {
                     this.fs.copy(context.notebookLocation + '/' + file, context.name + '/content' + file);
                 });
