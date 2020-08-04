@@ -7,7 +7,7 @@ We have written a Yeoman generator to help get you started. We plan to add templ
 Install Yeoman and the Azure Data Studio Extension generator:
 
 ```bash
-npm install generator-azuredatastudio
+npm install -g generator-azuredatastudio
 ```
 
 ## Run Yo Azure Data Studio

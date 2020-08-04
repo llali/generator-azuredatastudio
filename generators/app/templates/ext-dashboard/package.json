@@ -1,0 +1,269 @@
+{
+    "name": <%- JSON.stringify(name) %>,
+    "displayName": <%- JSON.stringify(displayName) %>,
+    "description": <%- JSON.stringify(description) %>,
+    "version": "0.0.1",
+    "engines": {
+        "vscode": <%- JSON.stringify(vsCodeEngine) %>,
+        "azdata": <%- JSON.stringify(azdataEngine) %>
+    },
+    "categories": [
+        "Other"
+    ],
+    <%if (addHomepageAction || addDashboardBar) {-%>
+    "activationEvents": [
+        "*"
+    ],
+    "main": "./src/extension",
+    <% } -%>
+    "contributes": {
+        <%if (addHomepageAction || addDashboardBar) {-%>
+            <%if (addHomepageAction) {-%>
+        "menus": {
+            "dashboard/toolbar": [
+                {
+                    "command": <%- JSON.stringify(`${name}.getQuery`) %>
+                },
+                {
+                    "command": <%- JSON.stringify(`${name}.getUrl`) %>
+                },
+                {
+                  "command": <%- JSON.stringify(`${name}.getConnection`) %>
+                },
+                {
+                  "command": <%- JSON.stringify(`${name}.getWebview`) %>
+                },
+                {
+                  "command": <%- JSON.stringify(`${name}.getNotebook`) %>
+                }
+            ]
+        },
+        <% } -%>
+
+
+
+        "commands": [
+            {
+              "command": <%- JSON.stringify(`${name}.getQuery`) %>,
+              "title": "Get Query",
+              "icon": {
+                "light": "./src/media/insights.svg",
+                "dark": "./src/media/insight_inverses.svg"
+              }
+            },
+            {
+              "command": <%- JSON.stringify(`${name}.getUrl`) %>,
+              "title": "Get Url",
+              "icon": {
+                "light": "./src/media/documentation.svg",
+                "dark": "./src/media/documentation_inverse.svg"
+              }
+            },
+            {
+              "command": <%- JSON.stringify(`${name}.getConnection`) %>,
+              "title": "Get Connection",
+              "icon": {
+                "light": "./src/media/tempdb.svg",
+                "dark": "./src/media/tempdb_inverse.svg"
+              }
+            },
+            {
+              "command": <%- JSON.stringify(`${name}.getWebview`) %>,
+              "title": "Get Webview",
+              "icon": {
+                "light": "./src/media/launch.svg",
+                "dark": "./src/media/launch_inverse.svg"
+              }
+            },
+            {
+              "command": <%- JSON.stringify(`${name}.getNotebook`) %>,
+              "title": "Get Notebook",
+              "icon": {
+                "light": "./src/media/book.svg",
+                "dark": "./src/media/book_inverse.svg"
+              }
+            }
+        ],
+
+        <% } -%>
+        <%if (addDashboardTab && (addServerTab || addDatabaseTab)) {-%>
+        "dashboard.tabs": [
+          {
+              "id": <%- JSON.stringify(name + '.tab') %>,
+              "title": <%- JSON.stringify(displayName) %>,
+              "description": "",
+              "icon": "src/media/tab.svg",
+              "group": <%- JSON.stringify(tabGroup) %>,
+              <%if (addServerTab && !addDatabaseTab) {-%>
+              "when": "dashboardContext == 'server'",
+              <% } -%>
+              <%if (addDatabaseTab && !addServerTab) {-%>
+                  "when": "dashboardContext == 'database'",
+              <% } -%>
+              "container": {
+                  <%if (addNavSection) {-%>
+                  "nav-section": [
+                      {
+                        "id": "monitoring",
+                        "title": "Monitor",
+                        "icon": {
+                          "light": "./src/media/monitor.svg",
+                          "dark": "./src/media/monitor_inverse.svg"
+                        },
+                        "container": {
+                          "insights":{}
+                        }
+                      },
+                      {
+                        "id": "webviewExample",
+                        "title": "Webivew",
+                        "icon": {
+                            "light": "./src/media/performance.svg",
+                            "dark": "./src/media/performance_inverse.svg"
+                        },
+                        "container": {
+                            "webview-container": null
+                        }
+                    }
+                    ]
+                  <% } -%>
+                  <%if (!addNavSection) {-%>
+                  "insights":{}
+                  <% } -%>
+              }
+          }
+        ],
+        "dashboard.insights": [
+            {
+                "id": <%- JSON.stringify(name + '.space-usage') %>,
+                "contrib": {
+                  "type": {
+                    "horizontalBar": {
+                      "dataDirection": "vertical",
+                      "dataType": "number",
+                      "legendPosition": "top",
+                      "labelFirstColumn": false,
+                      "columnsAsLabels": true
+                    }
+                  },
+                  "queryFile": "./src/sql/all_db_space_used.sql"
+                }
+            },
+            {
+                "id": <%- JSON.stringify(name + '.cpu-utilization') %>,
+                "contrib": {
+                  "type": {
+                    "timeSeries": {
+                      "dataDirection": "horizontal",
+                      "dataType": "point",
+                      "legendPosition": "top",
+                      "labelFirstColumn": false,
+                      "columnsAsLabels": false
+                    }
+                  },
+                  "queryFile": "./src/sql/cpumetric.sql"
+                }
+            },
+            {
+                "id": <%- JSON.stringify(name + '.insight') %>,
+                "contrib": {
+                    "queryFile": "./src/sql/query.sql",
+                    "type": {
+                        "bar": {
+                            "dataDirection": "vertical",
+                            "dataType": "number",
+                            "legendPosition": "none",
+                            "labelFirstColumn": false,
+                            "columnsAsLabels": true
+                        }
+                    }
+                }
+            }
+        ],
+
+        <% } -%>
+
+
+
+        "dashboard.containers": [
+            {
+                "id": "insights",
+                "container": {
+                    "widgets-container": [
+                        <%if (addDashboardBar) {-%>
+                        {
+                            "name": "Tasks",
+                            "widget": {
+                                "tasks-widget": [
+                                <%- JSON.stringify(`${name}.getQuery`) %>,
+                                <%- JSON.stringify(`${name}.getUrl`) %>,
+                                <%- JSON.stringify(`${name}.getConnection`) %>,
+                                <%- JSON.stringify(`${name}.getWebview`) %>,
+                                <%- JSON.stringify(`${name}.getNotebook`) %>
+                                ]
+                            }
+                        },
+                        <% } -%>
+                        {
+                            "name": "Top 10 DB Space Usage",
+                            "gridItemConfig": {
+                              "sizex": 2,
+                              "sizey": 2
+                            },
+                            "widget": {
+                                <%- JSON.stringify(name + '.space-usage') %>: {}
+                            }
+                        },
+                        {
+                            "name": "CPU Utilization",
+                            "gridItemConfig": {
+                              "sizex": 2,
+                              "sizey": 1
+                            },
+                            "widget": {
+                                <%- JSON.stringify(name + '.cpu-utilization') %>: {}
+                            }
+                        },
+                        {
+                            "name": "Label",
+                            "gridItemConfig": {
+                                "sizex": 2,
+                                "sizey": 1
+                            },
+                            "widget": {
+                                <%- JSON.stringify(name + '.insight') %>: {}
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "scripts": {
+        "build": "gulp build",
+        "compile": "gulp compile",
+        "watch": "gulp watch",
+        "typings": "gulp copytypings",
+        "postinstall": "node ./node_modules/vscode/bin/install && node ./node_modules/azdata/bin/install"
+      },
+      "dependencies": {
+        "fs-extra": "^5.0.0",
+        "handlebars": "^4.5.3",
+        "openurl": "^1.1.1"
+      },
+      "devDependencies": {
+        "@types/vscode": <%- JSON.stringify(vsCodeEngine) %>,
+		    "@types/azdata": <%- JSON.stringify(azdataEngine) %>,
+        "azdata": "^1.0.0",
+        "@types/glob": "^7.1.1",
+        "@types/mocha": "^7.0.2",
+        "@types/node": "^13.11.0",
+        "eslint": "^6.8.0",
+        "glob": "^7.1.6",
+        "mocha": "^7.1.2",
+        "typescript": "^3.8.3",
+        "vscode-test": "^1.3.0",
+        "vscode": "^1.1.6"
+}
+
+}
