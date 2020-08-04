@@ -4,10 +4,10 @@
 *--------------------------------------------------------*/
 'use strict';
 
-var path = require('path');
-var fs = require('fs');
-var plistParser = require('fast-plist');
-var request = require('request-light');
+let path = require('path');
+let fs = require('fs');
+let plistParser = require('fast-plist');
+let request = require('request-light');
 
 function convertGrammar(location, extensionConfig) {
     extensionConfig.languageId = '';
@@ -24,10 +24,10 @@ function convertGrammar(location, extensionConfig) {
         // load from url
         return request.xhr({ url: location }).then(r => {
             if (r.status == 200) {
-                var contentDisposition = r.headers && r.headers['content-disposition'];
-                var fileName = '';
+                const contentDisposition = r.headers && r.headers['content-disposition'];
+                let fileName = '';
                 if (contentDisposition) {
-                    var fileNameMatch = contentDisposition.match(/filename="([^"]*)/);
+                    const fileNameMatch = contentDisposition.match(/filename="([^"]*)/);
                     if (fileNameMatch) {
                         fileName = fileNameMatch[1];
                     }
@@ -40,7 +40,7 @@ function convertGrammar(location, extensionConfig) {
 
     } else {
         // load from disk
-        var body = null;
+        let body = null;
         // trim the spaces of the location path
         location = location.trim()
         try {
@@ -57,7 +57,7 @@ function convertGrammar(location, extensionConfig) {
 }
 
 function processContent(extensionConfig, fileName, body) {
-    var languageInfo;
+    let languageInfo;
     if (path.extname(fileName) === '.json') {
         try {
             languageInfo = JSON.parse(body);
@@ -82,19 +82,19 @@ function processContent(extensionConfig, fileName, body) {
     extensionConfig.languageName = languageInfo.name || '';
 
     // evaluate language id
-    var languageId = '';
-    var languageScopeName;
+    let languageId = '';
+    let languageScopeName;
 
     if (languageInfo.scopeName) {
         languageScopeName = languageInfo.scopeName;
 
-        var lastIndexOfDot = languageInfo.scopeName.lastIndexOf('.');
+        let lastIndexOfDot = languageInfo.scopeName.lastIndexOf('.');
         if (lastIndexOfDot) {
             languageId = languageInfo.scopeName.substring(lastIndexOfDot + 1);
         }
     }
     if (!languageId && fileName) {
-        var lastIndexOfDot2 = fileName.lastIndexOf('.');
+        const lastIndexOfDot2 = fileName.lastIndexOf('.');
         if (lastIndexOfDot2 && fileName.substring(lastIndexOfDot2 + 1) == 'tmLanguage') {
             languageId = fileName.substring(0, lastIndexOfDot2);
         }

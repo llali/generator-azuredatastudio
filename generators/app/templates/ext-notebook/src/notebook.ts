@@ -24,6 +24,7 @@ const findCorrectFolder = (folderName: string, rootExtensionsFolder: string, not
     if (folderExt.indexOf('<%= name%>') > -1) {
         let fullFolderPath = path.join(rootExtensionsFolder, folderName);
         try {
+            //notebookNames.push(fullFolderPath); // open in side viewlet
             extractNotebooksFromFolder(fullFolderPath, notebookNames);
         } catch (e) {
             vscode.window.showErrorMessage("Unable to access " + fullFolderPath + ": " + e.message);
@@ -32,9 +33,9 @@ const findCorrectFolder = (folderName: string, rootExtensionsFolder: string, not
 }
 
 const extractNotebooksFromFolder = (fullFolderPath: string, notebookNames: Array<string>) => {
-    var files = getFolderContent(fullFolderPath);
+    const files = getFolderContent(fullFolderPath);
     files.forEach(fileName => {
-    var fileExtension = path.extname(fileName).toLowerCase();
+        let fileExtension = path.extname(fileName).toLowerCase();
         if (fileExtension === '.ipynb'){
             let fullFilePath = path.join(fullFolderPath, fileName)
             notebookNames.push(path.normalize(fullFilePath));
@@ -54,6 +55,7 @@ const getFolderContent = (folderPath: string) => {
 export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(vscode.commands.registerCommand('launchNotebooks.<%= name %>', () => {
         let notebooksToDisplay: Array<string> = processNotebooks();
+        //vscode.commands.executeCommand('bookTreeView.openBook',notebooksToDisplay[0], true, notebooksToDisplay[1]); // open in side viewlet
         notebooksToDisplay.forEach(name => {
             azdata.nb.showNotebookDocument(vscode.Uri.file(name));
         });

@@ -749,7 +749,7 @@ describe('test code generator', function () {
                             "command": "testCom.showCurrentConnection",
                             "title": "Show Current Connection"
                         }
-                    ]
+                        ]
                     }
                 };
                 try {
@@ -831,7 +831,7 @@ describe('test code generator', function () {
                             "command": "testCom.showCurrentConnection",
                             "title": "Show Current Connection"
                         }
-                    ]
+                        ]
                     }
                 };
                 var expectedTsConfig = {
@@ -1131,238 +1131,448 @@ describe('test code generator', function () {
             }, done);
     });
 
-
-    it('notebook with python sample', function (done){
+    it('notebook with existing notebook', function (done) {
         helpers.run(path.join(__dirname, '../generators/app'))
-        .withPrompts({
-            addExtensions: false,
-            type: 'ext-notebook',
-            name: 'testNotebook',
-            displayName: 'Test Notebook',
-            description: 'My Test Notebook',
-            publisherName: 'test',
-            addNotebooks: false,
-            selectType: 'notebook-python',
-            pkgManager: 'npm'
-        }) // Mock the prompt answers
-        .toPromise().then(function () {
-            var expected = {
-                "name": "testNotebook",
-                "displayName": 'Test Notebook',
-                "description": "My Test Notebook",
-                "publisher": "test",
-                "version": "0.0.1",
-                "engines": {
-                    "vscode": engineVersion,
-                    "azdata": "*"
-                },
-                "activationEvents": [
-                    "onCommand:launchNotebooks.testNotebook"
-                ],
-                "devDependencies": {
-                    "@types/vscode": engineVersion,
-                    "@types/azdata": "*",
-                    "@types/glob": "^7.1.1",
-                    "@types/mocha": "^7.0.2",
-                    "@types/node": "^13.11.0",
-                    "eslint": "^6.8.0",
-                    "@typescript-eslint/parser": "^2.30.0",
-		            "@typescript-eslint/eslint-plugin": "^2.30.0",
-                    "glob": "^7.1.6",
-                    "mocha": "^7.1.2",
-                    "typescript": "^3.8.3",
-                    "vscode-test": "^1.3.0"
-                },
-                "main": "./out/notebook.js",
-                "scripts": {
-                    "vscode:prepublish": "npm run compile",
-		            "compile": "tsc -p ./",
-		            "lint": "eslint src --ext ts",
-		            "watch": "tsc -watch -p ./",
-		            "pretest": "npm run compile && npm run lint",
-		            "test": "node ./out/test/runTest.js"
-                },
-                "categories": [
-                    "Other"
-                ],
-                "contributes": {
-                    "commands": [{
-                        "command": "launchNotebooks.testNotebook",
-                        "title": "Launch Notebooks: testNotebook"
-                    }]
+            .withPrompts({
+                addExtensions: false,
+                type: 'ext-notebook',
+                name: 'testNotebook',
+                displayName: 'Test Notebook',
+                description: 'My Test Notebook',
+                publisherName: 'test',
+                addNotebooks: true,
+                notebookPath: path.join(__dirname, '/fixtures/jupyterbook'),
+                pkgManager: 'npm'
+            }) // Mock the prompt answers
+            .toPromise().then(function () {
+                var expected = {
+                    "name": "testNotebook",
+                    "displayName": 'Test Notebook',
+                    "description": "My Test Notebook",
+                    "publisher": "test",
+                    "version": "0.0.1",
+                    "engines": {
+                        "vscode": engineVersion,
+                        "azdata": "*"
+                    },
+                    "activationEvents": [
+                        "onCommand:launchNotebooks.testNotebook"
+                    ],
+                    "devDependencies": {
+                        "@types/vscode": engineVersion,
+                        "@types/azdata": "*",
+                        "@types/glob": "^7.1.1",
+                        "@types/mocha": "^7.0.2",
+                        "@types/node": "^13.11.0",
+                        "eslint": "^6.8.0",
+                        "@typescript-eslint/parser": "^2.30.0",
+                        "@typescript-eslint/eslint-plugin": "^2.30.0",
+                        "glob": "^7.1.6",
+                        "mocha": "^7.1.2",
+                        "typescript": "^3.8.3",
+                        "vscode-test": "^1.3.0"
+                    },
+                    "main": "./out/notebook.js",
+                    "scripts": {
+                        "vscode:prepublish": "npm run compile",
+                        "compile": "tsc -p ./",
+                        "lint": "eslint src --ext ts",
+                        "watch": "tsc -watch -p ./",
+                        "pretest": "npm run compile && npm run lint",
+                        "test": "node ./out/test/runTest.js"
+                    },
+                    "categories": [
+                        "Other"
+                    ],
+                    "contributes": {
+                        "commands": [{
+                            "command": "launchNotebooks.testNotebook",
+                            "title": "Launch Notebooks: Test Notebook"
+                        }]
+                    }
+                };
+                try {
+                    assert.file(['package.json', 'README.md', 'CHANGELOG.md', 'vsc-extension-quickstart.md', '.vscodeignore', 'src/notebook.ts', 'pySample.ipynb', 'tsconfig.json']);
+
+                    var body = fs.readFileSync('package.json', 'utf8');
+                    var actual = JSON.parse(body);
+
+                    assert.deepEqual(expected, actual);
+                    done();
+                } catch (e) {
+                    done(e);
                 }
-            };
-            try {
-                assert.file(['package.json', 'README.md', 'CHANGELOG.md', 'vsc-extension-quickstart.md', '.vscodeignore', 'src/notebook.ts', 'pySample.ipynb', 'tsconfig.json']);
-
-                var body = fs.readFileSync('package.json', 'utf8');
-                var actual = JSON.parse(body);
-
-                assert.deepEqual(expected, actual);
-                done();
-            } catch (e) {
-                done(e);
-            }
-        }, done);
+            }, done);
     });
 
-    it('notebook with sql sample', function (done){
+
+    it('notebook with python sample', function (done) {
         helpers.run(path.join(__dirname, '../generators/app'))
-        .withPrompts({
-            addExtensions: false,
-            type: 'ext-notebook',
-            name: 'testNotebook',
-            displayName: 'Test Notebook',
-            description: 'My Test Notebook',
-            publisherName: 'test',
-            addNotebooks: false,
-            selectType: 'notebook-sql',
-            pkgManager: 'npm'
-        }) // Mock the prompt answers
-        .toPromise().then(function () {
-            var expected = {
-                "name": "testNotebook",
-                "displayName": 'Test Notebook',
-                "description": "My Test Notebook",
-                "publisher": "test",
-                "version": "0.0.1",
-                "engines": {
-                    "vscode": engineVersion,
-                    "azdata": "*"
-                },
-                "activationEvents": [
-                    "onCommand:launchNotebooks.testNotebook"
-                ],
-                "devDependencies": {
-                    "@types/vscode": engineVersion,
-                    "@types/azdata": "*",
-                    "@types/glob": "^7.1.1",
-                    "@types/mocha": "^7.0.2",
-                    "@types/node": "^13.11.0",
-                    "eslint": "^6.8.0",
-                    "@typescript-eslint/parser": "^2.30.0",
-		            "@typescript-eslint/eslint-plugin": "^2.30.0",
-                    "glob": "^7.1.6",
-                    "mocha": "^7.1.2",
-                    "typescript": "^3.8.3",
-                    "vscode-test": "^1.3.0"
-                },
-                "main": "./out/notebook.js",
-                "scripts": {
-                    "vscode:prepublish": "npm run compile",
-		            "compile": "tsc -p ./",
-		            "lint": "eslint src --ext ts",
-		            "watch": "tsc -watch -p ./",
-		            "pretest": "npm run compile && npm run lint",
-		            "test": "node ./out/test/runTest.js"
-                },
-                "categories": [
-                    "Other"
-                ],
-                "contributes": {
-                    "commands": [{
-                        "command": "launchNotebooks.testNotebook",
-                        "title": "Launch Notebooks: testNotebook"
-                    }]
+            .withPrompts({
+                addExtensions: false,
+                type: 'ext-notebook',
+                name: 'testNotebook',
+                displayName: 'Test Notebook',
+                description: 'My Test Notebook',
+                publisherName: 'test',
+                addNotebooks: false,
+                selectType: 'notebook-python',
+                pkgManager: 'npm'
+            }) // Mock the prompt answers
+            .toPromise().then(function () {
+                var expected = {
+                    "name": "testNotebook",
+                    "displayName": 'Test Notebook',
+                    "description": "My Test Notebook",
+                    "publisher": "test",
+                    "version": "0.0.1",
+                    "engines": {
+                        "vscode": engineVersion,
+                        "azdata": "*"
+                    },
+                    "activationEvents": [
+                        "onCommand:launchNotebooks.testNotebook"
+                    ],
+                    "devDependencies": {
+                        "@types/vscode": engineVersion,
+                        "@types/azdata": "*",
+                        "@types/glob": "^7.1.1",
+                        "@types/mocha": "^7.0.2",
+                        "@types/node": "^13.11.0",
+                        "eslint": "^6.8.0",
+                        "@typescript-eslint/parser": "^2.30.0",
+                        "@typescript-eslint/eslint-plugin": "^2.30.0",
+                        "glob": "^7.1.6",
+                        "mocha": "^7.1.2",
+                        "typescript": "^3.8.3",
+                        "vscode-test": "^1.3.0"
+                    },
+                    "main": "./out/notebook.js",
+                    "scripts": {
+                        "vscode:prepublish": "npm run compile",
+                        "compile": "tsc -p ./",
+                        "lint": "eslint src --ext ts",
+                        "watch": "tsc -watch -p ./",
+                        "pretest": "npm run compile && npm run lint",
+                        "test": "node ./out/test/runTest.js"
+                    },
+                    "categories": [
+                        "Other"
+                    ],
+                    "contributes": {
+                        "commands": [{
+                            "command": "launchNotebooks.testNotebook",
+                            "title": "Launch Notebooks: Test Notebook"
+                        }]
+                    }
+                };
+                try {
+                    assert.file(['package.json', 'README.md', 'CHANGELOG.md', 'vsc-extension-quickstart.md', '.vscodeignore', 'src/notebook.ts', 'pySample.ipynb', 'tsconfig.json']);
+
+                    var body = fs.readFileSync('package.json', 'utf8');
+                    var actual = JSON.parse(body);
+
+                    assert.deepEqual(expected, actual);
+                    done();
+                } catch (e) {
+                    done(e);
                 }
-            };
-            try {
-                assert.file(['package.json', 'README.md', 'CHANGELOG.md', 'vsc-extension-quickstart.md', '.vscodeignore', 'sqlSample.ipynb', 'tsconfig.json']);
-
-                var body = fs.readFileSync('package.json', 'utf8');
-                var actual = JSON.parse(body);
-                assert.deepEqual(expected, actual);
-
-                done();
-            } catch (e) {
-                done(e);
-            }
-        }, done);
+            }, done);
     });
 
-    it('notebook with yarn', function (done){
+    it('notebook with sql sample', function (done) {
         helpers.run(path.join(__dirname, '../generators/app'))
-        .withPrompts({
-            addExtensions: false,
-            type: 'ext-notebook',
-            name: 'testNotebook',
-            displayName: 'Test Notebook',
-            description: 'My Test Notebook',
-            publisherName: 'test',
-            addNotebooks: false,
-            selectType: 'notebook-python',
-            pkgManager: 'yarn'
-        }) // Mock the prompt answers
-        .toPromise().then(function () {
-            var expected = {
-                "name": "testNotebook",
-                "displayName": 'Test Notebook',
-                "description": "My Test Notebook",
-                "publisher": "test",
-                "version": "0.0.1",
-                "engines": {
-                    "vscode": engineVersion,
-                    "azdata": "*"
-                },
-                "activationEvents": [
-                    "onCommand:launchNotebooks.testNotebook"
-                ],
-                "devDependencies": {
-                    "@types/vscode": engineVersion,
-                    "@types/azdata": "*",
-                    "@types/glob": "^7.1.1",
-                    "@types/mocha": "^7.0.2",
-                    "@types/node": "^13.11.0",
-                    "eslint": "^6.8.0",
-                    "@typescript-eslint/parser": "^2.30.0",
-		            "@typescript-eslint/eslint-plugin": "^2.30.0",
-                    "glob": "^7.1.6",
-                    "mocha": "^7.1.2",
-                    "typescript": "^3.8.3",
-                    "vscode-test": "^1.3.0"
-                },
-                "main": "./out/notebook.js",
-                "scripts": {
-                    "vscode:prepublish": "yarn run compile",
-                    "compile": "tsc -p ./",
-                    "lint": "eslint src --ext ts",
-                    "watch": "tsc -watch -p ./",
-                    "pretest": "yarn run compile && yarn run lint",
-                    "test": "node ./out/test/runTest.js"
-                },
-                "categories": [
-                    "Other"
-                ],
-                "contributes": {
-                    "commands": [{
-                        "command": "launchNotebooks.testNotebook",
-                        "title": "Launch Notebooks: testNotebook"
-                    }]
+            .withPrompts({
+                addExtensions: false,
+                type: 'ext-notebook',
+                name: 'testNotebook',
+                displayName: 'Test Notebook',
+                description: 'My Test Notebook',
+                publisherName: 'test',
+                addNotebooks: false,
+                selectType: 'notebook-sql',
+                pkgManager: 'npm'
+            }) // Mock the prompt answers
+            .toPromise().then(function () {
+                var expected = {
+                    "name": "testNotebook",
+                    "displayName": 'Test Notebook',
+                    "description": "My Test Notebook",
+                    "publisher": "test",
+                    "version": "0.0.1",
+                    "engines": {
+                        "vscode": engineVersion,
+                        "azdata": "*"
+                    },
+                    "activationEvents": [
+                        "onCommand:launchNotebooks.testNotebook"
+                    ],
+                    "devDependencies": {
+                        "@types/vscode": engineVersion,
+                        "@types/azdata": "*",
+                        "@types/glob": "^7.1.1",
+                        "@types/mocha": "^7.0.2",
+                        "@types/node": "^13.11.0",
+                        "eslint": "^6.8.0",
+                        "@typescript-eslint/parser": "^2.30.0",
+                        "@typescript-eslint/eslint-plugin": "^2.30.0",
+                        "glob": "^7.1.6",
+                        "mocha": "^7.1.2",
+                        "typescript": "^3.8.3",
+                        "vscode-test": "^1.3.0"
+                    },
+                    "main": "./out/notebook.js",
+                    "scripts": {
+                        "vscode:prepublish": "npm run compile",
+                        "compile": "tsc -p ./",
+                        "lint": "eslint src --ext ts",
+                        "watch": "tsc -watch -p ./",
+                        "pretest": "npm run compile && npm run lint",
+                        "test": "node ./out/test/runTest.js"
+                    },
+                    "categories": [
+                        "Other"
+                    ],
+                    "contributes": {
+                        "commands": [{
+                            "command": "launchNotebooks.testNotebook",
+                            "title": "Launch Notebooks: Test Notebook"
+                        }]
+                    }
+                };
+                try {
+                    assert.file(['package.json', 'README.md', 'CHANGELOG.md', 'vsc-extension-quickstart.md', '.vscodeignore', 'sqlSample.ipynb', 'tsconfig.json']);
+
+                    var body = fs.readFileSync('package.json', 'utf8');
+                    var actual = JSON.parse(body);
+                    assert.deepEqual(expected, actual);
+
+                    done();
+                } catch (e) {
+                    done(e);
                 }
-            };
-            try {
-                assert.file(['package.json', 'README.md', 'CHANGELOG.md', 'vsc-extension-quickstart.md', '.vscodeignore', 'src/notebook.ts', 'pySample.ipynb', 'tsconfig.json']);
-
-                var body = fs.readFileSync('package.json', 'utf8');
-                var actual = JSON.parse(body);
-                assert.deepEqual(expected, actual);
-
-                done();
-            } catch (e) {
-                done(e);
-            }
-        }, done);
+            }, done);
     });
 
-    it('jupyter book with existing book', function (done){
+    it('jupyter book with existing book', function (done) {
+        helpers.run(path.join(__dirname, '../generators/app'))
+            .withPrompts({
+                addExtensions: false,
+                type: 'ext-jupyterbook',
+                name: 'testBook',
+                displayName: 'Test Book',
+                description: 'My Test Book',
+                publisherName: 'test',
+                bookLocation: path.join(__dirname, '/fixtures/jupyterbook'),
+                addBooks: true,
+                pkgManager: 'npm'
+            }) // Mock the prompt answers
+            .toPromise().then(function () {
+                var expected = {
+                    "name": "testBook",
+                    "displayName": 'Test Book',
+                    "description": "My Test Book",
+                    "publisher": "test",
+                    "version": "0.0.1",
+                    "engines": {
+                        "vscode": engineVersion,
+                        "azdata": "*"
+                    },
+                    "activationEvents": [
+                        "onCommand:launchBook.testBook"
+                    ],
+                    "devDependencies": {
+                        "@types/vscode": engineVersion,
+                        "@types/azdata": "*",
+                        "@types/glob": "^7.1.1",
+                        "@types/mocha": "^7.0.2",
+                        "@types/node": "^13.11.0",
+                        "eslint": "^6.8.0",
+                        "@typescript-eslint/parser": "^2.30.0",
+                        "@typescript-eslint/eslint-plugin": "^2.30.0",
+                        "glob": "^7.1.6",
+                        "mocha": "^7.1.2",
+                        "typescript": "^3.8.3",
+                        "vscode-test": "^1.3.0"
+                    },
+                    "main": "./out/jupyter-book.js",
+                    "scripts": {
+                        "vscode:prepublish": "npm run compile",
+                        "compile": "tsc -p ./",
+                        "lint": "eslint src --ext ts",
+                        "watch": "tsc -watch -p ./",
+                        "pretest": "npm run compile && npm run lint",
+                        "test": "node ./out/test/runTest.js"
+                    },
+                    "categories": [
+                        "Other"
+                    ],
+                    "contributes": {
+                        "commands": [{
+                            "command": "launchBook.testBook",
+                            "title": "Launch Book: Test Book"
+                        }]
+                    }
+                };
+                try {
+                    assert.file(['package.json', 'README.md', 'CHANGELOG.md', 'vsc-extension-quickstart.md', '.vscodeignore', 'src/jupyter-book.ts', 'tsconfig.json', '_data/toc.yml', '_config.yml']);
 
+                    var body = fs.readFileSync('package.json', 'utf8');
+                    var actual = JSON.parse(body);
+                    assert.deepEqual(expected, actual);
+
+                    done();
+                } catch (e) {
+                    done(e);
+                }
+            }, done);
     });
 
-    it('jupyter book with notebook converted to book', function (done){
+    it('jupyter book with notebook converted to book', function (done) {
+        helpers.run(path.join(__dirname, '../generators/app'))
+            .withPrompts({
+                addExtensions: false,
+                type: 'ext-jupyterbook',
+                name: 'testBook',
+                displayName: 'Test Book',
+                description: 'My Test Book',
+                publisherName: 'test',
+                notebookPath: path.join(__dirname, '/fixtures/jupyterbook'),
+                addBooks: false,
+                pkgManager: 'npm'
+            }) // Mock the prompt answers
+            .toPromise().then(function () {
+                var expected = {
+                    "name": "testBook",
+                    "displayName": 'Test Book',
+                    "description": "My Test Book",
+                    "publisher": "test",
+                    "version": "0.0.1",
+                    "engines": {
+                        "vscode": engineVersion,
+                        "azdata": "*"
+                    },
+                    "activationEvents": [
+                        "onCommand:launchBook.testBook"
+                    ],
+                    "devDependencies": {
+                        "@types/vscode": engineVersion,
+                        "@types/azdata": "*",
+                        "@types/glob": "^7.1.1",
+                        "@types/mocha": "^7.0.2",
+                        "@types/node": "^13.11.0",
+                        "eslint": "^6.8.0",
+                        "@typescript-eslint/parser": "^2.30.0",
+                        "@typescript-eslint/eslint-plugin": "^2.30.0",
+                        "glob": "^7.1.6",
+                        "mocha": "^7.1.2",
+                        "typescript": "^3.8.3",
+                        "vscode-test": "^1.3.0"
+                    },
+                    "main": "./out/jupyter-book.js",
+                    "scripts": {
+                        "vscode:prepublish": "npm run compile",
+                        "compile": "tsc -p ./",
+                        "lint": "eslint src --ext ts",
+                        "watch": "tsc -watch -p ./",
+                        "pretest": "npm run compile && npm run lint",
+                        "test": "node ./out/test/runTest.js"
+                    },
+                    "categories": [
+                        "Other"
+                    ],
+                    "contributes": {
+                        "commands": [{
+                            "command": "launchBook.testBook",
+                            "title": "Launch Book: Test Book"
+                        }]
+                    }
+                };
+                try {
+                    assert.file(['package.json', 'README.md', 'CHANGELOG.md', 'vsc-extension-quickstart.md', '.vscodeignore', 'src/jupyter-book.ts', 'tsconfig.json', '_data/toc.yml', '_config.yml']);
 
+                    var body = fs.readFileSync('package.json', 'utf8');
+                    var actual = JSON.parse(body);
+                    assert.deepEqual(expected, actual);
+
+                    done();
+                } catch (e) {
+                    done(e);
+                }
+            }, done);
     });
 
-    it('jupyter book with sample book', function (done){
+    it('jupyter book with sample book', function (done) {
+        helpers.run(path.join(__dirname, '../generators/app'))
+            .withPrompts({
+                addExtensions: false,
+                type: 'ext-jupyterbook',
+                name: 'testBook',
+                displayName: 'Test Book',
+                description: 'My Test Book',
+                publisherName: 'test',
+                addBooks: false,
+                createBook: false,
+                pkgManager: 'npm'
+            }) // Mock the prompt answers
+            .toPromise().then(function () {
+                var expected = {
+                    "name": "testBook",
+                    "displayName": 'Test Book',
+                    "description": "My Test Book",
+                    "publisher": "test",
+                    "version": "0.0.1",
+                    "engines": {
+                        "vscode": engineVersion,
+                        "azdata": "*"
+                    },
+                    "activationEvents": [
+                        "onCommand:launchBook.testBook"
+                    ],
+                    "devDependencies": {
+                        "@types/vscode": engineVersion,
+                        "@types/azdata": "*",
+                        "@types/glob": "^7.1.1",
+                        "@types/mocha": "^7.0.2",
+                        "@types/node": "^13.11.0",
+                        "eslint": "^6.8.0",
+                        "@typescript-eslint/parser": "^2.30.0",
+                        "@typescript-eslint/eslint-plugin": "^2.30.0",
+                        "glob": "^7.1.6",
+                        "mocha": "^7.1.2",
+                        "typescript": "^3.8.3",
+                        "vscode-test": "^1.3.0"
+                    },
+                    "main": "./out/jupyter-book.js",
+                    "scripts": {
+                        "vscode:prepublish": "npm run compile",
+                        "compile": "tsc -p ./",
+                        "lint": "eslint src --ext ts",
+                        "watch": "tsc -watch -p ./",
+                        "pretest": "npm run compile && npm run lint",
+                        "test": "node ./out/test/runTest.js"
+                    },
+                    "categories": [
+                        "Other"
+                    ],
+                    "contributes": {
+                        "commands": [{
+                            "command": "launchBook.testBook",
+                            "title": "Launch Book: Test Book"
+                        }]
+                    }
+                };
+                try {
+                    assert.file(['package.json', 'README.md', 'CHANGELOG.md', 'vsc-extension-quickstart.md', '.vscodeignore', 'src/jupyter-book.ts', 'tsconfig.json', '_data/toc.yml', '_config.yml']);
 
+                    var body = fs.readFileSync('package.json', 'utf8');
+                    var actual = JSON.parse(body);
+                    assert.deepEqual(expected, actual);
+
+                    done();
+                } catch (e) {
+                    done(e);
+                }
+            }, done);
     });
 });

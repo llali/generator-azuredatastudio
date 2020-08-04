@@ -1,6 +1,0 @@
-- file: features/intro
-- file: features/content
-  sections:
-    - file: features/markdown
-    - file: features/notebooks
-    - file: features/sql-notebook

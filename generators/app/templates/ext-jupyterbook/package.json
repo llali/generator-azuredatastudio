@@ -12,14 +12,14 @@
 		"Other"
 	],
 	"activationEvents": [
-		<%- JSON.stringify(`onCommand:launchNotebooks.${name}`) %>
+		<%- JSON.stringify(`onCommand:launchBook.${name}`) %>
 	],
-	"main": "./out/notebook.js",
+	"main": "./out/jupyter-book.js",
 	"contributes": {
 		"commands": [
 			{
-				"command":  <%- JSON.stringify(`launchNotebooks.${name}`) %>,
-                "title": <%- JSON.stringify(`Launch Notebooks: ${displayName}`) %>
+				"command":  <%- JSON.stringify(`launchBook.${name}`) %>,
+                "title": <%- JSON.stringify(`Launch Book: ${displayName}`) %>
 			}
 		]
 	},
