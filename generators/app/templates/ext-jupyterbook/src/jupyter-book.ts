@@ -22,7 +22,7 @@ const processNotebooks = () => {
 const findCorrectFolder = (folderName: string, rootExtensionsFolder: string) => {
     let folderExt = path.basename(folderName).toLowerCase();
 
-    if (folderExt.indexOf('<%= publisherName%>.<%= name%>') > -1) {
+    if (folderExt.indexOf(('<%= publisherName%>.<%= name%>').toLowerCase()) > -1) {
         let fullFolderPath = path.join(rootExtensionsFolder, folderName);
         vscode.commands.executeCommand('bookTreeView.openBook', fullFolderPath, false);
     }

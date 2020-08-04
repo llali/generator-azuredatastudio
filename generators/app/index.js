@@ -563,9 +563,6 @@ module.exports = class extends Generator {
                     ]);
 
                     bookSections.sectionNames = bookSections.sectionNames.split(',');
-                    bookSections.sectionNames.forEach(name => {
-                        console.log("SECTION NAMES:" + name);
-                    });
 
                     Object.assign(generator.extensionConfig, bookSections);
                 }
@@ -879,9 +876,12 @@ module.exports = class extends Generator {
                     console.log("Cannot copy: " + e.message);
                 }
             } else if (context.createBook) {
+                console.log(context.notebookPath)
                 const files = fileSys.readdirSync(context.notebookPath);
                 files.forEach(file => {
-                    this.fs.copy(context.notebookLocation + '/' + file, context.name + '/content' + file);
+                    let srcPath = path.join(context.notebookPath, file);
+                    let dstPath = path.join(context.name, 'content', file);
+                    this.fs.copy(srcPath, dstPath);
                 });
             }
             else {
