@@ -152,8 +152,8 @@ module.exports = class extends Generator {
                                     value: 'file-saving'
                                 },
                                 {
-                                    name: 'Sample Wizard: Database Querying',
-                                    value: 'db-query'
+                                    name: 'Sample Wizard: Database Operations',
+                                    value: 'db-ops'
                                 }
                             ]
                         }).then(typeAnswer => {

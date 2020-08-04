@@ -19,10 +19,10 @@ export class Page2 extends BasePage {
         this.wizard = wizard;
 	}
 
-	async start(): Promise<boolean> {        
+	async start(): Promise<boolean> {
         this.tasks.set('New Query', () => this.newQuery());
-        this.tasks.set('View Dashboard', () => this.showDashboard());
-        this.tasks.set('Refresh Connection', () => this.refreshConnection());
+        this.tasks.set('Expand and Refresh Connection', () => this.refreshConnection());
+        this.tasks.set('View Connection String', () => this.viewConnectionString());
 
         let optionsComponent = await this.createOptionsDropdown();
 
@@ -55,6 +55,7 @@ export class Page2 extends BasePage {
 		};
     }
 
+    // working with VS Code file APIs
     private newQuery(){
         let sqlContent = 'SELECT * FROM ' + this.model.database + '.INFORMATION_SCHEMA.TABLES';
         vscode.workspace.openTextDocument({ language: 'sql', content: sqlContent }).then(async doc => {
@@ -62,29 +63,26 @@ export class Page2 extends BasePage {
         });
     }
 
-    private showDashboard() {
-        const connectionProfile: azdata.IConnectionProfile = {
-            serverName: this.model.server.serverName,
-            databaseName: this.model.server.databaseName,
-            authenticationType: this.model.server.authenticationType,
-            providerName: 'MSSQL',
-            connectionName: this.model.server.connectionName,
-            userName: this.model.server.userName,
-            password: this.model.server.password,
-            savePassword: this.model.server.savePassword,
-            groupFullName: this.model.server.groupFullName,
-            saveProfile: this.model.server.saveProfile,
-            id: '',
-            groupId: this.model.server.groupId,
-            options: this.model.server.options
-        };
-
-        azdata.connection.connect(connectionProfile, true, true);
+    // working with azdata object explorer API
+    private refreshConnection() {
+        azdata.objectexplorer.getNode(this.model.server.connectionId).then(node => {
+            if (node) {
+                node.refresh();
+                vscode.window.showInformationMessage('Connection refreshed!');
+            }
+        });
     }
 
-    private async refreshConnection() {
-        let node : azdata.objectexplorer.ObjectExplorerNode 
-            = await azdata.objectexplorer.getNode(this.model.server.connectionId);
-        node.refresh();
+    // working with azdata connection API
+    private viewConnectionString() {
+        azdata.connection.getConnectionString(this.model.server.connectionId, true).then(connection => {
+            if (connection) {
+                vscode.window.showInformationMessage(connection);
+            } else {
+                vscode.window.showErrorMessage('Could not retrieve connection string');
+            }
+        }, error => {
+            vscode.window.showErrorMessage(error);
+        });
     }
 }

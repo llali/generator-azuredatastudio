@@ -9,16 +9,16 @@ import { BasePage } from './api/basePage';
  * Represents a Wizard that guides user through selecting a connection, and then
  * performing a database-specific operation on that connection.
 */
-export class DbQueryingWizard {
+export class DbOpsWizard {
     public wizard: azdata.window.Wizard; // The Azure Data Wizard to be displayed
 	public model: ConnectionModel; // Model to communicate between Wizard Pages
 
 	constructor() {
-        this.wizard = azdata.window.createWizard('Sample Wizard: Database Querying');
+        this.wizard = azdata.window.createWizard('Sample Wizard: Database Operations');
         this.model = <ConnectionModel>{};
     }
 
-    // Creates, populates, and opens the database querying wizard
+    // Creates, populates, and opens the database operations wizard
     public async start() {
         // Note that below, there are two concepts of pages: 1) Azure Data wizard pages, and
         //  2) custom Page objects, which extend the BasePage. Each custom Page stores the

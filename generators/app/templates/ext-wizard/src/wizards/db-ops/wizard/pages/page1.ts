@@ -17,10 +17,10 @@ export class Page1 extends BasePage {
         super(wizardPage, model, view, width);
         this.serverOptions = new Map();
     }
-    
+
     async start() : Promise<boolean> {
-        let descriptionComponent = 
-                {component: this.view.modelBuilder.text().component(), 
+        let descriptionComponent =
+                {component: this.view.modelBuilder.text().component(),
                 title: 'This Wizard will demo commonly-used connection operations '
                 + 'and UI elements. You will select one of your existing connections, and '
                 + 'then choose an operation to perform on that connection.'};
@@ -81,7 +81,7 @@ export class Page1 extends BasePage {
 			title: 'Select a Database:'
 		};
     }
-    
+
     private async populateServerDropdown(): Promise<boolean> {
         if (!this.serverDropdown) {
             return false;
@@ -102,7 +102,7 @@ export class Page1 extends BasePage {
         }
 		return firstConnection !== undefined;
     }
-    
+
     private async populateDatabaseDropdown(): Promise<boolean> {
         if (!this.databaseDropdown) {
             return false;
@@ -120,7 +120,7 @@ export class Page1 extends BasePage {
 			values = [this.model.server.databaseName];
 			console.warn(e);
         }
-        
+
         this.model.database = values[0];
 		this.databaseDropdown.updateProperties({
 			values: values
@@ -128,6 +128,7 @@ export class Page1 extends BasePage {
 		return true;
     }
 
+    // working with azdata connection API
     private async getServerValues(): Promise<boolean> {
         let connections = await azdata.connection.getConnections(true);
 
@@ -141,7 +142,8 @@ export class Page1 extends BasePage {
 
 		return true;
 	}
-    
+
+    // working with azdata connection API
     private async getDatabaseValues(): Promise<string[]> {
 		let databaseValues = await azdata.connection.listDatabases(this.model.server.connectionId);
 		return databaseValues;
