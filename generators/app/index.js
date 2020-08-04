@@ -115,7 +115,7 @@ module.exports = class extends Generator {
                 });
             },
 
-            askForWizardOrDialogType : () => {
+            askForWizardOrDialogType : () => { // {{ADS EDIT}}
                 if (generator.extensionConfig.type !== 'ext-wizard') {
                     return Promise.resolve();
                 }
@@ -152,16 +152,8 @@ module.exports = class extends Generator {
                                     value: 'file-saving'
                                 },
                                 {
-                                    name: 'Sample Wizard: Database Querying **Still In Development',
+                                    name: 'Sample Wizard: Database Querying',
                                     value: 'db-query'
-                                },
-                                {
-                                    name: 'Sample Wizard: Custom Styles **Still In Development',
-                                    value: 'custom-styles'
-                                },
-                                {
-                                    name: 'Sample Wizard: Web View **Still In Development',
-                                    value: 'web-view'
                                 }
                             ]
                         }).then(typeAnswer => {
@@ -834,8 +826,7 @@ module.exports = class extends Generator {
         this.extensionConfig.installDependencies = true;
     }
 
-    // TODO: Comment
-    _writingWizard() {
+    _writingWizard() { // {{ADS EDIT}}
         let context = this.extensionConfig;
 
         this.fs.copy(this.sourceRoot() + '/vscode', context.name + '/.vscode');
