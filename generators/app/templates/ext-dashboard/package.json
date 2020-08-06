@@ -116,7 +116,7 @@
                       },
                       {
                         "id": "webviewExample",
-                        "title": "Webivew",
+                        "title": "Webview",
                         "icon": {
                             "light": "./src/media/performance.svg",
                             "dark": "./src/media/performance_inverse.svg"
