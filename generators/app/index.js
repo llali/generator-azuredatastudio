@@ -521,7 +521,7 @@ module.exports = class extends Generator {
                             type: 'input',
                             name: 'notebookPath',
                             message: 'Provide the absolute path to the folders where your notebooks currently exist.',
-                            default: '/users/laurajiang/desktop/notebooks',
+                            default: path.join(os.homedir(), 'Desktop', 'notebooks'),
                             validate: validator.validateFilePath,
                         },
                         {
