@@ -58,7 +58,7 @@ module.exports = class extends Generator {
             askForType: () => {
                 let extensionType = generator.options['extensionType'];
                 if (extensionType) {
-                    let extensionTypes = ['insight', 'colortheme', 'language', 'snippets', 'command-ts', 'command-js', 'extensionpack', 'notebook', 'jupyterbook'];// {{ADS EDIT}}
+                    let extensionTypes = ['insight', 'colortheme', 'language', 'snippets', 'command-ts', 'command-js', 'extensionpack', 'notebook', 'jupyterbook']; // {{ADS EDIT}}
                     if (extensionTypes.indexOf(extensionType) !== -1) {
                         generator.extensionConfig.type = 'ext-' + extensionType;
                     } else {
@@ -80,7 +80,7 @@ module.exports = class extends Generator {
                         value: 'ext-command-js'
                     },
                     {
-                        name: 'New Dashboard Insight',// {{ADS EDIT}}
+                        name: 'New Dashboard Insight', // {{ADS EDIT}}
                         value: 'ext-insight'// {{ADS EDIT}}
                     },
                     {
@@ -111,6 +111,10 @@ module.exports = class extends Generator {
                     {
                         name: 'New Notebooks (Individual)', // {{ADS EDIT}}
                         value: 'ext-notebook'
+                    },
+                    {
+                        name: 'New Jupyter Book', // {{ADS EDIT}}
+                        value: 'ext-jupyterbook'
                     }
                     ]
                 }).then(typeAnswer => {
@@ -403,6 +407,7 @@ module.exports = class extends Generator {
                 });
             },
 
+            // {{ADS EDIT}}
             askForExistingNotebooks: () => {
                 if (generator.extensionConfig.type !== 'ext-notebook') {
                     return Promise.resolve();
@@ -471,6 +476,7 @@ module.exports = class extends Generator {
                 });
             },
 
+            // {{ADS EDIT}}
             askForBookCreation: () => {
                 if (generator.extensionConfig.type !== 'ext-jupyterbook') {
                     return Promise.resolve();
@@ -503,6 +509,7 @@ module.exports = class extends Generator {
                 }
             },
 
+            // {{ADS EDIT}}
             askForBookConversion: async () => {
                 if (generator.extensionConfig.type !== 'ext-jupyterbook') {
                     return;
@@ -536,6 +543,7 @@ module.exports = class extends Generator {
                 }
             },
 
+            // {{ADS EDIT}}
             askForComplexBook: async () => {
                 if (generator.extensionConfig.complexBook) {
                     const bookSections = await generator.prompt([
@@ -586,7 +594,6 @@ module.exports = class extends Generator {
                         });
 
                     }
-                    console.log(organizedNotebooks);
                     generator.extensionConfig.organizedNotebooks = organizedNotebooks;
                 }
             },
@@ -799,8 +806,11 @@ module.exports = class extends Generator {
             case 'ext-localization':
                 localization.writingLocalizationExtension(this);
                 break;
-            case 'ext-notebook':
+            case 'ext-notebook': // {{ADS EDIT}}
                 this._writingNotebook();
+                break;
+            case 'ext-jupyterbook': // {{ADS EDIT}}
+                this._writingJupyterBook();
                 break;
             default:
                 //unknown project type
@@ -808,6 +818,7 @@ module.exports = class extends Generator {
         }
     }
 
+    // {{ADS EDIT}}
     _writingNotebook() {
 
         let context = this.extensionConfig;
@@ -839,6 +850,7 @@ module.exports = class extends Generator {
         this.extensionConfig.installDependencies = true;
     }
 
+    // {{ADS EDIT}}
     _writingJupyterBook() {
         let context = this.extensionConfig;
 
@@ -865,7 +877,6 @@ module.exports = class extends Generator {
                     console.log("Cannot copy: " + e.message);
                 }
             } else if (context.createBook) {
-                console.log(context.notebookPath)
                 const files = fileSys.readdirSync(context.notebookPath);
                 files.forEach(file => {
                     let srcPath = path.join(context.notebookPath, file);
@@ -1096,6 +1107,7 @@ module.exports = class extends Generator {
             return;
         }
 
+        // {{ADS EDIT}}
         if (this.extensionConfig.type === 'ext-jupyterbook' && (this.extensionConfig.addBooks === false)) {
             notebookConverter.buildCustomBook(this.extensionConfig);
         }
@@ -1117,6 +1129,7 @@ module.exports = class extends Generator {
         this.log(chalk.cyanBright('on how to modify, test and publish your extension.'));
         this.log('');
 
+        // {{ADS EDIT}}
         if (this.extensionConfig.type === 'ext-jupyterbook') {
             this.log(chalk.yellow('Please review the "toc.yml" in the "_data" folder and edit as appropriate before publishing the Jupyter Book.'));
             this.log('');
