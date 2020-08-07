@@ -556,14 +556,14 @@ module.exports = class extends Generator {
                         },
                         {
                             type: 'input',
-                            name: 'sectionNames',
+                            name: 'chapterNames',
                             message: 'List the name(s) of your chapter(s), separated by a comma for each new chapter. (e.g.:\'Placeholder,Placeholder2\')',
                             validate: validator.validateNonEmpty,
                         },
                     ]);
                     let folderNames = []
-                    bookSections.sectionNames = bookSections.sectionNames.split(',');
-                    bookSections.sectionNames.forEach(name => {
+                    bookSections.chapterNames = bookSections.chapterNames.split(',');
+                    bookSections.chapterNames.forEach(name => {
                         let regexSection = name.trim().replace(/[^a-zA-Z0-9]/g, '-');
                         folderNames.push(regexSection);
                     })
@@ -575,18 +575,18 @@ module.exports = class extends Generator {
             askForNotebooksinSections: async () => {
                 if (generator.extensionConfig.complexBook) {
                     let availableSectionNames = generator.extensionConfig.notebookNames;
-                    let sectionNames = generator.extensionConfig.sectionNames;
+                    let chapterNames = generator.extensionConfig.chapterNames;
                     let folderNames = generator.extensionConfig.folderNames;
                     let availableChoices = [], organizedNotebooks = [];
                     availableSectionNames.forEach(name => {
                         availableChoices.push({ "name": name });
                     });
 
-                    for (let i = 0; i < sectionNames.length; i++) {
+                    for (let i = 0; i < chapterNames.length; i++) {
                         const response = await generator.prompt([{
                             type: 'checkbox',
                             name: folderNames[i],
-                            message: `Select notebooks for your chapter, ${sectionNames[i]}:`,
+                            message: `Select notebooks for your chapter, ${chapterNames[i]}:`,
                             choices: availableChoices
                         }]);
 
@@ -864,17 +864,17 @@ module.exports = class extends Generator {
                 this.fs.copy(context.bookLocation + '/' + file, context.name + '/' + file);
             });
         } else {
-            if (context.createBook && context.sectionNames) {
+            if (context.createBook && context.chapterNames) {
                 try {
                     let idx = 0;
-                    context.folderNames.forEach(section => {
-                        context.organizedNotebooks[idx][section].forEach(item => {
+                    context.folderNames.forEach(chapter => {
+                        context.organizedNotebooks[idx][chapter].forEach(item => {
                             let srcPath = path.join(context.notebookPath, item);
-                            let destPath = path.join(context.name, 'content', section, item);
+                            let destPath = path.join(context.name, 'content', chapter, item);
                             this.fs.copy(srcPath, destPath);
                         });
                         idx += 1;
-                        this.fs.copy(this.sourceRoot() + '/optional/readme.md', context.name + '/content/' + section + '/readme.md')
+                        this.fs.copy(this.sourceRoot() + '/optional/readme.md', context.name + '/content/' + chapter + '/readme.md')
                     });
 
                 } catch (e) {

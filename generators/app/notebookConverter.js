@@ -127,7 +127,6 @@ const customizeJupyterBook = (context) => {
             if (stats.isDirectory()) {
                 const chapterFilePath = path.join(presentDirectory[0], context.name, 'content', file);
                 const chapterTitle = context.sectionNames[idx];
-                //const chapterTitle = file[0].toUpperCase() + file.slice(1);
                 tocContent += `- title: ${chapterTitle}\n  url: ${file}/readme\n  not_numbered: true\n  expand_sections: true\n  sections: \n`;
                 tocContent += writeForEachNotebook(file, chapterFilePath);
                 writeToReadme(chapterFilePath, presentDirectory, context.name, file);
@@ -199,10 +198,10 @@ const findTitle = (file, filePath) => {
         return "Untitled";
     }
     if (path.extname(file) === '.ipynb') {
-        return lines[6].replace(/["#,\n]+/g, '').replace(/[:]+/g, ' -').trim();
+        return lines[6].replace(/[^a-zA-Z0-9-]/g, ' ').trim();
     } else {
         if (path.extname(file) === '.md') {
-            return lines[0].replace(/["#,\n]+/g, '').replace(/[:]+/g, ' -').trim();
+            return lines[0].replace(/[^a-zA-Z0-9-]/g, ' ').trim();
         }
     }
 }
