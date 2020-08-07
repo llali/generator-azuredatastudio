@@ -32,7 +32,7 @@ export function activate(context: vscode.ExtensionContext) {
 
         wizard.pages = [page1, page2, page3]; // set wizard's content field to the wizard pages
         wizard.generateScriptButton.hidden = true;
-		wizard.open(); // open wizard
+        wizard.open(); // open wizard
     }));
 
     //------------------------------- Populating Wizard Pages -------------------------------------//
@@ -44,14 +44,14 @@ export function activate(context: vscode.ExtensionContext) {
             //  This means the text component is not created until component()
             //  method is called.
             let textComponent : azdata.TextComponent = view.modelBuilder.text()
-                .withProperties({ // Use withProperties() method to customize components
-                    value: 'Use a text component to include text in your Wizard page.',
-                    width: 800
-                }).component();
+            .withProperties({ // Use withProperties() method to customize components
+                value: 'Use a text component to include text in your Wizard page.',
+                width: 800
+            }).component();
 
             // To display the components on the page, call view's initializeModel method
             await view.initializeModel(textComponent);
-		});
+        });
     }
 
     // This functions registers sample content for the second wizard page
@@ -59,17 +59,17 @@ export function activate(context: vscode.ExtensionContext) {
         page.registerContent(async (view : azdata.ModelView) => {
             // Create text, input box, and button components:
             let textComponent : azdata.TextComponent = view.modelBuilder.text()
-                .withProperties({
-                    value: 'Use input boxes and buttons to add interaction with users.'
-                }).component();
+            .withProperties({
+                value: 'Use input boxes and buttons to add interaction with users.'
+            }).component();
             let inputBoxComponent : azdata.InputBoxComponent = view.modelBuilder.inputBox()
-                .component();
+            .component();
             let buttonComponent : azdata.ButtonComponent = view.modelBuilder.button()
-                .withProperties({ // Use withProperties() method to customize components
-                    width: 120,
-                    height: 30,
-                    label: 'Register Input'
-                }).component();
+            .withProperties({ // Use withProperties() method to customize components
+                width: 120,
+                height: 30,
+                label: 'Register Input'
+            }).component();
 
             // To add actions to components, use "on" methods, such as "onDidClick"
             buttonComponent.onDidClick(params => {
@@ -82,11 +82,11 @@ export function activate(context: vscode.ExtensionContext) {
             //  component at the top, encompassing all others. For example, a group
             //  container:
             let groupContainer : azdata.GroupContainer = view.modelBuilder.groupContainer()
-                .withItems([textComponent, inputBoxComponent, buttonComponent]).component();
+            .withItems([textComponent, inputBoxComponent, buttonComponent]).component();
 
             // Creates the page by passing the root component to the initializeModel method
             await view.initializeModel(groupContainer);
-		});
+        });
     }
 
     // This functions registers sample content for the third wizard page
@@ -115,20 +115,22 @@ export function activate(context: vscode.ExtensionContext) {
 
             // Initialize a 'show connection' button component
             let connectionButton : azdata.ButtonComponent = view.modelBuilder.button()
-                .withProperties({
-                    width: 120,
-                    height: 30,
-                    label: 'Show Connection'
-                }).component();
+            .withProperties({
+                width: 120,
+                height: 30,
+                label: 'Show Connection'
+            }).component();
+
             connectionButton.onDidClick(() => onShowConnection());
 
             // Initialize a 'submit' button component
             let submitButton : azdata.ButtonComponent = view.modelBuilder.button()
-                .withProperties({
-                    width: 120,
-                    height: 30,
-                    label: 'Submit and Clear'
-                }).component();
+            .withProperties({
+                width: 120,
+                height: 30,
+                label: 'Submit and Clear'
+            }).component();
+
             submitButton.onDidClick(() => onSubmit(inputBoxComponent, dropdownComponent, button1, button2));
 
             // Create the form using the above components:
@@ -152,12 +154,12 @@ export function activate(context: vscode.ExtensionContext) {
 
             // Create the page
             await view.initializeModel(formContainer);
-		});
+        });
     }
 
     // function called when submit button on tab2 is clicked
     function onSubmit(inputBox : azdata.InputBoxComponent, dropdown : azdata.DropDownComponent,
-        button1 : azdata.RadioButtonComponent, button2 : azdata.RadioButtonComponent) {
+    button1 : azdata.RadioButtonComponent, button2 : azdata.RadioButtonComponent) {
         vscode.window.showInformationMessage('You entered: ' + inputBox.value + ' ' + dropdown.value);
         inputBox.value = undefined;
         dropdown.value = 'Option A';

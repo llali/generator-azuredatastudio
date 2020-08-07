@@ -6,14 +6,14 @@ import {Page2} from './pages/page2';
 import { BasePage } from './api/basePage';
 
 /**
- * Represents a Wizard that guides user through selecting a connection, and then
- * performing a database-specific operation on that connection.
+* Represents a Wizard that guides user through selecting a connection, and then
+* performing a database-specific operation on that connection.
 */
 export class DbOpsWizard {
     public wizard: azdata.window.Wizard; // The Azure Data Wizard to be displayed
-	public model: ConnectionModel; // Model to communicate between Wizard Pages
+    public model: ConnectionModel; // Model to communicate between Wizard Pages
 
-	constructor() {
+    constructor() {
         this.wizard = azdata.window.createWizard('Sample Wizard: Database Operations');
         this.model = <ConnectionModel>{};
     }
@@ -38,7 +38,7 @@ export class DbOpsWizard {
             let page = new Page1(page1, this.model, view, width);
             pagesMap.set(0, page);
             await page.start().then(() => {
-				page.onPageEnter();
+                page.onPageEnter();
             });
         });
         page2.registerContent(async (view) => {
@@ -50,22 +50,22 @@ export class DbOpsWizard {
         // Uses map of index to custom pages to call the custom pages' onPageLeave
         //  and onPageEnter methods when user changes Wizard pages
         this.wizard.onPageChanged(async (event) => {
-			let indexLast = event.lastPage;
-			let lastPage = pagesMap.get(indexLast);
-			if (lastPage) {
-				lastPage.onPageLeave();
-			}
+            let indexLast = event.lastPage;
+            let lastPage = pagesMap.get(indexLast);
+            if (lastPage) {
+                lastPage.onPageLeave();
+            }
 
-			let indexNew = event.newPage;
-			let newPage = pagesMap.get(indexNew);
-			if (newPage) {
-				newPage.onPageEnter();
-			}
-		});
+            let indexNew = event.newPage;
+            let newPage = pagesMap.get(indexNew);
+            if (newPage) {
+                newPage.onPageEnter();
+            }
+        });
 
         this.wizard.pages = [page1, page2];
 
         this.wizard.generateScriptButton.hidden = true;
-		this.wizard.open(); // open the wizard
+        this.wizard.open(); // open the wizard
     }
 }

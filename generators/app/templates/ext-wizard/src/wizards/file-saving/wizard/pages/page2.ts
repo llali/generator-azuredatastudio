@@ -3,10 +3,10 @@ import {ProfileModel} from '../api/models'
 import {BasePage} from '../api/basePage'
 
 /**
- * Represents the second page of the Profile Builder Wizard, that prompts user for
- * a fun fact about themselves from a selection of options. Lays out UI elements on page and
- * updates Profile Model according to user input.
- */
+* Represents the second page of the Profile Builder Wizard, that prompts user for
+* a fun fact about themselves from a selection of options. Lays out UI elements on page and
+* updates Profile Model according to user input.
+*/
 export class Page2 extends BasePage {
     private dropdownOptions : Map<string, azdata.FormComponent>;
     private currentOption : string;
@@ -16,15 +16,15 @@ export class Page2 extends BasePage {
         super(wizardPage, model, view, width);
         this.dropdownOptions =  this.populateDropdownOptionsMap();
         this.currentOption = '';
-	}
+    }
 
-	async start(): Promise<boolean> {
+    async start(): Promise<boolean> {
         let options : Array<string> = Array.from(this.dropdownOptions.keys());
         let funFactDropdown = this.view.modelBuilder.dropDown()
-            .withProperties({
-                values: options,
-                required: true
-            }).component();
+        .withProperties({
+            values: options,
+            required: true
+        }).component();
 
         let layout = {componentWidth: this.width};
         let formBuilder = this.view.modelBuilder.formContainer().withFormItems([{
@@ -49,21 +49,21 @@ export class Page2 extends BasePage {
 
         await this.view.initializeModel(formBuilder.component());
         return true;
-	}
+    }
 
     async onPageEnter(): Promise<boolean> {
-		return true;
+        return true;
     }
 
     private populateDropdownOptionsMap() : Map<string, azdata.FormComponent> {
         let mapNamesToComponents : Map<string, azdata.FormComponent> = new Map();
 
         this.addDropdownOption(mapNamesToComponents, 'Favorite Book', 'What is your favorite book?',
-            '\'s favorite book is');
+        '\'s favorite book is');
         this.addDropdownOption(mapNamesToComponents, 'Favorite Food', 'What is your favorite food?',
-            '\'s favorite food is');
+        '\'s favorite food is');
         this.addDropdownOption(mapNamesToComponents, 'Languages Spoken', 'What languages do you speak?' +
-            ' (enter as comma-separated list)', ' can speak');
+        ' (enter as comma-separated list)', ' can speak');
 
         return mapNamesToComponents;
     }

@@ -39,7 +39,7 @@ export function activate(context: vscode.ExtensionContext) {
         azdata.window.openDialog(dialog); // open dialog
     }));
 
-        //----------------------------- Populating Dialog Tabs ------------------------------//
+    //----------------------------- Populating Dialog Tabs ------------------------------//
 
     // This functions registers sample content for the first dialog tab
     function registerTab1Content(tab : azdata.window.DialogTab) {
@@ -48,20 +48,20 @@ export function activate(context: vscode.ExtensionContext) {
             //  This means the text component is not created until component()
             //  method is called.
             let textComponent : azdata.TextComponent = view.modelBuilder.text()
-                .withProperties({ // Use withProperties() method to customize components
-                    value: 'Type in the box and press \'Register Input\'!'
-                }).component();
+            .withProperties({ // Use withProperties() method to customize components
+                value: 'Type in the box and press \'Register Input\'!'
+            }).component();
 
             // Intialize an input box that the user can type in
             let inputBoxComponent : azdata.InputBoxComponent = view.modelBuilder.inputBox()
-                .component();
+            .component();
             // Initialize a button component
             let buttonComponent : azdata.ButtonComponent = view.modelBuilder.button()
-                .withProperties({
-                    width: 120,
-                    height: 30,
-                    label: 'Register Input'
-                }).component();
+            .withProperties({
+                width: 120,
+                height: 30,
+                label: 'Register Input'
+            }).component();
 
             // To add actions to components, use "on" methods, such as "onDidClick"
             buttonComponent.onDidClick(() => {
@@ -73,11 +73,11 @@ export function activate(context: vscode.ExtensionContext) {
             // Tab components are organized in a tree structure. There must be a single
             //  "root" component at the top, encompassing all others
             let groupContainer : azdata.GroupContainer = view.modelBuilder.groupContainer()
-                .withItems([textComponent, inputBoxComponent, buttonComponent]).component();
+            .withItems([textComponent, inputBoxComponent, buttonComponent]).component();
 
             // Creates the tab by passing the root component to the initializeModel method
             await view.initializeModel(groupContainer);
-		});
+        });
     }
 
     // This functions registers sample content for the second dialog tab
@@ -90,12 +90,12 @@ export function activate(context: vscode.ExtensionContext) {
             // Create the components inside the form:
             let textComponent : azdata.TextComponent = view.modelBuilder.text()
                 .withProperties({
-                value: 'Forms provide a clean layout to collect user input'}).component();
+            value: 'Forms provide a clean layout to collect user input'}).component();
             let inputBoxComponent : azdata.InputBoxComponent = view.modelBuilder.inputBox()
                 .component();
             let dropdownComponent : azdata.DropDownComponent = view.modelBuilder.dropDown()
                 .withProperties({
-                values: ['Option A', 'Option B', 'Option C']}).component();
+            values: ['Option A', 'Option B', 'Option C']}).component();
 
             let button1 = view.modelBuilder.radioButton()
                 .withProperties({ name: 'buttons', label: 'Button1'}).component();
@@ -106,20 +106,22 @@ export function activate(context: vscode.ExtensionContext) {
 
             // Initialize a 'show connection' button component
             let connectionButton : azdata.ButtonComponent = view.modelBuilder.button()
-                .withProperties({
-                    width: 120,
-                    height: 30,
-                    label: 'Show Connection'
-                }).component();
+            .withProperties({
+                width: 120,
+                height: 30,
+                label: 'Show Connection'
+            }).component();
+
             connectionButton.onDidClick(() => onShowConnection());
 
             // Initialize a 'submit' button component
             let submitButton : azdata.ButtonComponent = view.modelBuilder.button()
-                .withProperties({
-                    width: 120,
-                    height: 30,
-                    label: 'Submit and Clear'
-                }).component();
+            .withProperties({
+                width: 120,
+                height: 30,
+                label: 'Submit and Clear'
+            }).component();
+
             submitButton.onDidClick(() => onSubmit(inputBoxComponent, dropdownComponent, button1, button2));
 
             // Create the form using the above components:
@@ -161,7 +163,7 @@ export function activate(context: vscode.ExtensionContext) {
                 let connectionId = connection ? connection.connectionId : 'No connection found!';
                 vscode.window.showInformationMessage(connectionId);
             }, error => {
-                 console.info(error);
+                console.info(error);
             });
         }
     }

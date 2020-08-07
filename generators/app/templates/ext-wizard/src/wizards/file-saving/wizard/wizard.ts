@@ -7,14 +7,14 @@ import {Page3} from './pages/page3';
 import { BasePage } from './api/basePage';
 
 /**
- * Represents a Wizard that collects information about the user and generates a
- * profile about them. This profile can then be saved to a txt file.
+* Represents a Wizard that collects information about the user and generates a
+* profile about them. This profile can then be saved to a txt file.
 */
 export class ProfileBuilderWizard {
     public wizard: azdata.window.Wizard; // The Azure Data Wizard to be displayed
-	public model: ProfileModel; // Model to communicate between Wizard Pages
+    public model: ProfileModel; // Model to communicate between Wizard Pages
 
-	constructor() {
+    constructor() {
         this.wizard = azdata.window.createWizard('Sample Wizard: Profile Builder');
         this.model = <ProfileModel>{};
     }
@@ -40,7 +40,7 @@ export class ProfileBuilderWizard {
             let page = new Page1(page1, this.model, view, width);
             pagesMap.set(0, page);
             await page.start().then(() => {
-				page.onPageEnter();
+                page.onPageEnter();
             });
         });
         page2.registerContent(async (view) => {
@@ -57,21 +57,21 @@ export class ProfileBuilderWizard {
         // Uses map of index to custom pages to call the custom pages' onPageLeave
         //  and onPageEnter methods when user changes Wizard pages
         this.wizard.onPageChanged(async (event) => {
-			let indexLast = event.lastPage;
-			let lastPage = pagesMap.get(indexLast);
-			if (lastPage) {
-				lastPage.onPageLeave();
-			}
+            let indexLast = event.lastPage;
+            let lastPage = pagesMap.get(indexLast);
+            if (lastPage) {
+                lastPage.onPageLeave();
+            }
 
-			let indexNew = event.newPage;
-			let newPage = pagesMap.get(indexNew);
-			if (newPage) {
-				newPage.onPageEnter();
-			}
-		});
+            let indexNew = event.newPage;
+            let newPage = pagesMap.get(indexNew);
+            if (newPage) {
+                newPage.onPageEnter();
+            }
+        });
 
         this.wizard.pages = [page1, page2, page3]; // sets the wizard pages to the Azure Data pages
         this.wizard.generateScriptButton.hidden = true;
-		this.wizard.open(); // open the wizard
+        this.wizard.open(); // open the wizard
     }
 }

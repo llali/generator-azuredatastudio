@@ -5,32 +5,34 @@ import {ProfileModel, PronounTypes} from '../api/models'
 import {BasePage} from '../api/basePage'
 
 /**
- * Represents the third page of the Profile Builder Wizard, which displays default
- * profile, and allows user to update and save their profile to a txt file.
- * Lays out UI elements on page and updates Profile Model according to user input.
- */
+* Represents the third page of the Profile Builder Wizard, which displays default
+* profile, and allows user to update and save their profile to a txt file.
+* Lays out UI elements on page and updates Profile Model according to user input.
+*/
 export class Page3 extends BasePage {
     private inputBox: azdata.InputBoxComponent;
     private inputBoxWrapper: azdata.LoadingComponent;
     private wizard: azdata.window.Wizard
 
     public constructor(wizardPage: azdata.window.WizardPage, model: ProfileModel, view: azdata.ModelView,
-         width: number, wizard : azdata.window.Wizard) {
+            width: number, wizard : azdata.window.Wizard) {
         super(wizardPage, model, view, width);
         this.inputBox = this.view.modelBuilder.inputBox().component();
         this.inputBoxWrapper = this.view.modelBuilder.loadingComponent().component();
         this.wizard = wizard;
-	}
+    }
 
-	async start(): Promise<boolean> {
+    async start(): Promise<boolean> {
         this.inputBox = this.view.modelBuilder.inputBox()
-            .withProperties({
-                multiline: true,
-                height: 200
-            }).component();
+        .withProperties({
+            multiline: true,
+            height: 200
+        }).component();
+
         this.inputBox.onTextChanged(text => {
             this.model.profileParagraph = text;
         });
+
         this.createDoneButton();
         let layout = {componentWidth: this.width};
 
@@ -45,22 +47,22 @@ export class Page3 extends BasePage {
 
         await this.view.initializeModel(form);
         return true;
-	}
+    }
 
     async onPageEnter(): Promise<boolean> {
         this.model.profileParagraph = this.capitalize(this.model.name) + ' is ' +
-            this.aOrAn(this.model.role) + ' ' + this.model.role + '. ' +
-            this.capitalize(this.model.pronouns.subject) + ' ' + this.conjugateToHave() +
+        this.aOrAn(this.model.role) + ' ' + this.model.role + '. ' +
+        this.capitalize(this.model.pronouns.subject) + ' ' + this.conjugateToHave() +
             ' been in this role for ' + this.model.yearsInRole + ' years. ' +
             'A fun fact about ' + this.model.pronouns.object + ': ' + this.model.name +
-            this.model.funFact + '.';
+        this.model.funFact + '.';
 
         this.inputBox.value = this.model.profileParagraph;
 
         // To demonstrate how to create a loading component:
-        //      loads for 1 second before showing contents
+        //     loads for 1 second before showing contents
         setTimeout(() => this.inputBoxWrapper.loading = false, 1000);
-		return true;
+        return true;
     }
 
     async onPageLeave(): Promise<boolean> {
@@ -85,11 +87,11 @@ export class Page3 extends BasePage {
                     });
                     // open the txt file with user's profile in ADS
                     await vscode.workspace.openTextDocument(fileUri)
-                        .then(document => {
-                            vscode.window.showTextDocument(document);
-                            vscode.window.showInformationMessage('Profile Saved and Opened!')
-                            this.wizard.close();
-                        });
+                    .then(document => {
+                        vscode.window.showTextDocument(document);
+                        vscode.window.showInformationMessage('Profile Saved and Opened!')
+                        this.wizard.close();
+                    });
                 }
             });
         });
