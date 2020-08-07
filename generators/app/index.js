@@ -527,7 +527,7 @@ module.exports = class extends Generator {
                         {
                             type: 'confirm',
                             name: 'complexBook',
-                            message: 'Would you like more than one section in your book?',
+                            message: 'Would you like more than one chapter in your book?',
                             default: false
                         },
                     ]);
@@ -550,21 +550,25 @@ module.exports = class extends Generator {
                         {
                             type: 'input',
                             name: 'numberSections',
-                            message: 'How many sections would you like in your book?',
+                            message: 'How many chapters would you like in your book?',
                             default: 2,
                             validate: validator.validateNumber,
                         },
                         {
                             type: 'input',
                             name: 'sectionNames',
-                            message: 'List the name(s) of your section(s), separated by a comma for each new section. (e.g.:\'Placeholder,Placeholder2\')',
+                            message: 'List the name(s) of your chapter(s), separated by a comma for each new chapter. (e.g.:\'Placeholder,Placeholder2\')',
                             validate: validator.validateNonEmpty,
                         },
                     ]);
-
+                    let folderNames = []
                     bookSections.sectionNames = bookSections.sectionNames.split(',');
-
+                    bookSections.sectionNames.forEach(name => {
+                        let regexSection = name.trim().replace(/[^a-zA-Z0-9]/g, '-');
+                        folderNames.push(regexSection);
+                    })
                     Object.assign(generator.extensionConfig, bookSections);
+                    generator.extensionConfig.folderNames = folderNames;
                 }
             },
 
@@ -572,22 +576,22 @@ module.exports = class extends Generator {
                 if (generator.extensionConfig.complexBook) {
                     let availableSectionNames = generator.extensionConfig.notebookNames;
                     let sectionNames = generator.extensionConfig.sectionNames;
+                    let folderNames = generator.extensionConfig.folderNames;
                     let availableChoices = [], organizedNotebooks = [];
                     availableSectionNames.forEach(name => {
                         availableChoices.push({ "name": name });
                     });
 
                     for (let i = 0; i < sectionNames.length; i++) {
-                        let regexSection = sectionNames[i].replace(/[^a-z0-9]/g, '-');
                         const response = await generator.prompt([{
                             type: 'checkbox',
-                            name: regexSection,
-                            message: `Select notebooks for your section, ${regexSection}:`,
+                            name: folderNames[i],
+                            message: `Select notebooks for your chapter, ${sectionNames[i]}:`,
                             choices: availableChoices
                         }]);
 
                         organizedNotebooks.push(response);
-                        availableSectionNames = availableSectionNames.filter(element => !response[sectionNames[i]].includes(element));
+                        availableSectionNames = availableSectionNames.filter(element => !response[folderNames[i]].includes(element));
                         availableChoices = [];
                         availableSectionNames.forEach(name => {
                             availableChoices.push({ "name": name });
@@ -863,7 +867,7 @@ module.exports = class extends Generator {
             if (context.createBook && context.sectionNames) {
                 try {
                     let idx = 0;
-                    context.sectionNames.forEach(section => {
+                    context.folderNames.forEach(section => {
                         context.organizedNotebooks[idx][section].forEach(item => {
                             let srcPath = path.join(context.notebookPath, item);
                             let destPath = path.join(context.name, 'content', section, item);
