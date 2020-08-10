@@ -3,21 +3,21 @@
  *--------------------------------------------------------*/
 'use strict';
 
-var Generator = require('yeoman-generator');
-var yosay = require('yosay');
-var os = require('os');
-var fileSys = require('fs');
-var path = require('path');
-var validator = require('./validator');
-var snippetConverter = require('./snippetConverter');
-var themeConverter = require('./themeConverter');
-var grammarConverter = require('./grammarConverter');
-var notebookConverter = require('./notebookConverter');
-var env = require('./env');
-var childProcess = require('child_process');
-var chalk = require('chalk');
-var sanitize = require("sanitize-filename");
-var localization = require('./localization');
+let Generator = require('yeoman-generator');
+let yosay = require('yosay');
+let os = require('os');
+let fileSys = require('fs');
+let path = require('path');
+let validator = require('./validator');
+let snippetConverter = require('./snippetConverter');
+let themeConverter = require('./themeConverter');
+let grammarConverter = require('./grammarConverter');
+let notebookConverter = require('./notebookConverter');
+let env = require('./env');
+let childProcess = require('child_process');
+let chalk = require('chalk');
+let sanitize = require("sanitize-filename");
+let localization = require('./localization');
 module.exports = class extends Generator {
 
     constructor(args, opts) {

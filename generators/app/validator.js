@@ -2,7 +2,6 @@
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
 const fs = require("fs");
-const { file } = require("assert");
 var nameRegex = /^[a-z0-9][a-z0-9\-]*$/i;
 var numberRegex = /^[0-9]*$/
 

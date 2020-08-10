@@ -108,30 +108,30 @@ var mappings = {
 };
 
 function migrate(content, tmThemeFileName, generator) {
-    var result = {};
+    let result = {};
     var theme;
     try {
         theme = plistParser.parse(content);
     } catch (e) {
         throw new Error(tmThemeFileName + " not be parsed: " + e.toString());
     }
-    var settings = theme.settings;
+    let settings = theme.settings;
     if (Array.isArray(settings)) {
-        var colorMap = {};
-        for (var entry of settings) {
-            var scope = entry.scope;
+        let colorMap = {};
+        for (let entry of settings) {
+            let scope = entry.scope;
             if (scope) {
-                var parts = scope.split(',').map(p => p.trim());
+                let parts = scope.split(',').map(p => p.trim());
                 if (parts.length > 1) {
                     entry.scope = parts;
                 }
             } else {
                 var entrySettings = entry.settings;
-                var notSupported = [];
+                let notSupported = [];
                 for (let entry in entrySettings) {
-                    var mapping = mappings[entry];
+                    let mapping = mappings[entry];
                     if (mapping) {
-                        for (var newKey of mapping) {
+                        for (let newKey of mapping) {
                             colorMap[newKey] = entrySettings[entry];
                         }
                         if (entry !== 'foreground' && entry !== 'background') {

@@ -7,9 +7,7 @@ npm run compile
 
 # <%= name %> README
 
-⚠️ Work-in-progress code for custom notebook extensions in Azure Data Studio. ⚠️
-
-To create an extension:
+To create a notebook extension:
 1. Follow the prompts from the command line, selecting 'New Notebooks (Individual)' option, providing a path to existing notebooks if needed.
 2. `cd <%= name%>` and then `code .` to open the new extension folder in VS Code.
 3. Update the README to your liking.
