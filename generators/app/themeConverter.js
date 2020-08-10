@@ -3,10 +3,10 @@
  *--------------------------------------------------------*/
 'use strict';
 
-let path = require('path');
-let fs = require('fs');
-let plistParser = require('fast-plist');
-let request = require('request-light');
+var path = require('path');
+var fs = require('fs');
+var plistParser = require('fast-plist');
+var request = require('request-light');
 
 function convertTheme(location, extensionConfig, inline, generator) {
     if (!location) {
@@ -16,17 +16,17 @@ function convertTheme(location, extensionConfig, inline, generator) {
         // load from url
         return request.xhr({ url: location }).then(r => {
             if (r.status == 200) {
-                let tmThemeFileName = null;
+                var tmThemeFileName = null;
                 if (!inline) {
-                    const contentDisposition = r.headers && r.headers['content-disposition'];
+                    var contentDisposition = r.headers && r.headers['content-disposition'];
                     if (contentDisposition) {
-                        const fileNameMatch = contentDisposition.match(/filename="([^"]*)/);
+                        var fileNameMatch = contentDisposition.match(/filename="([^"]*)/);
                         if (fileNameMatch) {
                             tmThemeFileName = fileNameMatch[1];
                         }
                     }
                     if (!tmThemeFileName) {
-                        const lastSlash = location.lastIndexOf('/');
+                        var lastSlash = location.lastIndexOf('/');
                         if (lastSlash) {
                             tmThemeFileName = location.substr(lastSlash + 1);
                         } else {
@@ -41,14 +41,14 @@ function convertTheme(location, extensionConfig, inline, generator) {
         });
     } else {
         // load from disk
-        let body = null;
+        var body = null;
         try {
             body = fs.readFileSync(location);
         } catch (error) {
             return Promise.reject("Problems loading theme: " + error.message);
         }
         if (body) {
-            let fileName = null;
+            var fileName = null;
             if (!inline) {
                 fileName = path.basename(location);
             }
@@ -60,8 +60,8 @@ function convertTheme(location, extensionConfig, inline, generator) {
 }
 
 function processContent(extensionConfig, tmThemeFileName, body, generator) {
-    let themeNameMatch = body.match(/<key>name<\/key>\s*<string>([^<]*)/);
-    let themeName = themeNameMatch ? themeNameMatch[1] : '';
+    var themeNameMatch = body.match(/<key>name<\/key>\s*<string>([^<]*)/);
+    var themeName = themeNameMatch ? themeNameMatch[1] : '';
     try {
         extensionConfig.themeContent = migrate(body, tmThemeFileName, generator);
         if (tmThemeFileName) {
@@ -81,7 +81,7 @@ function processContent(extensionConfig, tmThemeFileName, body, generator) {
 };
 
 // mapping from old tmTheme setting to new workbench color ids
-const mappings = {
+var mappings = {
     "background": ["editor.background"],
     "foreground": ["editor.foreground"],
     "hoverHighlight": ["editor.hoverHighlightBackground"],
@@ -108,30 +108,30 @@ const mappings = {
 };
 
 function migrate(content, tmThemeFileName, generator) {
-    let result = {};
-    let theme;
+    var result = {};
+    var theme;
     try {
         theme = plistParser.parse(content);
     } catch (e) {
         throw new Error(tmThemeFileName + " not be parsed: " + e.toString());
     }
-    let settings = theme.settings;
+    var settings = theme.settings;
     if (Array.isArray(settings)) {
-        let colorMap = {};
-        for (let entry of settings) {
-            let scope = entry.scope;
+        var colorMap = {};
+        for (var entry of settings) {
+            var scope = entry.scope;
             if (scope) {
-                let parts = scope.split(',').map(p => p.trim());
+                var parts = scope.split(',').map(p => p.trim());
                 if (parts.length > 1) {
                     entry.scope = parts;
                 }
             } else {
-                const entrySettings = entry.settings;
-                let notSupported = [];
+                var entrySettings = entry.settings;
+                var notSupported = [];
                 for (let entry in entrySettings) {
-                    let mapping = mappings[entry];
+                    var mapping = mappings[entry];
                     if (mapping) {
-                        for (let newKey of mapping) {
+                        for (var newKey of mapping) {
                             colorMap[newKey] = entrySettings[entry];
                         }
                         if (entry !== 'foreground' && entry !== 'background') {

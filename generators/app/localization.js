@@ -63,7 +63,7 @@ exports.askForLocalizedLanguageName = (generator) => {
 
 exports.writingLocalizationExtension = (generator) => {
 
-    const context = generator.extensionConfig;
+    var context = generator.extensionConfig;
 
     generator.fs.copyTpl(generator.sourceRoot() + '/package.json', context.name + '/package.json', context);
     generator.fs.copyTpl(generator.sourceRoot() + '/vsc-extension-quickstart.md', context.name + '/vsc-extension-quickstart.md', context);

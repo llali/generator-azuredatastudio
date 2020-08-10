@@ -2,8 +2,8 @@
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
 'use strict';
-const createParser = (function () {
-    let saxModule = null;
+var createParser = (function () {
+    var saxModule = null;
     return function parser(strict, opt) {
         if (!saxModule) {
             saxModule = require('sax');
@@ -12,11 +12,11 @@ const createParser = (function () {
     };
 })();
 function parse(content) {
-    let errors = [];
-    let currObject = null;
-    let result = null;
-    let text = null;
-    let parser = createParser(false, { lowercase: true });
+    var errors = [];
+    var currObject = null;
+    var result = null;
+    var text = null;
+    var parser = createParser(false, { lowercase: true });
     parser.onerror = function (e) {
         errors.push(e.message);
     };
@@ -43,7 +43,7 @@ function parse(content) {
         text = '';
     };
     parser.onclosetag = function (tagName) {
-        let value;
+        var value;
         switch (tagName) {
             case 'key':
                 if (!currObject || Array.isArray(currObject.value)) {
