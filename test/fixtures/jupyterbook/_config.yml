@@ -1,0 +1,4 @@
+# Book settings
+title: <%- JSON.stringify(name) %>
+description: <%- JSON.stringify(description) %>
+author: <%- JSON.stringify(publisherName) %>

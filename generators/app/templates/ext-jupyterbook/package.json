@@ -12,19 +12,14 @@
 		"Other"
 	],
 	"activationEvents": [
-		<%- JSON.stringify(`onCommand:${name}.helloWorld`) %>,
-		<%- JSON.stringify(`onCommand:${name}.showCurrentConnection`) %>
+		<%- JSON.stringify(`onCommand:launchBook.${name}`) %>
 	],
-	"main": "./out/extension.js",
+	"main": "./out/jupyter-book.js",
 	"contributes": {
 		"commands": [
 			{
-				"command": <%- JSON.stringify(`${name}.helloWorld`) %>,
-                "title": "Hello World"
-			},
-			{
-				"command": <%- JSON.stringify(`${name}.showCurrentConnection`) %>,
-                "title": "Show Current Connection"
+				"command":  <%- JSON.stringify(`launchBook.${name}`) %>,
+                "title": <%- JSON.stringify(`Launch Book: ${displayName}`) %>
 			}
 		]
 	},
