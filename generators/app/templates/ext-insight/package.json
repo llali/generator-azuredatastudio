@@ -2,7 +2,6 @@
     "name": <%- JSON.stringify(name) %>,
     "displayName": <%- JSON.stringify(displayName) %>,
     "description": <%- JSON.stringify(description) %>,
-    "publisher": <%- JSON.stringify(publisherName) %>,
     "version": "0.0.1",
     "engines": {
         "vscode": <%- JSON.stringify(vsCodeEngine) %>,
@@ -31,27 +30,28 @@
         ]
     <%if (addDashboardTab) {-%>
     ,
-        "dashboard.tabs": [
-            {
-                "id": <%- JSON.stringify(name + '.tab') %>,
-                "title": <%- JSON.stringify(displayName) %>,
-                "description": "",
-                "container": {
-                    "widgets-container": [
-                        {
-                            "name": <%- JSON.stringify(displayName) %>,
-                            "gridItemConfig": {
-                                "sizex": 2,
-                                "sizey": 1
-                            },
-                            "widget": {
+            "dashboard.tabs": [
+                {
+                    "id": <%- JSON.stringify(name + '.tab') %>,
+                    "title": <%- JSON.stringify(displayName) %>,
+                    "description": "",
+                    "container": {
+                        "widgets-container": [
+                            {
+                                "name": <%- JSON.stringify(displayName) %>,
+                                "gridItemConfig": {
+                                    "sizex": 2,
+                                    "sizey": 1
+                                },
+                                "widget": {
                                 <%- JSON.stringify(name + '.insight') %>: {}
+                                }
                             }
-                        }
-                    ]
+                        ]
+                    }
                 }
-            }
-        ]
-    <% } -%>
-}
+            ]
+    <%
+        } -%>
+    }
 }
