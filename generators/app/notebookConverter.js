@@ -126,7 +126,7 @@ const customizeJupyterBook = (context) => {
             const stats = fs.statSync(dirPath);
             if (stats.isDirectory()) {
                 const chapterFilePath = path.join(presentDirectory[0], context.name, 'content', file);
-                const chapterTitle = context.sectionNames[idx];
+                const chapterTitle = context.chapterNames[idx];
                 tocContent += `- title: ${chapterTitle}\n  url: ${file}/readme\n  not_numbered: true\n  expand_sections: true\n  sections: \n`;
                 tocContent += writeForEachNotebook(file, chapterFilePath);
                 writeToReadme(chapterFilePath, presentDirectory, context.name, file);
