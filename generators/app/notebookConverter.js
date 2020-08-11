@@ -204,14 +204,16 @@ const findTitle = (file, filePath) => {
     const data = fs.readFileSync(filePath, 'UTF-8');
     const lines = data.split(/\r?\n/);
 
-    if (lines[0] === '') {
+    if (lines[0] === '' || lines[6].indexOf("collapsed") > -1) {
         return "Untitled";
     }
     if (path.extname(file) === '.ipynb') {
-        return lines[6].replace(/[^a-zA-Z0-9-]/g, ' ').trim();
+        let regexStr = lines[6].replace(/[:#"',]/g, '');
+        return regexStr.replace(/\\n/g, '').trim();
     } else {
         if (path.extname(file) === '.md') {
-            return lines[0].replace(/[^a-zA-Z0-9-]/g, ' ').trim();
+            let regexStr = lines[0].replace(/[:#"',]/g, '');
+            return regexStr.replace(/\\n/g, '').trim();
         }
     }
 }
