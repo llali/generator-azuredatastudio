@@ -112,22 +112,12 @@ exports.buildCustomBook = (context) => {
 // Following functions are to perform file input/output to create a custom readme.md
 // for each chapter and a custom toc.yml for the overall book in line with the
 // SQL Server 2019 Jupyter Book in ADS
-const determineExtensionLocation = (context) => {
-    const presentDirectory = __dirname.split('generators');
-    const internalPath = path.join(presentDirectory[0], context.name);
-    const externalPath = path.join(presentDirectory[0], '..', context.name)
-    if (fs.existsSync(internalPath)) {
-        return internalPath;
-    }
-    return externalPath;
-}
-
 const customizeJupyterBook = (context) => {
     let tocContent = "";
     let idx = 0;
-    const extensionLocation = determineExtensionLocation(context)
-    const tocFilePath = path.join(extensionLocation, '_data', 'toc.yml');
-    const bookContentPath = path.join(extensionLocation, 'content');
+
+    const tocFilePath = path.join('.', '_data', 'toc.yml');
+    const bookContentPath = path.join('.', 'content');
     const bookContents = fs.readdirSync(bookContentPath);
 
     bookContents.forEach(file => {
@@ -135,11 +125,11 @@ const customizeJupyterBook = (context) => {
             const dirPath = path.join(bookContentPath, file);
             const stats = fs.statSync(dirPath);
             if (stats.isDirectory()) {
-                const chapterFilePath = path.join(extensionLocation, 'content', file);
+                const chapterFilePath = path.join('.', 'content', file);
                 const chapterTitle = context.chapterNames[idx];
                 tocContent += `- title: ${chapterTitle}\n  url: ${file}/readme\n  not_numbered: true\n  expand_sections: true\n  sections: \n`;
                 tocContent += writeForEachNotebook(file, chapterFilePath);
-                writeToReadme(chapterFilePath, extensionLocation, file);
+                writeToReadme(chapterFilePath, file);
                 idx += 1;
             } else {
                 tocContent += writeSingleNotebook(bookContentPath, file);
@@ -184,8 +174,8 @@ const getSlicedFilename = (fileName) => {
     }
 }
 
-const writeToReadme = (contentFilePath, extensionLocation, file) => {
-    const readmeFilePath = path.join(extensionLocation, 'content', file, 'readme.md');
+const writeToReadme = (contentFilePath, file) => {
+    const readmeFilePath = path.join('.', 'content', file, 'readme.md');
 
     let fileContent = "## Notebooks in this Chapter\n";
     const files = fs.readdirSync(contentFilePath);
