@@ -115,9 +115,9 @@ exports.buildCustomBook = (context) => {
 const customizeJupyterBook = (context) => {
     let tocContent = "";
     let idx = 0;
-    const presentDirectory = __dirname.split('generators');
-    const tocFilePath = path.join(presentDirectory[0], context.name, '_data', 'toc.yml');
-    const bookContentPath = path.join(presentDirectory[0], context.name, 'content');
+
+    const tocFilePath = path.join('.', '_data', 'toc.yml');
+    const bookContentPath = path.join('.', 'content');
     const bookContents = fs.readdirSync(bookContentPath);
 
     bookContents.forEach(file => {
@@ -125,11 +125,11 @@ const customizeJupyterBook = (context) => {
             const dirPath = path.join(bookContentPath, file);
             const stats = fs.statSync(dirPath);
             if (stats.isDirectory()) {
-                const chapterFilePath = path.join(presentDirectory[0], context.name, 'content', file);
-                const chapterTitle = context.sectionNames[idx];
+                const chapterFilePath = path.join('.', 'content', file);
+                const chapterTitle = context.chapterNames[idx];
                 tocContent += `- title: ${chapterTitle}\n  url: ${file}/readme\n  not_numbered: true\n  expand_sections: true\n  sections: \n`;
                 tocContent += writeForEachNotebook(file, chapterFilePath);
-                writeToReadme(chapterFilePath, presentDirectory, context.name, file);
+                writeToReadme(chapterFilePath, file);
                 idx += 1;
             } else {
                 tocContent += writeSingleNotebook(bookContentPath, file);
@@ -174,8 +174,8 @@ const getSlicedFilename = (fileName) => {
     }
 }
 
-const writeToReadme = (contentFilePath, presentDirectory, extensionName, file) => {
-    const readmeFilePath = path.join(presentDirectory[0], extensionName, 'content', file, 'readme.md');
+const writeToReadme = (contentFilePath, file) => {
+    const readmeFilePath = path.join('.', 'content', file, 'readme.md');
 
     let fileContent = "## Notebooks in this Chapter\n";
     const files = fs.readdirSync(contentFilePath);
@@ -194,14 +194,16 @@ const findTitle = (file, filePath) => {
     const data = fs.readFileSync(filePath, 'UTF-8');
     const lines = data.split(/\r?\n/);
 
-    if (lines[0] === '') {
+    if (lines[0] === '' || lines[6].indexOf("collapsed") > -1) {
         return "Untitled";
     }
     if (path.extname(file) === '.ipynb') {
-        return lines[6].replace(/[^a-zA-Z0-9-]/g, ' ').trim();
+        let regexStr = lines[6].replace(/[:#"',]/g, '');
+        return regexStr.replace(/\\n/g, '').trim();
     } else {
         if (path.extname(file) === '.md') {
-            return lines[0].replace(/[^a-zA-Z0-9-]/g, ' ').trim();
+            let regexStr = lines[0].replace(/[:#"',]/g, '');
+            return regexStr.replace(/\\n/g, '').trim();
         }
     }
 }

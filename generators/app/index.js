@@ -626,7 +626,7 @@ module.exports = class extends Generator {
                         type: 'input',
                         name: 'notebookPath',
                         message: 'Provide the absolute path to the folder containing your notebooks.',
-                        default: path.join(os.homedir(), 'Desktop', 'notebooks')
+                        default: os.homedir()
                     }).then(pathResponse => {
                         generator.extensionConfig.notebookNames = [];
                         generator.extensionConfig.notebookPaths = [];
@@ -688,7 +688,7 @@ module.exports = class extends Generator {
                         type: 'input',
                         name: 'bookLocation',
                         message: 'Provide the absolute path to the folder containing your Jupyter Book:',
-                        default: path.join(os.homedir(), 'Desktop', 'jupyter-book'),
+                        default: os.homedir(),
                         validate: validator.validateFilePath
                     }).then(locationResponse => {
                         let tempPath = path.normalize(locationResponse.bookLocation);
@@ -713,7 +713,7 @@ module.exports = class extends Generator {
                             type: 'input',
                             name: 'notebookPath',
                             message: 'Provide the absolute path to the folders where your notebooks currently exist.',
-                            default: path.join(os.homedir(), 'Desktop', 'notebooks'),
+                            default: os.homedir(),
                             validate: validator.validateFilePath,
                         },
                         {
@@ -748,19 +748,23 @@ module.exports = class extends Generator {
                         },
                         {
                             type: 'input',
-                            name: 'chapterNames',
-                            message: 'List the name(s) of your chapter(s), separated by a comma for each new chapter. (e.g.:\'Placeholder,Placeholder2\')',
-                            validate: validator.validateNonEmpty,
+                            name: 'rawChapterNames',
+                            message: 'List the name(s) of your chapter(s), separated by a comma for each new chapter. (e.g.:\'1 - Chapter 1, 2 - Chapter 2\')',
+                            validate: validator.validateNonEmpty
                         },
                     ]);
-                    let folderNames = []
-                    bookSections.chapterNames = bookSections.chapterNames.split(',');
-                    bookSections.chapterNames.forEach(name => {
-                        let regexSection = name.trim().replace(/[^a-zA-Z0-9]/g, '-');
+                    let folderNames = [];
+                    let chapterNames = [];
+                    bookSections.rawChapterNames = bookSections.rawChapterNames.split(',');
+                    bookSections.rawChapterNames.forEach(name => {
+                        let trimmedStr = name.trim();
+                        chapterNames.push(name.trim())
+                        let regexSection = trimmedStr.replace(/[^a-zA-Z0-9]/g, '-');
                         folderNames.push(regexSection);
                     })
                     Object.assign(generator.extensionConfig, bookSections);
                     generator.extensionConfig.folderNames = folderNames;
+                    generator.extensionConfig.chapterNames = chapterNames;
                 }
             },
 
