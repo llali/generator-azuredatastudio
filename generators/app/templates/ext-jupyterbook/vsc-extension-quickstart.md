@@ -1,7 +1,7 @@
 # Welcome to your Azure Data Studio Extension
 
 ## What's in the folder
-* This folder contains all of the files necessary for your notebook extension.
+* This folder contains all of the files necessary for your Jupyter Book extension.
 * `package.json` - this is the manifest file in which you declare your extension and command.
 The sample plugin registers a command and defines its title and command name. With this information
 Azure Data Studio can show the command in the command palette. It doesn’t yet need to load the plugin.
@@ -9,7 +9,7 @@ Azure Data Studio can show the command in the command palette. It doesn’t yet 
 The file exports one function, `activate`, which is called the very first time your extension is
 activated (in this case by executing the command). Inside the `activate` function we call `registerCommand`, which uses the `bookTreeView.openBook` command to open your Jupyter Book.
 
-## Share your notebooks instantly
+## Share your book instantly
 * Ensure that you have the [vsce](https://www.npmjs.com/package/vsce) module installed, which is an extenion manager.
 * Update your extension's README to your liking.
 * Run `vsce package` in your extension's base directory.
