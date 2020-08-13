@@ -1,10 +1,12 @@
-# Azure Data Studio - Extension and Customization Generator
+# Azure Data Studio - Extension Generator
 
 [![Twitter Follow](https://img.shields.io/twitter/follow/azuredatastudio?style=social)](https://twitter.com/azuredatastudio)
 
 The Azure Data Studio Extension Generator is a Yeoman-based generator to help get you started with authoring extensions. There are 13 different possible templates for you to use.
 
 ## Install the Generator
+
+Ensure that you have [Node.js](https://nodejs.org/en/) and npm installed.
 
 Install Yeoman and the Azure Data Studio Extension generator by using the following command:
 
@@ -32,6 +34,7 @@ These templates will:
 * Template out a rough `package.json` using your answers from the provided prompts
 * Import any assets required for your extension e.g. tmBundles or the VS Code Library
 * For Extensions: Set-up `launch.json` for running your extension and attaching to a process
+* Document how to get started in a `vsc-extension-quickstart.md` file
 
 ## History
 
