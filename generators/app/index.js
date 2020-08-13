@@ -1243,11 +1243,11 @@ module.exports = class extends Generator {
             this.fs.copyTpl(this.sourceRoot() + '/src/constants.js', context.name + '/src/constants.js', context);
             this.fs.copyTpl(this.sourceRoot() + '/src/localizedConstants.js', context.name + '/src/localizedConstants.js', context);
             this.fs.copyTpl(this.sourceRoot() + '/src/utils.js', context.name + '/src/utils.js', context);
-            this.fs.copy(this.sourceRoot() + '/src/media', context.name + '/src/media');
+            this.fs.copy(this.sourceRoot() + '/src/media/icon', context.name + '/src/media/icon');
             this.extensionConfig.installDependencies = true;
         }
         else {
-            this.fs.copyTpl(this.sourceRoot() + '/src/media/tab.svg', context.name + '/src/media/tab.svg', context);
+            this.fs.copyTpl(this.sourceRoot() + '/src/media/icon/tab.svg', context.name + '/src/media/icon/tab.svg', context);
         }
         this.fs.copyTpl(this.sourceRoot() + '/vsc-extension-quickstart.md', context.name + '/vsc-extension-quickstart.md', context);
         this.fs.copyTpl(this.sourceRoot() + '/README.md', context.name + '/README.md', context);

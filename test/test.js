@@ -1046,40 +1046,40 @@ describe('test code generator', function () {
                                 "command": "testCom.getQuery",
                                 "title": "Get Query",
                                 "icon": {
-                                    "light": "./src/media/insights.svg",
-                                    "dark": "./src/media/insight_inverses.svg"
+                                    "light": "./src/media/icon/insights.svg",
+                                    "dark": "./src/media/icon/insight_inverses.svg"
                                 }
                             },
                             {
                                 "command": "testCom.getUrl",
                                 "title": "Get Url",
                                 "icon": {
-                                    "light": "./src/media/documentation.svg",
-                                    "dark": "./src/media/documentation_inverse.svg"
+                                    "light": "./src/media/icon/documentation.svg",
+                                    "dark": "./src/media/icon/documentation_inverse.svg"
                                 }
                             },
                             {
                                 "command": "testCom.getConnection",
                                 "title": "Get Connection",
                                 "icon": {
-                                    "light": "./src/media/tempdb.svg",
-                                    "dark": "./src/media/tempdb_inverse.svg"
+                                    "light": "./src/media/icon/tempdb.svg",
+                                    "dark": "./src/media/icon/tempdb_inverse.svg"
                                 }
                             },
                             {
                                 "command": "testCom.getWebview",
                                 "title": "Get Webview",
                                 "icon": {
-                                    "light": "./src/media/launch.svg",
-                                    "dark": "./src/media/launch_inverse.svg"
+                                    "light": "./src/media/icon/launch.svg",
+                                    "dark": "./src/media/icon/launch_inverse.svg"
                                 }
                             },
                             {
                                 "command": "testCom.getNotebook",
                                 "title": "Get Notebook",
                                 "icon": {
-                                    "light": "./src/media/book.svg",
-                                    "dark": "./src/media/book_inverse.svg"
+                                    "light": "./src/media/icon/book.svg",
+                                    "dark": "./src/media/icon/book_inverse.svg"
                                 }
                             }
                         ],
@@ -1088,7 +1088,7 @@ describe('test code generator', function () {
                                 "id": "testCom.tab",
                                 "title": "Test Com",
                                 "description": "",
-                                "icon": "src/media/tab.svg",
+                                "icon": "src/media/icon/tab.svg",
                                 "group": "",
                                 "container": {
                                     "nav-section": [
@@ -1096,8 +1096,8 @@ describe('test code generator', function () {
                                             "id": "monitoring",
                                             "title": "Monitor",
                                             "icon": {
-                                                "light": "./src/media/monitor.svg",
-                                                "dark": "./src/media/monitor_inverse.svg"
+                                                "light": "./src/media/icon/monitor.svg",
+                                                "dark": "./src/media/icon/monitor_inverse.svg"
                                             },
                                             "container": {
                                                 "insights": {}
@@ -1105,10 +1105,10 @@ describe('test code generator', function () {
                                         },
                                         {
                                             "id": "webviewExample",
-                                            "title": "Webivew",
+                                            "title": "Webview",
                                             "icon": {
-                                                "light": "./src/media/performance.svg",
-                                                "dark": "./src/media/performance_inverse.svg"
+                                                "light": "./src/media/icon/performance.svg",
+                                                "dark": "./src/media/icon/performance_inverse.svg"
                                             },
                                             "container": {
                                                 "webview-container": null
@@ -1236,7 +1236,7 @@ describe('test code generator', function () {
 
 
                     assert.file(['package.json', 'README.md', 'CHANGELOG.md', '.vscodeignore', 'src/extension.js', 'src/constants.js', 'src/localizedConstants.js', 'src/utils.js', 'src/controllers/controllerBase.js',
-                        'src/controllers/mainController.js', 'src/controllers/webviewExample.html', 'src/media', 'src/notebook/sample.ipynb', 'src/sql/all_db_space_used.sql', 'src/sql/cpumetric.sql', 'src/sql/query.sql',
+                        'src/controllers/mainController.js', 'src/controllers/webviewExample.html', 'src/media/icon', 'src/notebook/sample.ipynb', 'src/sql/all_db_space_used.sql', 'src/sql/cpumetric.sql', 'src/sql/query.sql',
                         'src/test/suite/index.js', 'src/test/suite/extension.test.js', 'jsconfig.json']);
 
                     var body = fs.readFileSync('package.json', 'utf8');

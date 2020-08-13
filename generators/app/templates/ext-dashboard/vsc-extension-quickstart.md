@@ -15,7 +15,7 @@
 * `src/controllers/mainController.js` - this is the file that you register commands and define functionalities of them.
 * `src/controllers/webviewExample.html` - this is the html file that opened by default from the `Get Webview` command on the toolbar and also the default webview shown on the navigation section.
 * `src/notebook/sample.ipynb` - this is the notebook file that opened by default from the `Get Notebook` command on the toolbar.
-* `src/media` - this is the folder of all the icons
+* `src/media/icon` - this is the folder of all the icons
 * `src/sql` - this is the folder of all the query files that compose your first insight widget.
 
 
