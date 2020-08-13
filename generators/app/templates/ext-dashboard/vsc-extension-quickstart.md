@@ -1,5 +1,9 @@
 # Welcome to your Azure Data Studio Extension
 
+## Quick walkthrough of dashboard
+![Homepage](/generators/app/templates/ext-dashboard/src/media/homepage.png)
+![Tab](/generators/app/templates/ext-dashboard/src/media/tab.png)
+
 ## What's in the folder
 * This folder contains all of the files necessary for your dashboard insight extension.
 * `package.json` - this is the manifest file that defines the list of insights and new dashboard tabs for the extension. Open this in Azure Data Studio and edit the `contributes` section to add new features.
@@ -10,8 +14,6 @@
   * `dashboard/toolbar` section is where you register a new homepage action according to the command you defined. If you select `No` for the `Add a homepage action?` question this will not be added, and instead you can register these actions in the dashboard toolbar.
   * `tasks-widget` section is where you register a new dashboard toolbar. If you select `No` for the `Add a dashboard toolbar?` question this will not be added, and instead you can register a navigation section.
   * `nav-section` section is where you create a navigation section. The default template comes with a webview.
-
-
 * `src/controllers/mainController.js` - this is the file that you register commands and define functionalities of them.
 * `src/controllers/webviewExample.html` - this is the html file that opened by default from the `Get Webview` command on the toolbar and also the default webview shown on the navigation section.
 * `src/notebook/sample.ipynb` - this is the notebook file that opened by default from the `Get Notebook` command on the toolbar.
