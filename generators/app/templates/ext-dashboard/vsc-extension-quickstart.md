@@ -1,8 +1,8 @@
 # Welcome to your Azure Data Studio Extension
 
 ## Quick walkthrough of dashboard
-![Homepage](/generators/app/templates/ext-dashboard/src/media/homepage.png)
-![Tab](/generators/app/templates/ext-dashboard/src/media/tab.png)
+![Homepage](/generators/app/templates/ext-dashboard/src/media/homepage.PNG)
+![Tab](/generators/app/templates/ext-dashboard/src/media/tab.PNG)
 
 ## What's in the folder
 * This folder contains all of the files necessary for your dashboard insight extension.
