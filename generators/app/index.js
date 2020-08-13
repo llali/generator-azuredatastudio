@@ -5,18 +5,19 @@
 
 let Generator = require('yeoman-generator');
 let yosay = require('yosay');
-
+let os = require('os');
+let fileSys = require('fs');
 let path = require('path');
 let validator = require('./validator');
 let snippetConverter = require('./snippetConverter');
 let themeConverter = require('./themeConverter');
 let grammarConverter = require('./grammarConverter');
+let notebookConverter = require('./notebookConverter');
 let env = require('./env');
 let childProcess = require('child_process');
 let chalk = require('chalk');
 let sanitize = require("sanitize-filename");
 let localization = require('./localization');
-
 module.exports = class extends Generator {
 
     constructor(args, opts) {
@@ -38,25 +39,26 @@ module.exports = class extends Generator {
     initializing() {
 
         // Welcome
-        this.log(yosay('Welcome to the Azure Data Studio Extension generator!'));// {{ADS EDIT}}
+        this.log(yosay('Welcome to the Azure Data Studio Extension Generator!'));// {{ADS EDIT}}
 
         // evaluateEngineVersion
         let extensionConfig = this.extensionConfig;
         extensionConfig.azdataEngine = env.azdataVersion;// {{ADS EDIT}}
         extensionConfig.vsCodeEngine = '^1.19.0';
         return env.getLatestVSCodeVersion()
-        .then(function (version) { extensionConfig.vsCodeEngine = version; });
+            .then(function (version) { extensionConfig.vsCodeEngine = version; });
         // TODO add tool to get latest Azure Data Studio verison on machine and set this too
     }
 
     prompting() {
         let generator = this;
+
         let prompts = {
             // Ask for extension type
             askForType: () => {
                 let extensionType = generator.options['extensionType'];
                 if (extensionType) {
-                    let extensionTypes = ['dashboard', 'colortheme', 'language', 'snippets', 'command-ts', 'command-js', 'extensionpack'];// {{ADS EDIT}}
+                    let extensionTypes = ['dashboard', 'colortheme', 'language', 'snippets', 'command-ts', 'command-js', 'extensionpack', 'notebook', 'jupyterbook', 'wizards']; // {{ADS EDIT}}
                     if (extensionTypes.indexOf(extensionType) !== -1) {
                         generator.extensionConfig.type = 'ext-' + extensionType;
                     } else {
@@ -104,10 +106,73 @@ module.exports = class extends Generator {
                     {
                         name: 'New Language Pack (Localization)',
                         value: 'ext-localization'
+                    },
+                    {
+                        name: 'New Wizard or Dialog', // {{ADS EDIT}}
+                        value: 'ext-wizard'
+                    }
+                        ,
+                    {
+                        name: 'New Notebooks (Individual)', // {{ADS EDIT}}
+                        value: 'ext-notebook'
+                    },
+                    {
+                        name: 'New Jupyter Book', // {{ADS EDIT}}
+                        value: 'ext-jupyterbook'
                     }
                     ]
                 }).then(typeAnswer => {
                     generator.extensionConfig.type = typeAnswer.type;
+                });
+            },
+
+            askForWizardOrDialogType: () => { // {{ADS EDIT}}
+                if (generator.extensionConfig.type !== 'ext-wizard') {
+                    return Promise.resolve();
+                }
+                generator.extensionConfig.isCustomization = true;
+                return generator.prompt({
+                    type: 'list',
+                    name: 'wizardOrDialog',
+                    message: 'Do you want to create a Wizard or a Dialog Extension?',
+                    choices: [
+                        {
+                            name: 'Wizard',
+                            value: 'Wizard'
+                        },
+                        {
+                            name: 'Dialog',
+                            value: 'Dialog'
+                        }
+                    ]
+                }).then(answer => {
+                    let type = answer.wizardOrDialog;
+                    generator.extensionConfig.wizardOrDialog = type;
+                    if (type === 'Wizard') {
+                        return generator.prompt({
+                            type: 'list',
+                            name: 'wizardType',
+                            message: 'Choose a Wizard Template:',
+                            choices: [
+                                {
+                                    name: 'Getting Started Template',
+                                    value: 'standard'
+                                },
+                                {
+                                    name: 'Sample Wizard: File Saving',
+                                    value: 'file-saving'
+                                },
+                                {
+                                    name: 'Sample Wizard: Database Operations',
+                                    value: 'db-ops'
+                                }
+                            ]
+                        }).then(typeAnswer => {
+                            generator.extensionConfig.wizardType = typeAnswer.wizardType;
+                        });
+                    } else { // type === 'Dialog'
+                        generator.extensionConfig.dialogType = 'standard';
+                    }
                 });
             },
 
@@ -306,7 +371,7 @@ module.exports = class extends Generator {
                     generator.extensionConfig.addDashboardTab = answer.addDashboardExtension;
                     generator.extensionConfig.insightName = generator.extensionConfig.name + '.insight';
                     generator.extensionConfig.tabName = generator.extensionConfig.name + '.tab';
-                    if (!generator.extensionConfig.addDashboardTab){
+                    if (!generator.extensionConfig.addDashboardTab) {
                         generator.extensionConfig.addDashboardBar = false;
                     }
                 });
@@ -359,37 +424,37 @@ module.exports = class extends Generator {
                     name: 'tabGroup',
                     message: 'Which group to place the tab?',
                     choices: [
-                    {
-                        name: "General",
-                        value: ""
-                    },
-                    {
-                        name: "Administration",
-                        value: "administration"
-                    },
-                    {
-                        name: "Monitoring",
-                        value: "monitoring"
-                    },
-                    {
-                        name: "Performance",
-                        value: "performance"
-                    },
+                        {
+                            name: "General",
+                            value: ""
+                        },
+                        {
+                            name: "Administration",
+                            value: "administration"
+                        },
+                        {
+                            name: "Monitoring",
+                            value: "monitoring"
+                        },
+                        {
+                            name: "Performance",
+                            value: "performance"
+                        },
 
-                    {
-                        name: "Security",
-                        value: "security"
-                    },
+                        {
+                            name: "Security",
+                            value: "security"
+                        },
 
-                    {
-                        name: "Troubleshooting",
-                        value: "troubleshooting"
-                    },
+                        {
+                            name: "Troubleshooting",
+                            value: "troubleshooting"
+                        },
 
-                    {
-                        name: "Settings",
-                        value: "settings"
-                    }
+                        {
+                            name: "Settings",
+                            value: "settings"
+                        }
                     ]
                 }).then(function (answer) {
                     generator.extensionConfig.tabGroup = answer.tabGroup;
@@ -397,7 +462,7 @@ module.exports = class extends Generator {
             },
 
             askForDashboardBar: () => {// {{ADS EDIT}}
-                if (generator.extensionConfig.type !== 'ext-dashboard' || !generator.extensionConfig.addDashboardTab ) {
+                if (generator.extensionConfig.type !== 'ext-dashboard' || !generator.extensionConfig.addDashboardTab) {
                     return Promise.resolve();
                 }
 
@@ -415,7 +480,7 @@ module.exports = class extends Generator {
             },
 
             askForNavSection: () => {// {{ADS EDIT}}
-                if (generator.extensionConfig.type !== 'ext-dashboard' || generator.extensionConfig.addDashboardBar || !generator.extensionConfig.addDashboardTab ) {
+                if (generator.extensionConfig.type !== 'ext-dashboard' || generator.extensionConfig.addDashboardBar || !generator.extensionConfig.addDashboardTab) {
                     return Promise.resolve();
                 }
 
@@ -442,10 +507,22 @@ module.exports = class extends Generator {
                 return generator.prompt({
                     type: 'input',
                     name: 'displayName',
-                    message: 'What\'s the name of your extension?',
-                    default: generator.extensionConfig.displayName
+                    message: 'What\'s the display name of your extension?',
+                    default: "My Test Extension"
                 }).then(displayNameAnswer => {
                     generator.extensionConfig.displayName = displayNameAnswer.displayName;
+                });
+            },
+
+            askForPublisherName: () => {
+                return generator.prompt({
+                    type: 'input',
+                    name: 'publisherName',
+                    message: 'What\'s the publisher name for your extension?',
+                    default: "Microsoft",
+                    validate: validator.validateNonEmpty,
+                }).then(publisherAnswer => {
+                    generator.extensionConfig.publisherName = publisherAnswer.publisherName;
                 });
             },
 
@@ -467,7 +544,7 @@ module.exports = class extends Generator {
                 return generator.prompt({
                     type: 'input',
                     name: 'name',
-                    message: 'What\'s the identifier of your extension?',
+                    message: `What\'s the unique identifier for your extension? (Appears as ${generator.extensionConfig.publisherName}.your-identifier)`,
                     default: def,
                     validate: validator.validateExtensionId
                 }).then(nameAnswer => {
@@ -508,7 +585,7 @@ module.exports = class extends Generator {
             },
 
             askForGit: () => {
-                if (['ext-command-ts', 'ext-command-js'].indexOf(generator.extensionConfig.type) === -1) {
+                if (['ext-command-ts', 'ext-command-js', 'ext-wizard'].indexOf(generator.extensionConfig.type) === -1) {
                     return Promise.resolve();
                 }
 
@@ -520,6 +597,205 @@ module.exports = class extends Generator {
                 }).then(gitAnswer => {
                     generator.extensionConfig.gitInit = gitAnswer.gitInit;
                 });
+            },
+
+            // {{ADS EDIT}}
+            askForExistingNotebooks: () => {
+                if (generator.extensionConfig.type !== 'ext-notebook') {
+                    return Promise.resolve();
+                }
+
+                return generator.prompt({
+                    type: 'confirm',
+                    name: 'addNotebooks',
+                    message: 'Add existing notebooks to be shipped?',
+                    default: true
+                }).then(existingNotebook => {
+                    generator.extensionConfig.addNotebooks = existingNotebook.addNotebooks;
+                });
+            },
+
+            // {{ADS EDIT}}
+            askForNotebooks: () => {
+                if (generator.extensionConfig.type !== 'ext-notebook') {
+                    return Promise.resolve();
+                }
+
+                if (generator.extensionConfig.addNotebooks) {
+                    return generator.prompt({
+                        type: 'input',
+                        name: 'notebookPath',
+                        message: 'Provide the absolute path to the folder containing your notebooks.',
+                        default: os.homedir()
+                    }).then(pathResponse => {
+                        generator.extensionConfig.notebookNames = [];
+                        generator.extensionConfig.notebookPaths = [];
+                        return notebookConverter.processNotebookFolder(pathResponse.notebookPath, generator);
+                    })
+                }
+                else {
+                    return generator.prompt({
+                        type: 'list',
+                        name: 'selectType',
+                        message: 'Select a sample notebook to start with:',
+                        choices: [{
+                            name: 'SQL',
+                            value: 'notebook-sql'
+                        },
+                        {
+                            name: 'Python',
+                            value: 'notebook-python'
+                        }]
+                    }).then(notebookType => {
+                        generator.extensionConfig.notebookType = notebookType.selectType;
+                    });
+                }
+            },
+
+            // {{ADS EDIT}}
+            askForExistingBook: () => {
+                if (generator.extensionConfig.type !== 'ext-jupyterbook') {
+                    return Promise.resolve();
+                }
+
+                return generator.prompt({
+                    type: 'confirm',
+                    name: 'addBooks',
+                    message: 'Add an existing Jupyter Book to be shipped?',
+                    default: true
+                }).then(existingBookAnswer => {
+                    generator.extensionConfig.addBooks = existingBookAnswer.addBooks;
+                });
+            },
+
+            // {{ADS EDIT}}
+            askForBookCreation: () => {
+                if (generator.extensionConfig.type !== 'ext-jupyterbook') {
+                    return Promise.resolve();
+                }
+
+                if (!generator.extensionConfig.addBooks) {
+                    return generator.prompt({
+                        type: 'confirm',
+                        name: 'createBook',
+                        message: 'Do you have existing notebooks you would like to create a Jupyter Book out of?',
+                        default: true
+                    }).then(creationAnswer => {
+                        generator.extensionConfig.createBook = creationAnswer.createBook;
+                    });
+                } else {
+                    return generator.prompt({
+                        type: 'input',
+                        name: 'bookLocation',
+                        message: 'Provide the absolute path to the folder containing your Jupyter Book:',
+                        default: os.homedir(),
+                        validate: validator.validateFilePath
+                    }).then(locationResponse => {
+                        let tempPath = path.normalize(locationResponse.bookLocation);
+                        generator.extensionConfig.bookLocation = tempPath;
+                        generator.extensionConfig.notebookNames = [];
+                        generator.extensionConfig.notebookPaths = [];
+                        generator.extensionConfig.notebookFolders = [];
+                        return notebookConverter.processBookFolder(tempPath, generator);
+                    });
+                }
+            },
+
+            // {{ADS EDIT}}
+            askForBookConversion: async () => {
+                if (generator.extensionConfig.type !== 'ext-jupyterbook') {
+                    return;
+                }
+
+                if (generator.extensionConfig.createBook) {
+                    const answers = await generator.prompt([
+                        {
+                            type: 'input',
+                            name: 'notebookPath',
+                            message: 'Provide the absolute path to the folders where your notebooks currently exist.',
+                            default: os.homedir(),
+                            validate: validator.validateFilePath,
+                        },
+                        {
+                            type: 'confirm',
+                            name: 'complexBook',
+                            message: 'Would you like more than one chapter in your book?',
+                            default: false
+                        },
+                    ]);
+
+
+                    answers.notebookPath = path.normalize(answers.notebookPath);
+                    Object.assign(generator.extensionConfig, answers);
+
+                    let tempPath = path.normalize(generator.extensionConfig.notebookPath);
+                    generator.extensionConfig.notebookNames = [];
+                    generator.extensionConfig.notebookPaths = [];
+                    notebookConverter.processNotebookFolder(tempPath, generator);
+                }
+            },
+
+            // {{ADS EDIT}}
+            askForComplexBook: async () => {
+                if (generator.extensionConfig.complexBook) {
+                    const bookSections = await generator.prompt([
+                        {
+                            type: 'input',
+                            name: 'numberSections',
+                            message: 'How many chapters would you like in your book?',
+                            default: 2,
+                            validate: validator.validateNumber,
+                        },
+                        {
+                            type: 'input',
+                            name: 'rawChapterNames',
+                            message: 'List the name(s) of your chapter(s), separated by a comma for each new chapter. (e.g.:\'1 - Chapter 1, 2 - Chapter 2\')',
+                            validate: validator.validateNonEmpty
+                        },
+                    ]);
+                    let folderNames = [];
+                    let chapterNames = [];
+                    bookSections.rawChapterNames = bookSections.rawChapterNames.split(',');
+                    bookSections.rawChapterNames.forEach(name => {
+                        let trimmedStr = name.trim();
+                        chapterNames.push(name.trim())
+                        let regexSection = trimmedStr.replace(/[^a-zA-Z0-9]/g, '-');
+                        folderNames.push(regexSection);
+                    })
+                    Object.assign(generator.extensionConfig, bookSections);
+                    generator.extensionConfig.folderNames = folderNames;
+                    generator.extensionConfig.chapterNames = chapterNames;
+                }
+            },
+
+            askForNotebooksinSections: async () => {
+                if (generator.extensionConfig.complexBook) {
+                    let availableSectionNames = generator.extensionConfig.notebookNames;
+                    let chapterNames = generator.extensionConfig.chapterNames;
+                    let folderNames = generator.extensionConfig.folderNames;
+                    let availableChoices = [], organizedNotebooks = [];
+                    availableSectionNames.forEach(name => {
+                        availableChoices.push({ "name": name });
+                    });
+
+                    for (let i = 0; i < chapterNames.length; i++) {
+                        const response = await generator.prompt([{
+                            type: 'checkbox',
+                            name: folderNames[i],
+                            message: `Select notebooks for your chapter, ${chapterNames[i]}:`,
+                            choices: availableChoices
+                        }]);
+
+                        organizedNotebooks.push(response);
+                        availableSectionNames = availableSectionNames.filter(element => !response[folderNames[i]].includes(element));
+                        availableChoices = [];
+                        availableSectionNames.forEach(name => {
+                            availableChoices.push({ "name": name });
+                        });
+
+                    }
+                    generator.extensionConfig.organizedNotebooks = organizedNotebooks;
+                }
             },
 
             askForThemeName: () => {
@@ -651,9 +927,14 @@ module.exports = class extends Generator {
             },
 
             askForPackageManager: () => {
-                if (['ext-command-ts', 'ext-command-js', 'ext-localization', 'ext-dashboard'].indexOf(generator.extensionConfig.type) === -1) {
+                if (['ext-command-ts', 'ext-command-js', 'ext-localization', 'ext-dashboard', 'ext-wizard', 'ext-dashboard']
+                    .indexOf(generator.extensionConfig.type) === -1) {
+                    if (generator.extensionConfig.type === 'ext-jupyterbook' || generator.extensionConfig.type === 'ext-notebook') {
+                        generator.extensionConfig.pkgManager = 'npm';
+                    }
                     return Promise.resolve();
                 }
+
                 generator.extensionConfig.pkgManager = 'npm';
                 return generator.prompt({
                     type: 'list',
@@ -727,12 +1008,115 @@ module.exports = class extends Generator {
             case 'ext-localization':
                 localization.writingLocalizationExtension(this);
                 break;
+            case 'ext-notebook': // {{ADS EDIT}}
+                this._writingNotebook();
+                break;
+            case 'ext-jupyterbook': // {{ADS EDIT}}
+                this._writingJupyterBook();
+                break;
+            case 'ext-wizard': // {{ADS EDIT}}
+                this._writingWizard();
+                break;
             default:
                 //unknown project type
                 break;
         }
     }
 
+    // {{ADS EDIT}}
+    _writingNotebook() {
+
+        let context = this.extensionConfig;
+
+        if (context.addNotebooks) {
+            for (let i = 0; i < context.notebookPaths.length; i++) {
+                this.fs.copy(context.notebookPaths[i], context.name + '/' + context.notebookNames[i]);
+            }
+        } else {
+            if (context.notebookType === 'notebook-python') {
+                this.fs.copy(this.sourceRoot() + '/optional/pySample.ipynb', context.name + '/pySample.ipynb');
+            } else {
+                this.fs.copy(this.sourceRoot() + '/optional/sqlSample.ipynb', context.name + '/sqlSample.ipynb');
+            }
+        }
+
+        this.fs.copy(this.sourceRoot() + '/vscode', context.name + '/.vscode');
+        this.fs.copy(this.sourceRoot() + '/vscodeignore', context.name + '/.vscodeignore');
+        this.fs.copyTpl(this.sourceRoot() + '/README.md', context.name + '/README.md', context);
+        this.fs.copyTpl(this.sourceRoot() + '/CHANGELOG.md', context.name + '/CHANGELOG.md', context);
+        this.fs.copyTpl(this.sourceRoot() + '/vsc-extension-quickstart.md', context.name + '/vsc-extension-quickstart.md', context);
+        this.fs.copyTpl(this.sourceRoot() + '/tsconfig.json', context.name + '/tsconfig.json', context);
+        this.fs.copyTpl(this.sourceRoot() + '/src/notebook.ts', context.name + '/src/notebook.ts', context);
+        this.fs.copyTpl(this.sourceRoot() + '/package.json', context.name + '/package.json', context);
+        this.fs.copy(this.sourceRoot() + '/.eslintrc.json', context.name + '/.eslintrc.json');
+        if (this.extensionConfig.gitInit) {
+            this.fs.copy(this.sourceRoot() + '/gitignore', context.name + '/.gitignore');
+        }
+        this.extensionConfig.installDependencies = true;
+    }
+
+    // {{ADS EDIT}}
+    _writingJupyterBook() {
+        let context = this.extensionConfig;
+
+        if (context.addBooks) {
+            const files = fileSys.readdirSync(context.bookLocation);
+            files.forEach(file => {
+                this.fs.copy(context.bookLocation + '/' + file, context.name + '/' + file);
+            });
+        } else {
+            if (context.createBook && context.chapterNames) {
+                try {
+                    let idx = 0;
+                    context.folderNames.forEach(chapter => {
+                        context.organizedNotebooks[idx][chapter].forEach(item => {
+                            let srcPath = path.join(context.notebookPath, item);
+                            let destPath = path.join(context.name, 'content', chapter, item);
+                            this.fs.copy(srcPath, destPath);
+                        });
+                        idx += 1;
+                        this.fs.copy(this.sourceRoot() + '/optional/readme.md', context.name + '/content/' + chapter + '/readme.md')
+                    });
+
+                } catch (e) {
+                    console.log("Cannot copy: " + e.message);
+                }
+            } else if (context.createBook) {
+                const files = fileSys.readdirSync(context.notebookPath);
+                files.forEach(file => {
+                    let srcPath = path.join(context.notebookPath, file);
+                    let dstPath = path.join(context.name, 'content', file);
+                    this.fs.copy(srcPath, dstPath);
+                });
+            }
+            else {
+                this.fs.copy(this.sourceRoot() + '/content', context.name + '/content');
+                this.fs.copyTpl(this.sourceRoot() + '/requirements.txt', context.name + '/requirements.txt', context);
+                this.fs.copyTpl(this.sourceRoot() + '/references.bib', context.name + '/references.bib', context);
+                this.fs.copyTpl(this.sourceRoot() + '/logo.png', context.name + '/logo.png', context);
+            }
+
+            this.fs.copy(this.sourceRoot() + '/_data/toc.yml', context.name + '/_data/toc.yml', context);
+            this.fs.copyTpl(this.sourceRoot() + '/_config.yml', context.name + '/_config.yml', context);
+        }
+
+        this.fs.copy(this.sourceRoot() + '/vscode', context.name + '/.vscode');
+        this.fs.copy(this.sourceRoot() + '/vscodeignore', context.name + '/.vscodeignore');
+        this.fs.copyTpl(this.sourceRoot() + '/tsconfig.json', context.name + '/tsconfig.json', context);
+        this.fs.copyTpl(this.sourceRoot() + '/src/jupyter-book.ts', context.name + '/src/jupyter-book.ts', context);
+        this.fs.copyTpl(this.sourceRoot() + '/package.json', context.name + '/package.json', context);
+        this.fs.copy(this.sourceRoot() + '/.eslintrc.json', context.name + '/.eslintrc.json');
+        this.fs.copyTpl(this.sourceRoot() + '/vsc-extension-quickstart.md', context.name + '/vsc-extension-quickstart.md', context);
+        this.fs.copyTpl(this.sourceRoot() + '/README.md', context.name + '/README.md', context);
+        this.fs.copyTpl(this.sourceRoot() + '/CHANGELOG.md', context.name + '/CHANGELOG.md', context);
+
+        if (this.extensionConfig.gitInit) {
+            this.fs.copy(this.sourceRoot() + '/gitignore', context.name + '/.gitignore');
+            this.fs.copy(this.sourceRoot() + '/gitattributes', context.name + '/.gitattributes');
+        }
+
+        this.extensionConfig.installDependencies = true;
+    }
 
     // Write Color Theme Extension
     _writingExtensionPack() {
@@ -840,8 +1224,8 @@ module.exports = class extends Generator {
         }
     }
 
-     // Write Dashboard Extension
-     _writingDashboard() {// {{ADS EDIT}}
+    // Write Dashboard Extension
+    _writingDashboard() {// {{ADS EDIT}}
         let context = this.extensionConfig;
 
         this.fs.copy(this.sourceRoot() + '/vscode', context.name + '/.vscode');
@@ -925,6 +1309,35 @@ module.exports = class extends Generator {
         this.extensionConfig.installDependencies = true;
     }
 
+    _writingWizard() { // {{ADS EDIT}}
+        let context = this.extensionConfig;
+
+        this.fs.copy(this.sourceRoot() + '/vscode', context.name + '/.vscode');
+        this.fs.copy(this.sourceRoot() + '/src/test', context.name + '/src/test');
+        this.fs.copy(this.sourceRoot() + '/src/typings', context.name + '/src/typings');
+
+        this.fs.copy(this.sourceRoot() + '/vscodeignore', context.name + '/.vscodeignore');
+        if (this.extensionConfig.gitInit) {
+            this.fs.copy(this.sourceRoot() + '/gitignore', context.name + '/.gitignore');
+        }
+        this.fs.copyTpl(this.sourceRoot() + '/README.md', context.name + '/README.md', context);
+        this.fs.copyTpl(this.sourceRoot() + '/CHANGELOG.md', context.name + '/CHANGELOG.md', context);
+        this.fs.copyTpl(this.sourceRoot() + '/vsc-extension-quickstart.md', context.name + '/vsc-extension-quickstart.md', context);
+        this.fs.copyTpl(this.sourceRoot() + '/tsconfig.json', context.name + '/tsconfig.json', context);
+
+        if (context.wizardOrDialog === 'Wizard') {
+            this.fs.copyTpl(this.sourceRoot() + '/src/wizards/' + context.wizardType, context.name + '/src', context);
+        } else { // context.wizardOrDialog === 'Dialog'
+            this.fs.copyTpl(this.sourceRoot() + '/src/dialogs/' + context.dialogType, context.name + '/src', context);
+        }
+        this.fs.copyTpl(this.sourceRoot() + '/installTypings.js', context.name + '/installTypings.js', context);
+        this.fs.copyTpl(this.sourceRoot() + '/package.json', context.name + '/package.json', context);
+
+        this.fs.copyTpl(this.sourceRoot() + '/.eslintrc.json', context.name + '/.eslintrc.json', context);
+
+        this.extensionConfig.installDependencies = true;
+    }
+
     // Installation
     install() {
         if (this.abort) {
@@ -947,6 +1360,11 @@ module.exports = class extends Generator {
             return;
         }
 
+        // {{ADS EDIT}}
+        if (this.extensionConfig.type === 'ext-jupyterbook' && (this.extensionConfig.addBooks === false)) {
+            notebookConverter.buildCustomBook(this.extensionConfig);
+        }
+
         // Git init
         if (this.extensionConfig.gitInit) {
             this.spawnCommand('git', ['init', '--quiet']);
@@ -955,21 +1373,27 @@ module.exports = class extends Generator {
         this.log('');
         this.log('Your extension ' + this.extensionConfig.name + ' has been created!');
         this.log('');
-        this.log('To start editing with Visual Studio Code, use the following commands:');
+        this.log('To start editing with Visual Studio Code, navigate to your new extension folder or use the following commands:');
         this.log('');
         this.log('     cd ' + this.extensionConfig.name);
         this.log('     code .');
         this.log('');
-        this.log('Open vsc-extension-quickstart.md inside the new extension for further instructions');
-        this.log('on how to modify, test and publish your extension.');
+        this.log(chalk.cyanBright('Open vsc-extension-quickstart.md inside the new extension for further instructions'));
+        this.log(chalk.cyanBright('on how to modify, test and publish your extension.'));
         this.log('');
+
+        // {{ADS EDIT}}
+        if (this.extensionConfig.type === 'ext-jupyterbook') {
+            this.log(chalk.yellow('Please review the "toc.yml" in the "_data" folder and edit as appropriate before publishing the Jupyter Book.'));
+            this.log('');
+        }
 
         if (this.extensionConfig.type === 'ext-extensionpack') {
             this.log(chalk.yellow('Please review the "extensionPack" in the "package.json" before publishing the extension pack.'));
             this.log('');
         }
 
-        if (this.extensionConfig.type === 'ext-command-ts') {
+        if (this.extensionConfig.type === 'ext-command-ts' || this.extensionConfig.type === 'ext-wizard') {
             this.log('To include proposed Azure Data Studio APIs in your extension, run the following after opening the directory:');// {{ADS EDIT}}
             this.log('');
             this.log(chalk.blue('npm run proposedapi'));// {{ADS EDIT}}
