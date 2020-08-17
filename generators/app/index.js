@@ -1361,7 +1361,7 @@ module.exports = class extends Generator {
         }
 
         // {{ADS EDIT}}
-        if (this.extensionConfig.type === 'ext-jupyterbook' && (this.extensionConfig.addBooks === false)) {
+        if (this.extensionConfig.type === 'ext-jupyterbook' && this.extensionConfig.addBooks === false) {
             notebookConverter.buildCustomBook(this.extensionConfig);
         }
 
