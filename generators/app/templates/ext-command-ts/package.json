@@ -34,7 +34,8 @@
 		"lint": "eslint src --ext ts",
 		"watch": "tsc -watch -p ./",
 		"pretest": "<%= pkgManager %> run compile && <%= pkgManager %> run lint",
-		"test": "node ./out/test/runTest.js"
+		"test": "node ./out/test/runTest.js",
+		"proposedapi": "node installTypings.js"
 	},
 	"devDependencies": {
 		"@types/vscode": <%- JSON.stringify(vsCodeEngine) %>,

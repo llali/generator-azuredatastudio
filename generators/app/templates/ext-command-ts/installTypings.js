@@ -9,4 +9,4 @@ function download(filename, url) {
 }
 
 console.log('Downloading azdata proposed typings');
-download('src/typings/azdata.proposed.d.ts', 'https://raw.githubusercontent.com/Microsoft/azuredatastudio/master/src/sql/azdata.proposed.d.ts');
+download('typings/azdata.proposed.d.ts', 'https://raw.githubusercontent.com/Microsoft/azuredatastudio/master/src/sql/azdata.proposed.d.ts');
