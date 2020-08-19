@@ -125,12 +125,14 @@ const customizeJupyterBook = (context) => {
             const dirPath = path.join(bookContentPath, file);
             const stats = fs.statSync(dirPath);
             if (stats.isDirectory()) {
-                const chapterFilePath = path.join('.', 'content', file);
-                const chapterTitle = context.chapterNames[idx];
-                tocContent += `- title: ${chapterTitle}\n  url: ${file}/readme\n  not_numbered: true\n  expand_sections: true\n  sections: \n`;
-                tocContent += writeForEachNotebook(file, chapterFilePath);
-                writeToReadme(chapterFilePath, file);
-                idx += 1;
+                if (context.chapterNames) {
+                    const chapterFilePath = path.join('.', 'content', file);
+                    const chapterTitle = context.chapterNames[idx];
+                    tocContent += `- title: ${chapterTitle}\n  url: ${file}/readme\n  not_numbered: true\n  expand_sections: true\n  sections: \n`;
+                    tocContent += writeForEachNotebook(file, chapterFilePath);
+                    writeToReadme(chapterFilePath, file);
+                    idx += 1;
+                }
             } else {
                 tocContent += writeSingleNotebook(bookContentPath, file);
             }
@@ -193,8 +195,7 @@ const writeToReadme = (contentFilePath, file) => {
 const findTitle = (file, filePath) => {
     const data = fs.readFileSync(filePath, 'UTF-8');
     const lines = data.split(/\r?\n/);
-
-    if (lines[0] === '' || lines[6].indexOf("collapsed") > -1) {
+    if (lines[0] === '' || (lines.length >= 7 && lines[6].indexOf("collapsed") > -1)) {
         return "Untitled";
     }
     if (path.extname(file) === '.ipynb') {

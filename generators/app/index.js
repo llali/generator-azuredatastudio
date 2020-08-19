@@ -1361,7 +1361,7 @@ module.exports = class extends Generator {
         }
 
         // {{ADS EDIT}}
-        if (this.extensionConfig.type === 'ext-jupyterbook' && (this.extensionConfig.addBooks === false)) {
+        if (this.extensionConfig.type === 'ext-jupyterbook' && this.extensionConfig.addBooks === false) {
             notebookConverter.buildCustomBook(this.extensionConfig);
         }
 
@@ -1400,7 +1400,7 @@ module.exports = class extends Generator {
             this.log('');
         }
 
-        this.log('For more information, also visit http://code.visualstudio.com and follow us @code.');
+        this.log('For more information, also visit aka.ms/azuredatastudio and follow us @azuredatastudio.');
         this.log('\r\n');
     }
 }

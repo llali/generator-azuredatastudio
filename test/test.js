@@ -1700,6 +1700,7 @@ describe('test code generator', function () {
                 publisherName: 'test',
                 notebookPath: path.join(__dirname, '/fixtures/jupyterbook'),
                 addBooks: false,
+                complexBook: false,
                 pkgManager: 'npm'
             }) // Mock the prompt answers
             .toPromise().then(function () {
