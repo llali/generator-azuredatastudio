@@ -735,7 +735,8 @@ describe('test code generator', function () {
                         "lint": "eslint src --ext ts",
                         "watch": "tsc -watch -p ./",
                         "pretest": "npm run compile && npm run lint",
-                        "test": "node ./out/test/runTest.js"
+                        "test": "node ./out/test/runTest.js",
+                        "proposedapi": "node installTypings.js"
                     },
                     "categories": [
                         "Other"
@@ -817,7 +818,8 @@ describe('test code generator', function () {
                         "lint": "eslint src --ext ts",
                         "watch": "tsc -watch -p ./",
                         "pretest": "yarn run compile && yarn run lint",
-                        "test": "node ./out/test/runTest.js"
+                        "test": "node ./out/test/runTest.js",
+                        "proposedapi": "node installTypings.js"
                     },
                     "categories": [
                         "Other"
@@ -915,7 +917,8 @@ describe('test code generator', function () {
                     "scripts": {
                         "lint": "eslint .",
                         "pretest": "npm run lint",
-                        "test": "node ./test/runTest.js"
+                        "test": "node ./test/runTest.js",
+                        "proposedapi": "node installTypings.js"
                     },
                     "categories": [
                         "Other"
@@ -1210,7 +1213,8 @@ describe('test code generator', function () {
                         "compile": "gulp compile",
                         "watch": "gulp watch",
                         "typings": "gulp copytypings",
-                        "postinstall": "node ./node_modules/vscode/bin/install && node ./node_modules/azdata/bin/install"
+                        "postinstall": "node ./node_modules/vscode/bin/install && node ./node_modules/azdata/bin/install",
+                        "proposedapi": "node installTypings.js"
                     },
                     "dependencies": {
                         "fs-extra": "^5.0.0",
