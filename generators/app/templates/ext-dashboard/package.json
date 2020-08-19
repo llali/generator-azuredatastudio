@@ -47,40 +47,40 @@
               "command": <%- JSON.stringify(`${name}.getQuery`) %>,
               "title": "Get Query",
               "icon": {
-                "light": "./src/media/insights.svg",
-                "dark": "./src/media/insight_inverses.svg"
+                "light": "./src/media/icon/insights.svg",
+                "dark": "./src/media/icon/insight_inverses.svg"
               }
             },
             {
               "command": <%- JSON.stringify(`${name}.getUrl`) %>,
               "title": "Get Url",
               "icon": {
-                "light": "./src/media/documentation.svg",
-                "dark": "./src/media/documentation_inverse.svg"
+                "light": "./src/media/icon/documentation.svg",
+                "dark": "./src/media/icon/documentation_inverse.svg"
               }
             },
             {
               "command": <%- JSON.stringify(`${name}.getConnection`) %>,
               "title": "Get Connection",
               "icon": {
-                "light": "./src/media/tempdb.svg",
-                "dark": "./src/media/tempdb_inverse.svg"
+                "light": "./src/media/icon/tempdb.svg",
+                "dark": "./src/media/icon/tempdb_inverse.svg"
               }
             },
             {
               "command": <%- JSON.stringify(`${name}.getWebview`) %>,
               "title": "Get Webview",
               "icon": {
-                "light": "./src/media/launch.svg",
-                "dark": "./src/media/launch_inverse.svg"
+                "light": "./src/media/icon/launch.svg",
+                "dark": "./src/media/icon/launch_inverse.svg"
               }
             },
             {
               "command": <%- JSON.stringify(`${name}.getNotebook`) %>,
               "title": "Get Notebook",
               "icon": {
-                "light": "./src/media/book.svg",
-                "dark": "./src/media/book_inverse.svg"
+                "light": "./src/media/icon/book.svg",
+                "dark": "./src/media/icon/book_inverse.svg"
               }
             }
         ],
@@ -92,7 +92,7 @@
               "id": <%- JSON.stringify(name + '.tab') %>,
               "title": <%- JSON.stringify(displayName) %>,
               "description": "",
-              "icon": "src/media/tab.svg",
+              "icon": "src/media/icon/tab.svg",
               "group": <%- JSON.stringify(tabGroup) %>,
               <%if (addServerTab && !addDatabaseTab) {-%>
               "when": "dashboardContext == 'server'",
@@ -107,8 +107,8 @@
                         "id": "monitoring",
                         "title": "Monitor",
                         "icon": {
-                          "light": "./src/media/monitor.svg",
-                          "dark": "./src/media/monitor_inverse.svg"
+                          "light": "./src/media/icon/monitor.svg",
+                          "dark": "./src/media/icon/monitor_inverse.svg"
                         },
                         "container": {
                           "insights":{}
@@ -116,10 +116,10 @@
                       },
                       {
                         "id": "webviewExample",
-                        "title": "Webivew",
+                        "title": "Webview",
                         "icon": {
-                            "light": "./src/media/performance.svg",
-                            "dark": "./src/media/performance_inverse.svg"
+                            "light": "./src/media/icon/performance.svg",
+                            "dark": "./src/media/icon/performance_inverse.svg"
                         },
                         "container": {
                             "webview-container": null
