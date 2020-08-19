@@ -1000,6 +1000,7 @@ describe('test code generator', function () {
                 type: 'ext-dashboard',
                 name: 'testCom',
                 displayName: 'Test Com',
+                publisherName: 'Test Publisher',
                 description: 'My TestCom',
                 tabGroup: '',
                 checkJavaScript: false,
@@ -1012,6 +1013,7 @@ describe('test code generator', function () {
                     "name": "testCom",
                     "displayName": "Test Com",
                     "description": "My TestCom",
+                    "publisher": "Test Publisher",
                     "version": "0.0.1",
                     "engines": {
                         "vscode": "^1.39.0",
@@ -1852,6 +1854,7 @@ describe('test code generator', function () {
                 wizardType: 'file-saving',
                 name: 'testWiz',
                 displayName: 'Test Wiz',
+                publisherName: 'Test Publisher',
                 description: 'My TestWiz',
                 gitInit: true,
                 pkgManager: 'npm'
@@ -1859,8 +1862,9 @@ describe('test code generator', function () {
             .toPromise().then(function () {
                 var expectedPackageJSON = {
                     "name": "testWiz",
-                    "displayName": 'Test Wiz',
+                    "displayName": "Test Wiz",
                     "description": "My TestWiz",
+                    "publisher": "Test Publisher",
                     "version": "0.0.1",
                     "engines": {
                         "vscode": engineVersion,
@@ -1930,6 +1934,7 @@ describe('test code generator', function () {
                 wizardType: 'standard',
                 name: 'testWiz',
                 displayName: 'Test Wiz',
+                publisherName: 'Test Publisher',
                 description: 'My TestWiz',
                 gitInit: true,
                 pkgManager: 'npm'
@@ -1937,8 +1942,9 @@ describe('test code generator', function () {
             .toPromise().then(function () {
                 var expectedPackageJSON = {
                     "name": "testWiz",
-                    "displayName": 'Test Wiz',
+                    "displayName": "Test Wiz",
                     "description": "My TestWiz",
+                    "publisher": "Test Publisher",
                     "version": "0.0.1",
                     "engines": {
                         "vscode": engineVersion,
@@ -2008,6 +2014,7 @@ describe('test code generator', function () {
                 dialogType: 'standard',
                 name: 'testDialog',
                 displayName: 'Test Dialog',
+                publisherName: 'Test Publisher',
                 description: 'My TestDialog',
                 gitInit: true,
                 pkgManager: 'npm'
@@ -2015,8 +2022,9 @@ describe('test code generator', function () {
             .toPromise().then(function () {
                 var expectedPackageJSON = {
                     "name": "testDialog",
-                    "displayName": 'Test Dialog',
+                    "displayName": "Test Dialog",
                     "description": "My TestDialog",
+                    "publisher": "Test Publisher",
                     "version": "0.0.1",
                     "engines": {
                         "vscode": engineVersion,
