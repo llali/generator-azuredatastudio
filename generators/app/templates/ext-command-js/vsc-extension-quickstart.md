@@ -23,9 +23,10 @@ We pass the function containing the implementation of the command as the second 
 
 ## Explore the API
 * You can open the full set of our API when you open the file:
-  * Azure Data Studio specific APIs: `node_modules/azdata/azdata.d.ts`.
-  * Other APIs: `node_modules/vscode/vscode.d.ts`.
-
+  * SQL specific APIs: `node_modules/@types/azdata/index.d.ts`.
+  * Other APIs: `node_modules/@types/vscode/index.d.ts`.
+* To include Proposed APIs, run `npm run proposedapi` in your terminal
+  * Proposed APIs will downloaded into: `typings/azdata.proposed.d.ts`
 
 ## Run tests
 * Open the debug viewlet (`Ctrl+Shift+D` or `Cmd+Shift+D` on Mac) and from the launch configuration dropdown pick `Launch Tests`.

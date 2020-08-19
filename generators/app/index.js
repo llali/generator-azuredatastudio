@@ -1232,6 +1232,8 @@ module.exports = class extends Generator {
         this.fs.copy(this.sourceRoot() + '/src/test', context.name + '/src/test');
         this.fs.copy(this.sourceRoot() + '/src/sql', context.name + '/src/sql');
         this.fs.copy(this.sourceRoot() + '/src/notebook', context.name + '/src/notebook');
+        this.fs.copy(this.sourceRoot() + '/typings', context.name + '/typings');
+
         this.fs.copyTpl(this.sourceRoot() + '/package.json', context.name + '/package.json', context);
         if (this.extensionConfig.addDashboardBar || this.extensionConfig.addHomepageAction || this.extensionConfig.addNavSection) {
             this.fs.copyTpl(this.sourceRoot() + '/jsconfig.json', context.name + '/jsconfig.json', context);
@@ -1257,6 +1259,7 @@ module.exports = class extends Generator {
         if (this.extensionConfig.gitInit) {
             this.fs.copy(this.sourceRoot() + '/gitattributes', context.name + '/.gitattributes');
         }
+        this.fs.copyTpl(this.sourceRoot() + '/installTypings.js', context.name + '/installTypings.js', context);
 
     }
 
@@ -1266,8 +1269,9 @@ module.exports = class extends Generator {
 
         this.fs.copy(this.sourceRoot() + '/vscode', context.name + '/.vscode');
         this.fs.copy(this.sourceRoot() + '/src/test', context.name + '/src/test');
-
+        this.fs.copy(this.sourceRoot() + '/typings', context.name + '/typings');
         this.fs.copy(this.sourceRoot() + '/vscodeignore', context.name + '/.vscodeignore');
+
         if (this.extensionConfig.gitInit) {
             this.fs.copy(this.sourceRoot() + '/gitignore', context.name + '/.gitignore');
         }
@@ -1278,8 +1282,8 @@ module.exports = class extends Generator {
 
         this.fs.copyTpl(this.sourceRoot() + '/src/extension.ts', context.name + '/src/extension.ts', context);
         this.fs.copyTpl(this.sourceRoot() + '/package.json', context.name + '/package.json', context);
-
         this.fs.copy(this.sourceRoot() + '/.eslintrc.json', context.name + '/.eslintrc.json');
+        this.fs.copyTpl(this.sourceRoot() + '/installTypings.js', context.name + '/installTypings.js', context);
 
         this.extensionConfig.installDependencies = true;
     }
@@ -1290,7 +1294,7 @@ module.exports = class extends Generator {
 
         this.fs.copy(this.sourceRoot() + '/vscode', context.name + '/.vscode');
         this.fs.copy(this.sourceRoot() + '/test', context.name + '/test');
-
+        this.fs.copy(this.sourceRoot() + '/typings', context.name + '/typings');
         this.fs.copy(this.sourceRoot() + '/vscodeignore', context.name + '/.vscodeignore');
 
         if (this.extensionConfig.gitInit) {
@@ -1305,6 +1309,7 @@ module.exports = class extends Generator {
         this.fs.copyTpl(this.sourceRoot() + '/extension.js', context.name + '/extension.js', context);
         this.fs.copyTpl(this.sourceRoot() + '/package.json', context.name + '/package.json', context);
         this.fs.copyTpl(this.sourceRoot() + '/.eslintrc.json', context.name + '/.eslintrc.json', context);
+        this.fs.copyTpl(this.sourceRoot() + '/installTypings.js', context.name + '/installTypings.js', context);
 
         this.extensionConfig.installDependencies = true;
     }
@@ -1314,7 +1319,7 @@ module.exports = class extends Generator {
 
         this.fs.copy(this.sourceRoot() + '/vscode', context.name + '/.vscode');
         this.fs.copy(this.sourceRoot() + '/src/test', context.name + '/src/test');
-        this.fs.copy(this.sourceRoot() + '/src/typings', context.name + '/src/typings');
+        this.fs.copy(this.sourceRoot() + '/typings', context.name + '/typings');
 
         this.fs.copy(this.sourceRoot() + '/vscodeignore', context.name + '/.vscodeignore');
         if (this.extensionConfig.gitInit) {
@@ -1330,10 +1335,9 @@ module.exports = class extends Generator {
         } else { // context.wizardOrDialog === 'Dialog'
             this.fs.copyTpl(this.sourceRoot() + '/src/dialogs/' + context.dialogType, context.name + '/src', context);
         }
-        this.fs.copyTpl(this.sourceRoot() + '/installTypings.js', context.name + '/installTypings.js', context);
         this.fs.copyTpl(this.sourceRoot() + '/package.json', context.name + '/package.json', context);
-
         this.fs.copyTpl(this.sourceRoot() + '/.eslintrc.json', context.name + '/.eslintrc.json', context);
+        this.fs.copyTpl(this.sourceRoot() + '/installTypings.js', context.name + '/installTypings.js', context);
 
         this.extensionConfig.installDependencies = true;
     }
@@ -1393,7 +1397,8 @@ module.exports = class extends Generator {
             this.log('');
         }
 
-        if (this.extensionConfig.type === 'ext-command-ts' || this.extensionConfig.type === 'ext-wizard') {
+        if (this.extensionConfig.type === 'ext-command-ts' || this.extensionConfig.type === 'ext-command-js'
+            || this.extensionConfig.type === 'ext-dashboard' || this.extensionConfig.type === 'ext-wizard') {
             this.log('To include proposed Azure Data Studio APIs in your extension, run the following after opening the directory:');// {{ADS EDIT}}
             this.log('');
             this.log(chalk.blue('npm run proposedapi'));// {{ADS EDIT}}

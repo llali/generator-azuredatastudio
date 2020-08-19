@@ -31,7 +31,8 @@
 	"scripts": {
 		"lint": "eslint .",
 		"pretest": "<%= pkgManager %> run lint",
-		"test": "node ./test/runTest.js"
+		"test": "node ./test/runTest.js",
+		"proposedapi": "node installTypings.js"
 	},
 	"devDependencies": {
 		"@types/vscode": <%- JSON.stringify(vsCodeEngine) %>,

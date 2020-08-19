@@ -25,6 +25,8 @@ activated, and `deactivate`, which is called when your extension is deactivated.
 * You can open the full set of our API when you open the file:
   * SQL specific APIs: `node_modules/@types/azdata/index.d.ts`.
   * Other APIs: `node_modules/@types/vscode/index.d.ts`.
+* To include Proposed APIs, run `npm run proposedapi` in your terminal
+  * Proposed APIs will downloaded into: `typings/azdata.proposed.d.ts`
 
 ## Wizards and Dialogs API Overview
 * **Creating Wizards and Dialogs:** Wizards include wizard pages, and Dialogs include dialog tabs. To create Wizards, wizard pages, Dialogs, and dialog tabs, use the `azdata.window` namespace. For example: `let wizard = azdata.window.createWizard('Sample Wizard')`.

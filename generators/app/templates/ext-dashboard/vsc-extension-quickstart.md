@@ -20,8 +20,6 @@
 * `src/media/icon` - this is the folder of all the icons
 * `src/sql` - this is the folder of all the query files that compose your first insight widget.
 
-
-
 ## Get up and running straight away
 * Press `F5` to open a new window with your extension loaded.
 * Right click your sever or databse and select manage to access your dashboard
@@ -29,6 +27,13 @@
 ## Make changes
 * You can relaunch the extension from the debug toolbar after making changes to the files/folders listed above.
 * You can also reload (`Ctrl+R` or `Cmd+R` on Mac) the Azure Data Studio window with your extension to load your changes.
+
+## Explore the API
+* You can open the full set of our API when you open the file:
+  * SQL specific APIs: `node_modules/@types/azdata/index.d.ts`.
+  * Other APIs: `node_modules/@types/vscode/index.d.ts`.
+* To include Proposed APIs, run `npm run proposedapi` in your terminal
+  * Proposed APIs will downloaded into: `typings/azdata.proposed.d.ts`
 
 ## Install your extension
 * To start using your extension with Azure Data Studio copy it into the `<user home>/.azuredatastudio/extensions` folder and restart Azure Data Studio.

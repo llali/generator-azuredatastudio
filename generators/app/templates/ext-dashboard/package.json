@@ -244,7 +244,8 @@
         "compile": "gulp compile",
         "watch": "gulp watch",
         "typings": "gulp copytypings",
-        "postinstall": "node ./node_modules/vscode/bin/install && node ./node_modules/azdata/bin/install"
+        "postinstall": "node ./node_modules/vscode/bin/install && node ./node_modules/azdata/bin/install",
+        "proposedapi": "node installTypings.js"
       },
       "dependencies": {
         "fs-extra": "^5.0.0",
