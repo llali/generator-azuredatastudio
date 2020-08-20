@@ -193,7 +193,7 @@ const writeToReadme = (contentFilePath, file) => {
 
 // Need to grab title from inside each file, dependent on if markdown or notebook file
 const findTitle = (file, filePath) => {
-    const data = fs.readFileSync(filePath, 'UTF-8');
+    const data = fs.readFileSync(filePath, 'utf-8');
     const lines = data.split(/\r?\n/);
     if (lines[0] === '' || (lines.length >= 7 && lines[6].indexOf("collapsed") > -1)) {
         return "Untitled";
