@@ -28,7 +28,7 @@ const findCorrectFolder = (folderName: string, rootExtensionsFolder: string, not
     let folderExt = path.basename(folderName).toLowerCase();
 
     if (folderExt.indexOf(('<%= publisherName%>.<%= name%>').toLowerCase()) > -1) {
-        let fullFolderPath = path.join(rootExtensionsFolder, folderName);
+        let fullFolderPath = path.join(rootExtensionsFolder, folderName, 'content');
         try {
             extractNotebooksFromFolder(fullFolderPath, notebookNames);
         } catch (e) {

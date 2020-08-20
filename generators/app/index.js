@@ -1030,13 +1030,13 @@ module.exports = class extends Generator {
 
         if (context.addNotebooks) {
             for (let i = 0; i < context.notebookPaths.length; i++) {
-                this.fs.copy(context.notebookPaths[i], context.name + '/' + context.notebookNames[i]);
+                this.fs.copy(context.notebookPaths[i], context.name + '/content/' + context.notebookNames[i]);
             }
         } else {
             if (context.notebookType === 'notebook-python') {
-                this.fs.copy(this.sourceRoot() + '/optional/pySample.ipynb', context.name + '/pySample.ipynb');
+                this.fs.copy(this.sourceRoot() + '/optional/pySample.ipynb', context.name + '/content//pySample.ipynb');
             } else {
-                this.fs.copy(this.sourceRoot() + '/optional/sqlSample.ipynb', context.name + '/sqlSample.ipynb');
+                this.fs.copy(this.sourceRoot() + '/optional/sqlSample.ipynb', context.name + '/content/sqlSample.ipynb');
             }
         }
 
@@ -1058,6 +1058,7 @@ module.exports = class extends Generator {
     // {{ADS EDIT}}
     _writingJupyterBook() {
         let context = this.extensionConfig;
+        this.extensionConfig.installDependencies = true;
 
         if (context.addBooks) {
             const files = fileSys.readdirSync(context.bookLocation);
@@ -1114,8 +1115,6 @@ module.exports = class extends Generator {
             this.fs.copy(this.sourceRoot() + '/gitignore', context.name + '/.gitignore');
             this.fs.copy(this.sourceRoot() + '/gitattributes', context.name + '/.gitattributes');
         }
-
-        this.extensionConfig.installDependencies = true;
     }
 
     // Write Color Theme Extension
