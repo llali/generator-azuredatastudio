@@ -2,6 +2,7 @@
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
 const fs = require("fs");
+const path = require("path")
 var nameRegex = /^[a-z0-9][a-z0-9\-]*$/i;
 var numberRegex = /^[0-9]*$/
 
@@ -46,6 +47,15 @@ module.exports.validateNumber = function (number) {
 module.exports.validateFilePath = function (filePath) {
     if (!fs.existsSync(filePath)) {
         return "Invalid file path!";
+    }
+    return true;
+}
+
+module.exports.validateJupyterBook = function (filePath) {
+    const tocPath = path.join(filePath, 'toc.yml');
+    const tocDataPath = path.join(filePath, '_data', 'toc.yml');
+    if (!fs.existsSync(tocPath) && !fs.existsSync(tocDataPath)) {
+        return "Invalid Jupyter Book location!";
     }
     return true;
 }

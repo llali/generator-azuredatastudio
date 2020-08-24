@@ -616,7 +616,7 @@ module.exports = class extends Generator {
             },
 
             // {{ADS EDIT}}
-            askForNotebooks: () => {
+            askForNotebooks: async () => {
                 if (generator.extensionConfig.type !== 'ext-notebook') {
                     return Promise.resolve();
                 }
@@ -630,6 +630,7 @@ module.exports = class extends Generator {
                     }).then(pathResponse => {
                         generator.extensionConfig.notebookNames = [];
                         generator.extensionConfig.notebookPaths = [];
+                        generator.extensionConfig.notebookLocation = pathResponse.notebookPath;
                         return notebookConverter.processNotebookFolder(pathResponse.notebookPath, generator);
                     })
                 }
@@ -652,8 +653,26 @@ module.exports = class extends Generator {
                 }
             },
 
+            askForNotebookFiles: async () => {
+                if (generator.extensionConfig.type !== 'ext-notebook') {
+                    return Promise.resolve();
+                }
+
+                if (generator.extensionConfig.addNotebooks){
+                    let availableChoices = generator.extensionConfig.notebookNames;
+                    return generator.prompt([{
+                        type: 'checkbox',
+                        name: 'notebookFiles',
+                        message: `Select which notebooks you would like to include:`,
+                        choices: availableChoices
+                    }]).then(fileAnswer => {
+                        generator.extensionConfig.notebookFiles = fileAnswer.notebookFiles;
+                    })
+                }
+            },
+
             // {{ADS EDIT}}
-            askForExistingBook: () => {
+            askForExistingBook: async () => {
                 if (generator.extensionConfig.type !== 'ext-jupyterbook') {
                     return Promise.resolve();
                 }
@@ -689,7 +708,7 @@ module.exports = class extends Generator {
                         name: 'bookLocation',
                         message: 'Provide the absolute path to the folder containing your Jupyter Book:',
                         default: os.homedir(),
-                        validate: validator.validateFilePath
+                        validate: validator.validateJupyterBook
                     }).then(locationResponse => {
                         let tempPath = path.normalize(locationResponse.bookLocation);
                         generator.extensionConfig.bookLocation = tempPath;
@@ -698,6 +717,24 @@ module.exports = class extends Generator {
                         generator.extensionConfig.notebookFolders = [];
                         return notebookConverter.processBookFolder(tempPath, generator);
                     });
+                }
+            },
+
+            askForBookFiles: async () => {
+                if (generator.extensionConfig.type !== 'ext-jupyterbook') {
+                    return Promise.resolve();
+                }
+
+                if (generator.extensionConfig.addBooks){
+                    let availableChoices = fileSys.readdirSync(generator.extensionConfig.bookLocation);
+                    return generator.prompt([{
+                        type: 'checkbox',
+                        name: 'bookFiles',
+                        message: `Select which files you would like to include:`,
+                        choices: availableChoices
+                    }]).then(fileAnswer => {
+                        generator.extensionConfig.bookFiles = fileAnswer.bookFiles;
+                    })
                 }
             },
 
@@ -715,13 +752,7 @@ module.exports = class extends Generator {
                             message: 'Provide the absolute path to the folders where your notebooks currently exist.',
                             default: os.homedir(),
                             validate: validator.validateFilePath,
-                        },
-                        {
-                            type: 'confirm',
-                            name: 'complexBook',
-                            message: 'Would you like more than one chapter in your book?',
-                            default: false
-                        },
+                        }
                     ]);
 
 
@@ -737,7 +768,7 @@ module.exports = class extends Generator {
 
             // {{ADS EDIT}}
             askForComplexBook: async () => {
-                if (generator.extensionConfig.complexBook) {
+                if (generator.extensionConfig.createBook) {
                     const bookSections = await generator.prompt([
                         {
                             type: 'input',
@@ -769,7 +800,7 @@ module.exports = class extends Generator {
             },
 
             askForNotebooksinSections: async () => {
-                if (generator.extensionConfig.complexBook) {
+                if (generator.extensionConfig.createBook) {
                     let availableSectionNames = generator.extensionConfig.notebookNames;
                     let chapterNames = generator.extensionConfig.chapterNames;
                     let folderNames = generator.extensionConfig.folderNames;
@@ -1029,12 +1060,14 @@ module.exports = class extends Generator {
         let context = this.extensionConfig;
 
         if (context.addNotebooks) {
-            for (let i = 0; i < context.notebookPaths.length; i++) {
-                this.fs.copy(context.notebookPaths[i], context.name + '/content/' + context.notebookNames[i]);
+            for (let i = 0; i < context.notebookFiles.length; i++){
+                let src = path.join(context.notebookLocation, context.notebookFiles[i]);
+                let dest = path.join(context.name, 'content', context.notebookFiles[i]);
+                this.fs.copy(src, dest);
             }
         } else {
             if (context.notebookType === 'notebook-python') {
-                this.fs.copy(this.sourceRoot() + '/optional/pySample.ipynb', context.name + '/content//pySample.ipynb');
+                this.fs.copy(this.sourceRoot() + '/optional/pySample.ipynb', context.name + '/content/pySample.ipynb');
             } else {
                 this.fs.copy(this.sourceRoot() + '/optional/sqlSample.ipynb', context.name + '/content/sqlSample.ipynb');
             }
@@ -1061,10 +1094,11 @@ module.exports = class extends Generator {
         this.extensionConfig.installDependencies = true;
 
         if (context.addBooks) {
-            const files = fileSys.readdirSync(context.bookLocation);
-            files.forEach(file => {
-                this.fs.copy(context.bookLocation + '/' + file, context.name + '/' + file);
-            });
+            for (let i = 0; i < context.bookFiles.length; i++){
+                let src = path.join(context.bookLocation, context.bookFiles[i]);
+                let dest = path.join(context.name, context.bookFiles[i]);
+                this.fs.copy(src, dest);
+            }
         } else {
             if (context.createBook && context.chapterNames) {
                 try {
@@ -1348,6 +1382,11 @@ module.exports = class extends Generator {
         }
         process.chdir(this.extensionConfig.name);
 
+         // {{ADS EDIT}}
+        if (this.extensionConfig.type === 'ext-jupyterbook' && this.extensionConfig.addBooks === false) {
+            notebookConverter.buildCustomBook(this.extensionConfig);
+        }
+
         if (this.extensionConfig.installDependencies) {
             this.installDependencies({
                 yarn: this.extensionConfig.pkgManager === 'yarn',
@@ -1361,11 +1400,6 @@ module.exports = class extends Generator {
     end() {
         if (this.abort) {
             return;
-        }
-
-        // {{ADS EDIT}}
-        if (this.extensionConfig.type === 'ext-jupyterbook' && this.extensionConfig.addBooks === false) {
-            notebookConverter.buildCustomBook(this.extensionConfig);
         }
 
         // Git init

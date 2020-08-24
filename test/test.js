@@ -1403,6 +1403,7 @@ describe('test code generator', function () {
                 publisherName: 'test',
                 addNotebooks: true,
                 notebookPath: path.join(__dirname, '/fixtures/jupyterbook'),
+                notebookFiles: ['pySample.ipynb'],
                 pkgManager: 'npm'
             }) // Mock the prompt answers
             .toPromise().then(function () {
@@ -1453,7 +1454,7 @@ describe('test code generator', function () {
                     }
                 };
                 try {
-                    assert.file(['package.json', 'README.md', 'CHANGELOG.md', 'vsc-extension-quickstart.md', '.vscodeignore', 'src/notebook.ts', 'pySample.ipynb', 'tsconfig.json']);
+                    assert.file(['package.json', 'README.md', 'CHANGELOG.md', 'vsc-extension-quickstart.md', '.vscodeignore', 'src/notebook.ts', 'content/pySample.ipynb', 'tsconfig.json']);
 
                     var body = fs.readFileSync('package.json', 'utf8');
                     var actual = JSON.parse(body);
@@ -1528,7 +1529,7 @@ describe('test code generator', function () {
                     }
                 };
                 try {
-                    assert.file(['package.json', 'README.md', 'CHANGELOG.md', 'vsc-extension-quickstart.md', '.vscodeignore', 'src/notebook.ts', 'pySample.ipynb', 'tsconfig.json']);
+                    assert.file(['package.json', 'README.md', 'CHANGELOG.md', 'vsc-extension-quickstart.md', '.vscodeignore', 'src/notebook.ts', 'content/pySample.ipynb', 'tsconfig.json']);
 
                     var body = fs.readFileSync('package.json', 'utf8');
                     var actual = JSON.parse(body);
@@ -1602,7 +1603,7 @@ describe('test code generator', function () {
                     }
                 };
                 try {
-                    assert.file(['package.json', 'README.md', 'CHANGELOG.md', 'vsc-extension-quickstart.md', '.vscodeignore', 'sqlSample.ipynb', 'tsconfig.json']);
+                    assert.file(['package.json', 'README.md', 'CHANGELOG.md', 'vsc-extension-quickstart.md', '.vscodeignore', 'content/sqlSample.ipynb', 'tsconfig.json']);
 
                     var body = fs.readFileSync('package.json', 'utf8');
                     var actual = JSON.parse(body);
@@ -1626,6 +1627,7 @@ describe('test code generator', function () {
                 publisherName: 'test',
                 bookLocation: path.join(__dirname, '/fixtures/jupyterbook'),
                 addBooks: true,
+                bookFiles: ['_data', 'pySample.ipynb', '_config.yml'],
                 pkgManager: 'npm'
             }) // Mock the prompt answers
             .toPromise().then(function () {
@@ -1700,7 +1702,9 @@ describe('test code generator', function () {
                 publisherName: 'test',
                 notebookPath: path.join(__dirname, '/fixtures/jupyterbook'),
                 addBooks: false,
-                complexBook: false,
+                numberSections: 1,
+                rawChapterNames: 'Test',
+                Test: ['pySample.ipynb'],
                 pkgManager: 'npm'
             }) // Mock the prompt answers
             .toPromise().then(function () {
