@@ -45,12 +45,6 @@ const findNotebookFiles = (folderPath, errors, generator) => {
 exports.processBookFolder = (folderPath, generator) => {
     let errors = [];
     try {
-        const validBook = findBookTOC(folderPath, errors);
-        if (validBook < 0) {
-            generator.log("No valid Jupyter Book found in " + folderPath + (errors.length > 0 ? '.\n' + errors.join('\n') : ''));
-            return validBook;
-        }
-
         generator.log("Jupyter Book found!" + (errors.length > 0 ? '\n\nProblems while converting: \n' + errors.join('\n') : ''));
 
         const count = discoverFoldersContainingNotebooks(folderPath, errors, generator);
@@ -72,21 +66,6 @@ const discoverFoldersContainingNotebooks = (rootFolder, errors, generator) => {
     })
     return totalNotebookCount;
 }
-
-// Determines if this book is valid by attempting to locate a TOC (Jupyter Book v0.6.4 and 0.7.1)
-const findBookTOC = (folderPath, errors) => {
-    if (errors.length > 0) {
-        return -1;
-    }
-
-    const tocPath = path.join(folderPath, 'toc.yml');
-    const tocDataPath = path.join(folderPath, '_data', 'toc.yml');
-    if (fs.existsSync(tocPath) || fs.existsSync(tocDataPath)) {
-        return 1;
-    }
-    return -1;
-}
-
 
 const getFolderContent = (folderPath, errors) => {
     try {
@@ -193,7 +172,7 @@ const writeToReadme = (contentFilePath, file) => {
 
 // Need to grab title from inside each file, dependent on if markdown or notebook file
 const findTitle = (file, filePath) => {
-    const data = fs.readFileSync(filePath, 'UTF-8');
+    const data = fs.readFileSync(filePath, 'utf-8');
     const lines = data.split(/\r?\n/);
     if (lines[0] === '' || (lines.length >= 7 && lines[6].indexOf("collapsed") > -1)) {
         return "Untitled";
