@@ -1,5 +1,7 @@
 # Azure Data Studio - Extension Generator
 
+Note: Azure Data Studion Extension Generator is moved to a new repository (https://github.com/microsoft/generator-azuredatastudio)
+
 [![Twitter Follow](https://img.shields.io/twitter/follow/azuredatastudio?style=social)](https://twitter.com/azuredatastudio)
 
 The Azure Data Studio Extension Generator is a Yeoman-based generator to help get you started with authoring extensions. There are 13 different possible templates for you to use.
